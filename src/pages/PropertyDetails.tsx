@@ -1,21 +1,24 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Bed, Bath, Square, MapPin, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Bed, Bath, Square, MapPin, ExternalLink, ImageOff } from 'lucide-react';
 
 export default function PropertyDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
 
   const { data: property, isLoading, error } = useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
       if (!id) throw new Error('Property ID is required');
+      
+      console.log('Fetching property with ID:', id);
       
       const { data, error } = await supabase
         .from('scraped_properties')
@@ -23,11 +26,21 @@ export default function PropertyDetails() {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching property:', error);
+        throw error;
+      }
+      
+      console.log('Fetched property data:', data);
       return data;
     },
     enabled: !!id,
   });
+
+  const handleImageError = () => {
+    console.log('Property detail image failed to load');
+    setImageError(true);
+  };
 
   if (isLoading) {
     return (
@@ -81,11 +94,22 @@ export default function PropertyDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Property Image */}
           <div>
-            <img
-              src={property.image_url || '/placeholder.svg'}
-              alt={property.title || 'Property'}
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
-            />
+            {!imageError && property.image_url ? (
+              <img
+                src={property.image_url}
+                alt={property.title || 'Property'}
+                className="w-full h-96 object-cover rounded-lg shadow-lg"
+                onError={handleImageError}
+                onLoad={() => console.log('Property detail image loaded successfully')}
+              />
+            ) : (
+              <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <ImageOff className="w-16 h-16 mx-auto mb-4" />
+                  <p className="text-lg">Image not available</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Property Details */}

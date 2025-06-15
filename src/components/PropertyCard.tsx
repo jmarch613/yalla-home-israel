@@ -1,9 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Bed, Bath, Square, MapPin } from 'lucide-react';
+import { Heart, Bed, Bath, Square, MapPin, ImageOff } from 'lucide-react';
 
 interface PropertyCardProps {
   property: {
@@ -22,19 +22,36 @@ interface PropertyCardProps {
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
 
   const handleViewDetails = () => {
     navigate(`/property/${property.id}`);
   };
 
+  const handleImageError = () => {
+    console.log('Image failed to load for property:', property.id);
+    setImageError(true);
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="relative cursor-pointer" onClick={handleViewDetails}>
-        <img
-          src={property.image}
-          alt={property.title}
-          className="w-full h-48 object-cover"
-        />
+        {!imageError ? (
+          <img
+            src={property.image}
+            alt={property.title}
+            className="w-full h-48 object-cover"
+            onError={handleImageError}
+            onLoad={() => console.log('Image loaded successfully for property:', property.id)}
+          />
+        ) : (
+          <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+            <div className="text-center text-gray-500">
+              <ImageOff className="w-12 h-12 mx-auto mb-2" />
+              <p className="text-sm">Image not available</p>
+            </div>
+          </div>
+        )}
         <Button
           variant="ghost"
           size="sm"

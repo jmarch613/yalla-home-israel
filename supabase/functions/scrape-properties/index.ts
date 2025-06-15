@@ -53,7 +53,7 @@ serve(async (req) => {
       throw new Error(`Failed to create scraping session: ${sessionError.message}`)
     }
 
-    // Simulate scraping real estate data (in a real implementation, you'd use a proper web scraper)
+    // Mock properties with realistic image URLs from Unsplash
     const mockProperties: ScrapedProperty[] = [
       {
         title: "Luxury 4BR Apartment in German Colony",
@@ -65,7 +65,7 @@ serve(async (req) => {
         area: 140,
         property_type: "apartment",
         neighborhood: "German Colony",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/german-colony-luxury-4br`,
         source_website: sourceUrl
       },
@@ -79,7 +79,7 @@ serve(async (req) => {
         area: 110,
         property_type: "apartment",
         neighborhood: "Rehavia",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/rehavia-modern-3br`,
         source_website: sourceUrl
       },
@@ -93,7 +93,7 @@ serve(async (req) => {
         area: 300,
         property_type: "villa",
         neighborhood: "Ein Karem",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/ein-karem-villa`,
         source_website: sourceUrl
       },
@@ -107,7 +107,7 @@ serve(async (req) => {
         area: 75,
         property_type: "apartment",
         neighborhood: "Nachlaot",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/nachlaot-cozy-2br`,
         source_website: sourceUrl
       },
@@ -121,7 +121,7 @@ serve(async (req) => {
         area: 200,
         property_type: "penthouse",
         neighborhood: "Mamilla",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/mamilla-penthouse`,
         source_website: sourceUrl
       },
@@ -135,7 +135,7 @@ serve(async (req) => {
         area: 160,
         property_type: "house",
         neighborhood: "Katamon",
-        image_url: "/placeholder.svg",
+        image_url: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop",
         listing_url: `${sourceUrl}/properties/katamon-family-home`,
         source_website: sourceUrl
       }
