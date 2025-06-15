@@ -1,4 +1,3 @@
-
 import { ScrapedProperty } from '@/hooks/useScrapedProperties';
 
 export interface PropertyCardType {
@@ -94,6 +93,14 @@ export function sortProperties(properties: PropertyCardType[], sort: string): Pr
       const priceB = parseInt(b.price.replace(/[₪,]/g, '')) || 0;
       return priceA - priceB;
     });
+  } else if (sort === 'price-high-low') {
+    arr.sort((a, b) => {
+      const priceA = parseInt(a.price.replace(/[₪,]/g, '')) || 0;
+      const priceB = parseInt(b.price.replace(/[₪,]/g, '')) || 0;
+      return priceB - priceA;
+    });
+  } else if (sort === 'size-largest') {
+    arr.sort((a, b) => (b.area || 0) - (a.area || 0));
   }
   return arr;
 }

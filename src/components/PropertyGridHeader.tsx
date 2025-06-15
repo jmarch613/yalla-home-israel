@@ -45,8 +45,8 @@ export const PropertyGridHeader = ({
     >
       <option value="most-recent">Sort by: Most Recent</option>
       <option value="price-low-high">Price: Low to High</option>
-      <option value="price-high-low" disabled>Price: High to Low</option>
-      <option value="size-largest" disabled>Size: Largest First</option>
+      <option value="price-high-low">Price: High to Low</option>
+      <option value="size-largest">Size: Largest First</option>
     </select>
   </div>
 );
