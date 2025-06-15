@@ -16,7 +16,14 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Starting property title generation...');
+    
+    if (!anthropicApiKey) {
+      throw new Error('ANTHROPIC_API_KEY not configured');
+    }
+
     const { propertyData } = await req.json();
+    console.log('Property data received:', propertyData);
 
     const prompt = `Create a compelling and concise property title for a ${propertyData.property_type} in ${propertyData.city}${propertyData.neighborhood ? `, ${propertyData.neighborhood}` : ''}.
 
@@ -51,10 +58,11 @@ Examples of good titles:
 
 Write only the title, nothing else.`;
 
+    console.log('Making request to Anthropic API...');
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${anthropicApiKey}`,
         'Content-Type': 'application/json',
         'x-api-key': anthropicApiKey,
         'anthropic-version': '2023-06-01',
@@ -71,12 +79,19 @@ Write only the title, nothing else.`;
       }),
     });
 
+    console.log('API response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Anthropic API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Anthropic API error response:', errorText);
+      throw new Error(`Anthropic API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('API response data:', data);
+    
     const title = data.content[0].text.trim();
+    console.log('Generated title:', title);
 
     return new Response(JSON.stringify({ title }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

@@ -16,7 +16,14 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Starting property description generation...');
+    
+    if (!anthropicApiKey) {
+      throw new Error('ANTHROPIC_API_KEY not configured');
+    }
+
     const { propertyData } = await req.json();
+    console.log('Property data received:', propertyData);
 
     const prompt = `Create an engaging property description for a ${propertyData.property_type} in ${propertyData.city}${propertyData.neighborhood ? `, ${propertyData.neighborhood}` : ''}.
 
@@ -62,10 +69,11 @@ Write a compelling, professional property description that includes:
 
 Keep the description engaging, informative, and around 150-200 words. Focus on what makes this location special and convenient for potential ${propertyData.listing_type === 'rent' ? 'tenants' : 'buyers'}. Use warm, inviting language that highlights both the property and its strategic location advantages.`;
 
+    console.log('Making request to Anthropic API...');
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${anthropicApiKey}`,
         'Content-Type': 'application/json',
         'x-api-key': anthropicApiKey,
         'anthropic-version': '2023-06-01',
@@ -82,12 +90,19 @@ Keep the description engaging, informative, and around 150-200 words. Focus on w
       }),
     });
 
+    console.log('API response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`Anthropic API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Anthropic API error response:', errorText);
+      throw new Error(`Anthropic API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('API response data:', data);
+    
     const description = data.content[0].text.trim();
+    console.log('Generated description:', description);
 
     return new Response(JSON.stringify({ description }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
