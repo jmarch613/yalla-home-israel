@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Bed, Bath, Square, MapPin, ImageOff } from 'lucide-react';
+import { Heart, Bed, Bath, Square, MapPin, ImageOff, Sofa } from 'lucide-react';
 
 interface PropertyCardProps {
   property: {
