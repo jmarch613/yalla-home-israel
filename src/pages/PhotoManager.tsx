@@ -19,7 +19,7 @@ const PhotoManager = () => {
     reorderImages,
     removeImage,
     saveImageOrder
-  } = usePhotoManager(id);
+  } = usePhotoManager(id!);
 
   if (loading) {
     return (

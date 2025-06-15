@@ -7,6 +7,8 @@ import { PropertyListing } from '@/types/database';
 
 export const usePhotoManager = (propertyId: string) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [localImages, setLocalImages] = useState<string[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -21,7 +23,7 @@ export const usePhotoManager = (propertyId: string) => {
 
       if (error) throw error;
       
-      return {
+      const propertyData = {
         id: data.id,
         user_id: data.user_id,
         title: data.title,
@@ -58,6 +60,11 @@ export const usePhotoManager = (propertyId: string) => {
         created_at: data.created_at,
         updated_at: data.updated_at,
       };
+
+      // Initialize local images with property images
+      setLocalImages(propertyData.images);
+      
+      return propertyData;
     },
   });
 
@@ -110,9 +117,8 @@ export const usePhotoManager = (propertyId: string) => {
         uploadedUrls.push(publicUrl);
       }
 
-      const currentImages = property?.images || [];
-      const newImages = [...currentImages, ...uploadedUrls];
-      
+      const newImages = [...localImages, ...uploadedUrls];
+      setLocalImages(newImages);
       await updateImagesMutation.mutateAsync(newImages);
       
     } catch (error) {
@@ -127,18 +133,36 @@ export const usePhotoManager = (propertyId: string) => {
     }
   };
 
-  const removeImage = async (imageUrl: string) => {
-    if (!property) return;
-    
-    const newImages = property.images.filter(img => img !== imageUrl);
-    await updateImagesMutation.mutateAsync(newImages);
+  const removeImage = (index: number) => {
+    const newImages = localImages.filter((_, i) => i !== index);
+    setLocalImages(newImages);
+  };
+
+  const reorderImages = (draggedIndex: number, dropIndex: number) => {
+    const newImages = [...localImages];
+    const draggedImage = newImages[draggedIndex];
+    newImages.splice(draggedIndex, 1);
+    newImages.splice(dropIndex, 0, draggedImage);
+    setLocalImages(newImages);
+  };
+
+  const saveImageOrder = async () => {
+    setIsSaving(true);
+    try {
+      await updateImagesMutation.mutateAsync(localImages);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return {
     property,
-    isLoading,
-    isUploading,
+    images: localImages,
+    loading: isLoading,
+    saving: isSaving,
     uploadImages,
     removeImage,
+    reorderImages,
+    saveImageOrder,
   };
 };
