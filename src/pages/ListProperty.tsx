@@ -56,6 +56,16 @@ const ListProperty = () => {
     setIsSubmitting(true);
 
     try {
+      // Construct the full address from the new fields
+      const addressParts = [
+        data.road,
+        data.road_number?.toString(),
+        data.flat_number ? `Apt ${data.flat_number}` : null,
+        data.entrance_number ? `Entrance ${data.entrance_number}` : null
+      ].filter(Boolean);
+      
+      const fullAddress = addressParts.join(', ');
+
       const insertData = {
         user_id: user.id,
         title: data.title,
@@ -63,7 +73,7 @@ const ListProperty = () => {
         price: data.price || null,
         property_type: data.property_type,
         listing_type: data.listing_type,
-        address: data.address,
+        address: fullAddress,
         neighborhood: data.neighborhood || null,
         city: data.city,
         bedrooms: data.bedrooms || null,

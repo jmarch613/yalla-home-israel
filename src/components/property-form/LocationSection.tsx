@@ -28,19 +28,80 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
         <CardTitle>Location</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <FormField
-          control={control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address</FormLabel>
-              <FormControl>
-                <Input placeholder="123 Main Street" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={control}
+            name="road"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Road/Street Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Rothschild Boulevard" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="road_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Road Number</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    placeholder="123" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={control}
+            name="flat_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Flat Number (if applicable)</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    placeholder="5" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="entrance_number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Entrance Number</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    placeholder="A or 1" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={control}
