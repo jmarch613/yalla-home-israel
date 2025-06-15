@@ -4,8 +4,7 @@ import { useSearchParams, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { PropertyGrid } from '@/components/PropertyGrid';
 import { SearchHeader } from '@/components/search/SearchHeader';
-import { SearchFiltersSection } from '@/components/search/SearchFiltersSection';
-import { PriceBedroomFilters } from '@/components/search/PriceBedroomFilters';
+import { SearchFiltersBar } from '@/components/search/SearchFiltersBar';
 import { BackToTopButton } from '@/components/BackToTopButton';
 
 const Search = () => {
@@ -24,10 +23,11 @@ const Search = () => {
       balcony: false,
       elevator: false,
       garden: false,
+      safeRoom: false,
+      bombShelter: false,
     }
   });
   const [appliedFilters, setAppliedFilters] = useState(searchFilters);
-  const [showFilters, setShowFilters] = useState(false);
   const [searchLocation, setSearchLocation] = useState('');
 
   useEffect(() => {
@@ -51,7 +51,6 @@ const Search = () => {
     const restoreScrollPosition = location.state?.restoreScrollPosition;
     if (restoreScrollPosition) {
       console.log('Restoring scroll position to:', restoreScrollPosition);
-      // Use setTimeout to ensure the page has rendered before scrolling
       setTimeout(() => {
         window.scrollTo(0, restoreScrollPosition);
       }, 100);
@@ -68,65 +67,31 @@ const Search = () => {
     setAppliedFilters({ ...searchFilters });
   };
 
-  const handleSearch = () => {
-    console.log('Searching for:', searchLocation);
-  };
-
-  const handleFilterChange = (field: string, value: string) => {
-    const updatedFilters = { ...searchFilters, [field]: value };
-    
-    // Reset neighborhood when location changes
-    if (field === 'location') {
-      updatedFilters.neighborhood = '';
-    }
-    
-    setSearchFilters(updatedFilters);
-    handleFiltersChange(updatedFilters);
-  };
-
-  const handleNeighborhoodChange = (neighborhood: string) => {
-    const updatedFilters = { ...searchFilters, neighborhood };
-    setSearchFilters(updatedFilters);
-    handleFiltersChange(updatedFilters);
-  };
-
-  const handleToggleFilters = () => {
-    setShowFilters(!showFilters);
-  };
-
   const propertyTypeForUrl = searchParams.get('type') || 'buy';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       
-      {/* Main search header */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-6">
+      {/* Search Header */}
+      <div className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4">
           <SearchHeader 
             propertyType={propertyTypeForUrl}
             location={searchFilters.location}
             neighborhood={searchFilters.neighborhood}
           />
-          
-          {/* Rightmove-style horizontal filters */}
-          <div className="space-y-4">
-            {/* Main filter row */}
-            <SearchFiltersSection
-              searchFilters={searchFilters}
-              onFilterChange={handleFilterChange}
-              onNeighborhoodChange={handleNeighborhoodChange}
-              onFiltersApply={handleFiltersApply}
-            />
+        </div>
+      </div>
 
-            {/* Price and bedrooms row */}
-            <PriceBedroomFilters
-              searchFilters={searchFilters}
-              onFilterChange={handleFilterChange}
-              showFilters={showFilters}
-              onToggleFilters={handleToggleFilters}
-            />
-          </div>
+      {/* Filters Bar */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4">
+          <SearchFiltersBar
+            searchFilters={searchFilters}
+            onFiltersChange={handleFiltersChange}
+            onFiltersApply={handleFiltersApply}
+          />
         </div>
       </div>
 
@@ -135,7 +100,6 @@ const Search = () => {
         <PropertyGrid filters={appliedFilters} />
       </div>
 
-      {/* Back to Top Button */}
       <BackToTopButton />
     </div>
   );

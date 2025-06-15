@@ -104,6 +104,17 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
       }
     }
 
+    // Feature filters - for now we'll simulate these as most properties don't have this data
+    // In a real app, this would check actual property features
+    if (filters.features) {
+      const hasActiveFeatureFilters = Object.values(filters.features).some(Boolean);
+      if (hasActiveFeatureFilters) {
+        // For demo purposes, we'll include properties but in reality 
+        // this would filter based on actual property feature data
+        console.log('Feature filters applied:', filters.features);
+      }
+    }
+
     return true;
   });
 
@@ -136,10 +147,10 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
-          <p className="text-gray-600">
-            {filteredProperties.length} properties found
+          <p className="text-gray-700 font-medium">
+            {filteredProperties.length} properties
             {filteredProperties.length !== allProperties.length && (
-              <span className="text-sm text-gray-500 ml-2">
+              <span className="text-sm font-normal text-gray-500 ml-2">
                 (filtered from {allProperties.length} total)
               </span>
             )}
@@ -154,7 +165,7 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
             Update Data
           </Button>
         </div>
-        <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
+        <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
           <option>Sort by: Most Recent</option>
           <option>Price: Low to High</option>
           <option>Price: High to Low</option>
@@ -163,7 +174,7 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
       </div>
       
       {filteredProperties.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-12 bg-white rounded-lg border">
           <Database className="w-12 h-12 mx-auto mb-4 text-gray-400" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             {allProperties.length === 0 ? 'No properties found' : 'No properties match your filters'}

@@ -8,10 +8,22 @@ interface SearchHeaderProps {
 }
 
 export const SearchHeader = ({ propertyType, location, neighborhood }: SearchHeaderProps) => {
+  const getResultsText = () => {
+    const type = propertyType === 'buy' ? 'for sale' : 'to rent';
+    const baseLocation = location || 'Israel';
+    const fullLocation = neighborhood ? `${neighborhood}, ${baseLocation}` : baseLocation;
+    
+    return `Property ${type} in ${fullLocation}`;
+  };
+
   return (
-    <h1 className="text-3xl font-bold mb-6">
-      Find property {propertyType === 'buy' ? 'for sale' : 'to rent'} in {location || 'Israel'}
-      {neighborhood && `, ${neighborhood}`}
-    </h1>
+    <div>
+      <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        {getResultsText()}
+      </h1>
+      <p className="text-gray-600 text-sm">
+        Search properties to find your perfect home
+      </p>
+    </div>
   );
 };
