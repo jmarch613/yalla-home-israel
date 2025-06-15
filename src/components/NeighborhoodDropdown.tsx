@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
 
 interface NeighborhoodDropdownProps {
@@ -14,28 +15,26 @@ export const NeighborhoodDropdown = ({
   selectedNeighborhood,
   onNeighborhoodChange
 }: NeighborhoodDropdownProps) => {
-  const city = extractCityFromLocation(selectedLocation);
-  const neighborhoods = getNeighborhoodsForCity(city);
-  const hasNeighborhoods = neighborhoods.length > 0;
+  const cityName = extractCityFromLocation(selectedLocation);
+  const neighborhoods = getNeighborhoodsForCity(cityName);
 
-  const handleValueChange = (value: string) => {
-    onNeighborhoodChange(value === "any" ? "" : value);
+  const handleNeighborhoodChange = (value: string) => {
+    onNeighborhoodChange(value === 'any' ? '' : value);
   };
 
   return (
     <div>
+      <Label className="text-sm font-medium text-gray-700 mb-2 block">Neighborhood</Label>
       <Select 
-        value={selectedNeighborhood || "any"} 
-        onValueChange={handleValueChange}
-        disabled={!hasNeighborhoods}
+        value={selectedNeighborhood || 'any'} 
+        onValueChange={handleNeighborhoodChange}
+        disabled={!selectedLocation || neighborhoods.length === 0}
       >
-        <SelectTrigger className="h-10 bg-white border-gray-300">
-          <SelectValue placeholder={hasNeighborhoods ? `${city}...` : "Select a city first"} />
+        <SelectTrigger className="h-12">
+          <SelectValue placeholder="Neighborhood" />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
-          <SelectItem value="any">
-            {hasNeighborhoods ? city : "Any neighborhood"}
-          </SelectItem>
+          <SelectItem value="any">Any</SelectItem>
           {neighborhoods.map((neighborhood) => (
             <SelectItem key={neighborhood} value={neighborhood}>
               {neighborhood}
