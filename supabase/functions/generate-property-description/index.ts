@@ -2,7 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,8 +18,8 @@ serve(async (req) => {
   try {
     console.log('Starting property description generation...');
     
-    if (!anthropicApiKey) {
-      throw new Error('ANTHROPIC_API_KEY not configured');
+    if (!openAIApiKey) {
+      throw new Error('OPENAI_API_KEY not configured');
     }
 
     const { propertyData } = await req.json();
@@ -69,24 +69,28 @@ Write a compelling, professional property description that includes:
 
 Keep the description engaging, informative, and around 150-200 words. Focus on what makes this location special and convenient for potential ${propertyData.listing_type === 'rent' ? 'tenants' : 'buyers'}. Use warm, inviting language that highlights both the property and its strategic location advantages.`;
 
-    console.log('Making request to Anthropic API...');
+    console.log('Making request to OpenAI API...');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
-        max_tokens: 400,
+        model: 'gpt-4o-mini',
         messages: [
+          {
+            role: 'system',
+            content: 'You are a professional real estate marketing expert who creates engaging property descriptions. Write compelling, informative descriptions that highlight both the property features and location advantages.'
+          },
           {
             role: 'user',
             content: prompt
           }
         ],
+        max_tokens: 500,
+        temperature: 0.7,
       }),
     });
 
@@ -94,14 +98,14 @@ Keep the description engaging, informative, and around 150-200 words. Focus on w
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error response:', errorText);
-      throw new Error(`Anthropic API error: ${response.status} - ${errorText}`);
+      console.error('OpenAI API error response:', errorText);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
     console.log('API response data:', data);
     
-    const description = data.content[0].text.trim();
+    const description = data.choices[0].message.content.trim();
     console.log('Generated description:', description);
 
     return new Response(JSON.stringify({ description }), {

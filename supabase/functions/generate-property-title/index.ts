@@ -2,7 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
+const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,8 +18,8 @@ serve(async (req) => {
   try {
     console.log('Starting property title generation...');
     
-    if (!anthropicApiKey) {
-      throw new Error('ANTHROPIC_API_KEY not configured');
+    if (!openAIApiKey) {
+      throw new Error('OPENAI_API_KEY not configured');
     }
 
     const { propertyData } = await req.json();
@@ -58,24 +58,28 @@ Examples of good titles:
 
 Write only the title, nothing else.`;
 
-    console.log('Making request to Anthropic API...');
+    console.log('Making request to OpenAI API...');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
-        max_tokens: 50,
+        model: 'gpt-4o-mini',
         messages: [
+          {
+            role: 'system',
+            content: 'You are a professional real estate marketing expert who creates compelling property titles. Respond with only the title, no additional text or formatting.'
+          },
           {
             role: 'user',
             content: prompt
           }
         ],
+        max_tokens: 50,
+        temperature: 0.7,
       }),
     });
 
@@ -83,14 +87,14 @@ Write only the title, nothing else.`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error response:', errorText);
-      throw new Error(`Anthropic API error: ${response.status} - ${errorText}`);
+      console.error('OpenAI API error response:', errorText);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
     console.log('API response data:', data);
     
-    const title = data.content[0].text.trim();
+    const title = data.choices[0].message.content.trim();
     console.log('Generated title:', title);
 
     return new Response(JSON.stringify({ title }), {
