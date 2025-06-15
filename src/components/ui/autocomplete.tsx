@@ -27,10 +27,8 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           suggestion.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 8); // Limit to 8 suggestions
         setFilteredSuggestions(filtered);
-        setOpen(filtered.length > 0);
       } else {
         setFilteredSuggestions([]);
-        setOpen(false);
       }
     }, [value, suggestions]);
 
@@ -42,10 +40,16 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
+      if (!open && e.target.value.trim().length > 0) {
+        setOpen(true);
+      }
+      if (e.target.value.trim().length === 0) {
+        setOpen(false);
+      }
     };
 
     const handleInputFocus = () => {
-      if (filteredSuggestions.length > 0) {
+      if (value.trim().length > 0) {
         setOpen(true);
       }
     };
