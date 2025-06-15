@@ -4,7 +4,6 @@ import { useSearchParams } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { SearchFilters } from '@/components/SearchFilters';
 import { PropertyGrid } from '@/components/PropertyGrid';
-import { FeaturedProperties } from '@/components/FeaturedProperties';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -47,9 +46,7 @@ const Search = () => {
           </p>
         </div>
         
-        <FeaturedProperties />
-        
-        <div className="mt-12">
+        <div>
           <h2 className="text-2xl font-bold mb-6">All Properties</h2>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1">
