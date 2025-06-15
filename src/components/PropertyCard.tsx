@@ -26,10 +26,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const [imageError, setImageError] = useState(false);
 
   const handleViewDetails = () => {
-    // Pass current search parameters to maintain search context
-    const searchParams = new URLSearchParams(location.search);
+    // Convert search parameters to string to avoid cloning issues
+    const searchParamsString = location.search;
+    console.log('Navigating to property details with search params:', searchParamsString);
     navigate(`/property/${property.id}`, { 
-      state: { searchParams } 
+      state: { searchParams: searchParamsString } 
     });
   };
 

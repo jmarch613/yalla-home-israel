@@ -41,10 +41,10 @@ export default function PropertyDetails() {
   });
 
   const handleBackToSearch = () => {
-    // Get the referrer from the location state or default to search page
-    const searchParams = location.state?.searchParams || new URLSearchParams();
-    const searchPath = `/search?${searchParams.toString()}`;
-    console.log('Navigating back to search with params:', searchPath);
+    // Get the search params string from the location state or default to search page
+    const searchParamsString = location.state?.searchParams || '';
+    const searchPath = searchParamsString ? `/search${searchParamsString}` : '/search';
+    console.log('Navigating back to search with path:', searchPath);
     navigate(searchPath);
   };
 
