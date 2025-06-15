@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Autocomplete } from '@/components/ui/autocomplete';
+import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
 import { israeliLocations } from '@/data/israeliLocations';
 import { israeliStreets } from '@/data/israeliStreets';
-import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
 import { PropertyFormData } from './PropertyFormSchema';
 
 interface LocationSectionProps {
@@ -21,7 +21,10 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
     name: 'city',
   });
 
-  const availableNeighborhoods = getNeighborhoodsForCity(extractCityFromLocation(cityValue || ''));
+  const neighborhoodValue = useWatch({
+    control,
+    name: 'neighborhood',
+  });
 
   return (
     <Card>
@@ -135,12 +138,13 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
             <FormItem>
               <FormLabel>Neighborhood</FormLabel>
               <FormControl>
-                <Autocomplete
-                  value={field.value || ''}
-                  onChange={field.onChange}
-                  placeholder="Enter neighborhood name"
-                  suggestions={availableNeighborhoods}
-                />
+                <div>
+                  <NeighborhoodDropdown
+                    selectedLocation={cityValue || ''}
+                    selectedNeighborhood={neighborhoodValue || ''}
+                    onNeighborhoodChange={field.onChange}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
