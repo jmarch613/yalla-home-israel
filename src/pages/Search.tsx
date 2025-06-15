@@ -24,6 +24,7 @@ const Search = () => {
       garden: false,
     }
   });
+  const [appliedFilters, setAppliedFilters] = useState(searchFilters);
   const [showFilters, setShowFilters] = useState(false);
   const [searchLocation, setSearchLocation] = useState('');
 
@@ -31,18 +32,26 @@ const Search = () => {
     const location = searchParams.get('location') || '';
     const type = searchParams.get('type') || 'buy';
     
-    setSearchFilters(prev => ({
-      ...prev,
+    const initialFilters = {
+      ...searchFilters,
       location,
       type,
-      neighborhood: '' // Reset neighborhood when location changes from URL
-    }));
+      neighborhood: ''
+    };
+    
+    setSearchFilters(initialFilters);
+    setAppliedFilters(initialFilters);
     setSearchLocation(location);
   }, [searchParams]);
 
   const handleFiltersChange = (filters: typeof searchFilters) => {
     setSearchFilters(filters);
-    console.log('Filtering with:', filters);
+    console.log('Filters updated:', filters);
+  };
+
+  const handleFiltersApply = () => {
+    console.log('Applying filters:', searchFilters);
+    setAppliedFilters({ ...searchFilters });
   };
 
   const handleSearch = () => {
@@ -93,6 +102,7 @@ const Search = () => {
               searchFilters={searchFilters}
               onFilterChange={handleFilterChange}
               onNeighborhoodChange={handleNeighborhoodChange}
+              onFiltersApply={handleFiltersApply}
             />
 
             {/* Price and bedrooms row */}
@@ -108,7 +118,7 @@ const Search = () => {
 
       {/* Property results */}
       <div className="container mx-auto px-4 py-6">
-        <PropertyGrid filters={searchFilters} />
+        <PropertyGrid filters={appliedFilters} />
       </div>
     </div>
   );

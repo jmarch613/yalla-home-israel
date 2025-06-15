@@ -1,19 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
+import { SearchFilters } from '@/components/SearchFilters';
 
 interface SearchFiltersSectionProps {
   searchFilters: {
     location: string;
     neighborhood: string;
     propertyType: string;
+    minPrice: string;
+    maxPrice: string;
+    bedrooms: string;
+    bathrooms: string;
+    features: {
+      parking: boolean;
+      balcony: boolean;
+      elevator: boolean;
+      garden: boolean;
+    };
   };
   onFilterChange: (field: string, value: string) => void;
   onNeighborhoodChange: (neighborhood: string) => void;
+  onFiltersApply: () => void;
 }
 
 const propertyTypes = [
@@ -27,8 +40,30 @@ const propertyTypes = [
 export const SearchFiltersSection = ({ 
   searchFilters, 
   onFilterChange, 
-  onNeighborhoodChange 
+  onNeighborhoodChange,
+  onFiltersApply
 }: SearchFiltersSectionProps) => {
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
+
+  const handleSearchClick = () => {
+    console.log('Search button clicked, applying filters:', searchFilters);
+    onFiltersApply();
+  };
+
+  const handleMoreFiltersApply = (filters: any) => {
+    // Update all the advanced filters
+    Object.keys(filters).forEach(key => {
+      if (key === 'features') {
+        // Handle features separately since it's an object
+        // This would need to be passed up to the parent component
+      } else {
+        onFilterChange(key, filters[key]);
+      }
+    });
+    onFiltersApply();
+    setShowMoreFilters(false);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
       {/* Search radius */}
@@ -95,10 +130,29 @@ export const SearchFiltersSection = ({
         </Label>
       </div>
 
-      {/* Search button */}
-      <Button className="h-12 bg-green-500 hover:bg-green-600 text-white font-medium">
-        Search properties
-      </Button>
+      {/* Search and More Filters buttons */}
+      <div className="flex flex-col gap-2">
+        <Button 
+          className="h-12 bg-green-500 hover:bg-green-600 text-white font-medium"
+          onClick={handleSearchClick}
+        >
+          Search properties
+        </Button>
+        
+        <Dialog open={showMoreFilters} onOpenChange={setShowMoreFilters}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="h-10">
+              More filters
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md bg-white">
+            <DialogHeader>
+              <DialogTitle>Advanced Filters</DialogTitle>
+            </DialogHeader>
+            <SearchFilters onFiltersChange={handleMoreFiltersApply} />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

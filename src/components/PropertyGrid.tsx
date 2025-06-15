@@ -40,7 +40,7 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
   };
 
   // Transform scraped properties to match PropertyCard interface
-  const transformedProperties = scrapedProperties?.map((property) => ({
+  const allProperties = scrapedProperties?.map((property) => ({
     id: property.id,
     title: property.title || 'Property Title',
     location: property.address || 'Jerusalem',
@@ -56,6 +56,58 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
       'Recently Updated'
     ].filter(Boolean)
   })) || [];
+
+  // Apply filters to the properties
+  const filteredProperties = allProperties.filter((property) => {
+    console.log('Filtering property:', property.title, 'with filters:', filters);
+    
+    // Location filter
+    if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) {
+      return false;
+    }
+
+    // Neighborhood filter
+    if (filters.neighborhood && !property.features.some(feature => 
+      feature.toLowerCase().includes(filters.neighborhood.toLowerCase())
+    )) {
+      return false;
+    }
+
+    // Property type filter
+    if (filters.propertyType && !property.features.some(feature => 
+      feature.toLowerCase().includes(filters.propertyType.toLowerCase())
+    )) {
+      return false;
+    }
+
+    // Bedrooms filter
+    if (filters.bedrooms && property.bedrooms < parseInt(filters.bedrooms)) {
+      return false;
+    }
+
+    // Bathrooms filter
+    if (filters.bathrooms && property.bathrooms < parseInt(filters.bathrooms)) {
+      return false;
+    }
+
+    // Price range filters
+    if (filters.minPrice || filters.maxPrice) {
+      const priceString = property.price.replace(/[₪,]/g, '');
+      const price = parseInt(priceString);
+      
+      if (filters.minPrice && price < parseInt(filters.minPrice)) {
+        return false;
+      }
+      
+      if (filters.maxPrice && price > parseInt(filters.maxPrice)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  console.log(`Filtered ${filteredProperties.length} properties from ${allProperties.length} total`);
 
   if (isLoading) {
     return (
@@ -85,7 +137,12 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           <p className="text-gray-600">
-            {transformedProperties.length} properties found
+            {filteredProperties.length} properties found
+            {filteredProperties.length !== allProperties.length && (
+              <span className="text-sm text-gray-500 ml-2">
+                (filtered from {allProperties.length} total)
+              </span>
+            )}
           </p>
           <Button 
             onClick={handleScrapeData}
@@ -105,21 +162,28 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
         </select>
       </div>
       
-      {transformedProperties.length === 0 ? (
+      {filteredProperties.length === 0 ? (
         <div className="text-center py-12">
           <Database className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No properties found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            {allProperties.length === 0 ? 'No properties found' : 'No properties match your filters'}
+          </h3>
           <p className="text-gray-600 mb-4">
-            Click "Update Data" to scrape the latest properties from remaxjerusalem.com
+            {allProperties.length === 0 
+              ? 'Click "Update Data" to scrape the latest properties from remaxjerusalem.com'
+              : 'Try adjusting your search filters to see more results'
+            }
           </p>
-          <Button onClick={handleScrapeData}>
-            <Database className="w-4 h-4 mr-2" />
-            Scrape Properties
-          </Button>
+          {allProperties.length === 0 && (
+            <Button onClick={handleScrapeData}>
+              <Database className="w-4 h-4 mr-2" />
+              Scrape Properties
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {transformedProperties.map((property) => (
+          {filteredProperties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
         </div>
