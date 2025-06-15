@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database } from 'lucide-react';
-import { CurrencySelector } from './CurrencySelector';
+// Removed CurrencySelector import
 
 interface PropertyGridHeaderProps {
   filteredCount: number;
@@ -20,9 +20,7 @@ export const PropertyGridHeader = ({
   onSortChange
 }: PropertyGridHeaderProps) => (
   <div className="mb-6">
-    <div className="flex justify-end items-center mb-2">
-      <CurrencySelector />
-    </div>
+    {/* Removed CurrencySelector */}
     <div className="flex justify-between items-center">
       <div className="flex items-center gap-4">
         <p className="text-gray-700 font-medium">
