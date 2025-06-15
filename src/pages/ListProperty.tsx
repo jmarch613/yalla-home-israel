@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -159,10 +158,10 @@ const ListProperty = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <LocationSection control={form.control} />
-              <BasicInfoSection control={form.control} />
               <PropertyDetailsSection control={form.control} />
               <FeaturesSection control={form.control} />
               <ImageUploadSection control={form.control} />
+              <BasicInfoSection control={form.control} />
               <ContactSection control={form.control} />
 
               <div className="flex space-x-4">
