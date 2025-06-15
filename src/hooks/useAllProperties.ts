@@ -49,7 +49,10 @@ export function useAllProperties() {
           heating,
           furnished,
           pets_allowed,
+          safe_room,
+          bomb_shelter,
           images,
+          floorplan_url,
           created_at,
           updated_at
         `)
@@ -88,10 +91,10 @@ export function useAllProperties() {
           heating: item.heating,
           furnished: item.furnished,
           pets_allowed: item.pets_allowed,
-          safe_room: false, // Default value since this field doesn't exist in current schema
-          bomb_shelter: false, // Default value since this field doesn't exist in current schema
+          safe_room: item.safe_room || false,
+          bomb_shelter: item.bomb_shelter || false,
           images: item.images,
-          floorplan_url: null, // Default value since this field doesn't exist in current schema
+          floorplan_url: item.floorplan_url,
           created_at: item.created_at,
           updated_at: item.updated_at,
         } as PropertyListing;
