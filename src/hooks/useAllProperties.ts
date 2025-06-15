@@ -53,17 +53,25 @@ export function useAllProperties() {
           bomb_shelter,
           images,
           floorplan_url,
+          status,
           created_at,
           updated_at
-        `)
-        .in("status", ["approved", "published"]);
+        `);
+        // Removed the .in("status", ["approved", "published"]) filter to include all statuses
       if (error) throw error;
       
       console.log('Raw user listed data from DB:', data);
+      console.log('Number of user properties from DB:', data?.length || 0);
       
       // Transform the data to match PropertyListing interface
-      return (data ?? []).map(item => {
-        if (!item) return null;
+      const transformedData = (data ?? []).map(item => {
+        if (!item) {
+          console.log('Skipping null item');
+          return null;
+        }
+        
+        console.log('Processing property:', item.title, 'Status:', item.status, 'City:', item.city);
+        
         return {
           id: item.id,
           user_id: item.user_id,
@@ -101,6 +109,9 @@ export function useAllProperties() {
           updated_at: item.updated_at,
         } as PropertyListing;
       }).filter(Boolean) as PropertyListing[];
+      
+      console.log('Transformed user properties:', transformedData.length);
+      return transformedData;
     },
   });
 
