@@ -5,16 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PropertyFormData } from './PropertyFormSchema';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PropertyDetailsSectionProps {
   control: Control<PropertyFormData>;
 }
 
 export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps) => {
+  const { t } = useLanguage();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Property Details</CardTitle>
+        <CardTitle>{t('details.type')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
@@ -23,7 +26,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="bedrooms"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bedrooms</FormLabel>
+                <FormLabel>{t('common.bedrooms')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -42,7 +45,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="bathrooms"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bathrooms</FormLabel>
+                <FormLabel>{t('common.bathrooms')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -63,7 +66,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="floor_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Floor</FormLabel>
+                <FormLabel>{t('common.floor')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -82,7 +85,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="total_floors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Floors</FormLabel>
+                <FormLabel>{t('form.total.floors')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -101,7 +104,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="year_built"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Year Built</FormLabel>
+                <FormLabel>{t('common.year.built')}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -121,7 +124,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
           name="parking_spots"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Parking Spots</FormLabel>
+              <FormLabel>{t('form.parking.spots')}</FormLabel>
               <FormControl>
                 <Input
                   type="number"

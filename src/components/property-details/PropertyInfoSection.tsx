@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, ExternalLink } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PropertyInfoSectionProps {
   title: string | null;
@@ -22,6 +23,19 @@ export const PropertyInfoSection = ({
   listingUrl, 
   transformText 
 }: PropertyInfoSectionProps) => {
+  const { t } = useLanguage();
+
+  // Function to translate property type from database
+  const translatePropertyType = (type: string | null) => {
+    if (!type) return t('common.unavailable');
+    
+    const typeKey = `property.type.${type.toLowerCase()}`;
+    const translated = t(typeKey);
+    
+    // If translation doesn't exist, fallback to original type
+    return translated === typeKey ? type : translated;
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -39,23 +53,23 @@ export const PropertyInfoSection = ({
 
       {/* Property Features */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-3">Property Details</h3>
+        <h3 className="text-lg font-semibold mb-3">{t('details.type')}</h3>
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div><span className="font-medium">Type:</span> {propertyType || 'N/A'}</div>
-          <div><span className="font-medium">Neighborhood:</span> {neighborhood || 'N/A'}</div>
+          <div><span className="font-medium">{t('details.type')}:</span> {translatePropertyType(propertyType)}</div>
+          <div><span className="font-medium">{t('details.neighborhood')}:</span> {neighborhood || t('common.unavailable')}</div>
         </div>
       </div>
 
       {/* Contact Buttons */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Button className="flex-1">
-          Contact Agent
+          {t('details.contact')}
         </Button>
         {listingUrl && (
           <Button variant="outline" className="flex-1" asChild>
             <a href={listingUrl} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="w-4 h-4 mr-2" />
-              View Original
+              {t('details.original')}
             </a>
           </Button>
         )}

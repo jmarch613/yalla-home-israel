@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SearchFiltersBarProps {
   searchFilters: {
@@ -28,46 +29,48 @@ interface SearchFiltersBarProps {
   onFiltersApply: () => void;
 }
 
-const propertyTypes = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'house', label: 'House' },
-  { value: 'villa', label: 'Villa' },
-  { value: 'penthouse', label: 'Penthouse' },
-  { value: 'studio', label: 'Studio' }
-];
-
-const priceOptions = [
-  { value: '500000', label: '₪500,000' },
-  { value: '750000', label: '₪750,000' },
-  { value: '1000000', label: '₪1,000,000' },
-  { value: '1500000', label: '₪1,500,000' },
-  { value: '2000000', label: '₪2,000,000' },
-  { value: '3000000', label: '₪3,000,000' },
-  { value: '5000000', label: '₪5,000,000+' }
-];
-
-const bedroomOptions = [
-  { value: '1', label: '1+' },
-  { value: '2', label: '2+' },
-  { value: '3', label: '3+' },
-  { value: '4', label: '4+' },
-  { value: '5', label: '5+' }
-];
-
-const featureOptions = [
-  { key: 'parking', label: 'Parking' },
-  { key: 'balcony', label: 'Balcony' },
-  { key: 'safeRoom', label: 'Safe Room' },
-  { key: 'bombShelter', label: 'Bomb Shelter' },
-  { key: 'elevator', label: 'Elevator' },
-  { key: 'garden', label: 'Garden' },
-];
-
 export const SearchFiltersBar = ({ 
   searchFilters, 
   onFiltersChange, 
   onFiltersApply 
 }: SearchFiltersBarProps) => {
+  const { t } = useLanguage();
+
+  const propertyTypes = [
+    { value: 'apartment', label: t('filters.property.apartment') },
+    { value: 'house', label: t('filters.property.house') },
+    { value: 'villa', label: t('filters.property.villa') },
+    { value: 'penthouse', label: t('filters.property.penthouse') },
+    { value: 'studio', label: t('filters.property.studio') }
+  ];
+
+  const priceOptions = [
+    { value: '500000', label: '₪500,000' },
+    { value: '750000', label: '₪750,000' },
+    { value: '1000000', label: '₪1,000,000' },
+    { value: '1500000', label: '₪1,500,000' },
+    { value: '2000000', label: '₪2,000,000' },
+    { value: '3000000', label: '₪3,000,000' },
+    { value: '5000000', label: '₪5,000,000+' }
+  ];
+
+  const bedroomOptions = [
+    { value: '1', label: '1+' },
+    { value: '2', label: '2+' },
+    { value: '3', label: '3+' },
+    { value: '4', label: '4+' },
+    { value: '5', label: '5+' }
+  ];
+
+  const featureOptions = [
+    { key: 'parking', label: t('filters.parking') },
+    { key: 'balcony', label: t('filters.balcony') },
+    { key: 'safeRoom', label: t('filters.safe.room') },
+    { key: 'bombShelter', label: t('filters.bomb.shelter') },
+    { key: 'elevator', label: t('filters.elevator') },
+    { key: 'garden', label: t('filters.garden') },
+  ];
+
   const handleFilterChange = (field: string, value: string) => {
     const updatedFilters = { ...searchFilters, [field]: value };
     
@@ -102,10 +105,10 @@ export const SearchFiltersBar = ({
         <div className="min-w-[140px]">
           <Select value={searchFilters.propertyType} onValueChange={(value) => handleFilterChange('propertyType', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder="Property type" />
+              <SelectValue placeholder={t('filters.property.type')} />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">Any</SelectItem>
+              <SelectItem value="any">{t('filters.property.any')}</SelectItem>
               {propertyTypes.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}
@@ -128,10 +131,10 @@ export const SearchFiltersBar = ({
         <div className="min-w-[120px]">
           <Select value={searchFilters.minPrice} onValueChange={(value) => handleFilterChange('minPrice', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder="Min price" />
+              <SelectValue placeholder={t('filters.price.min')} />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">No min</SelectItem>
+              <SelectItem value="any">{t('filters.price.no.min')}</SelectItem>
               {priceOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -145,10 +148,10 @@ export const SearchFiltersBar = ({
         <div className="min-w-[120px]">
           <Select value={searchFilters.maxPrice} onValueChange={(value) => handleFilterChange('maxPrice', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder="Max price" />
+              <SelectValue placeholder={t('filters.price.max')} />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">No max</SelectItem>
+              <SelectItem value="any">{t('filters.price.no.max')}</SelectItem>
               {priceOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -162,10 +165,10 @@ export const SearchFiltersBar = ({
         <div className="min-w-[110px]">
           <Select value={searchFilters.bedrooms} onValueChange={(value) => handleFilterChange('bedrooms', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder="Beds" />
+              <SelectValue placeholder={t('filters.bedrooms')} />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">Any</SelectItem>
+              <SelectItem value="any">{t('filters.property.any')}</SelectItem>
               {bedroomOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -180,7 +183,7 @@ export const SearchFiltersBar = ({
           className="h-10 bg-blue-600 hover:bg-blue-700 text-white px-6"
           onClick={onFiltersApply}
         >
-          Search
+          {t('filters.search')}
         </Button>
       </div>
 
