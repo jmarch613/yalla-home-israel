@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export const Header = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -57,35 +57,37 @@ export const Header = () => {
               </Button>
             )}
             
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="hidden md:flex">
-                    <Avatar className="w-6 h-6 mr-2">
-                      <AvatarFallback className="text-xs">
-                        {getInitials(user)}
-                      </AvatarFallback>
-                    </Avatar>
-                    Account
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="hidden md:flex"
-                onClick={() => navigate('/auth')}
-              >
-                <User className="w-4 h-4 mr-2" />
-                Sign in
-              </Button>
+            {!loading && (
+              user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="hidden md:flex">
+                      <Avatar className="w-6 h-6 mr-2">
+                        <AvatarFallback className="text-xs">
+                          {getInitials(user)}
+                        </AvatarFallback>
+                      </Avatar>
+                      Account
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="hidden md:flex"
+                  onClick={() => navigate('/auth')}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Sign in
+                </Button>
+              )
             )}
             
             <CurrencySelector />

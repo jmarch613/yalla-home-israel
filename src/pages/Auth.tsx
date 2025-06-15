@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { Home } from 'lucide-react';
+import { Home, Loader2 } from 'lucide-react';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,8 +26,54 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
+  const validateForm = () => {
+    if (!email || !password) {
+      toast({
+        title: "Validation Error",
+        description: "Email and password are required.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (!isLogin && (!firstName || !lastName)) {
+      toast({
+        title: "Validation Error",
+        description: "First name and last name are required for sign up.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Validation Error",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Validation Error",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -37,7 +83,13 @@ const Auth = () => {
           if (error.message.includes('Invalid login credentials')) {
             toast({
               title: "Login failed",
-              description: "Invalid email or password. Please try again.",
+              description: "Invalid email or password. Please check your credentials and try again.",
+              variant: "destructive"
+            });
+          } else if (error.message.includes('Email not confirmed')) {
+            toast({
+              title: "Email not confirmed",
+              description: "Please check your email and click the confirmation link before signing in.",
               variant: "destructive"
             });
           } else {
@@ -52,6 +104,7 @@ const Auth = () => {
             title: "Welcome back!",
             description: "You have successfully signed in."
           });
+          navigate('/');
         }
       } else {
         const { error } = await signUp(email, password, firstName, lastName);
@@ -60,6 +113,13 @@ const Auth = () => {
             toast({
               title: "Account exists",
               description: "An account with this email already exists. Please sign in instead.",
+              variant: "destructive"
+            });
+            setIsLogin(true);
+          } else if (error.message.includes('Password should be at least')) {
+            toast({
+              title: "Password too weak",
+              description: "Password should be at least 6 characters long.",
               variant: "destructive"
             });
           } else {
@@ -71,12 +131,15 @@ const Auth = () => {
           }
         } else {
           toast({
-            title: "Account created!",
-            description: "Please check your email to verify your account."
+            title: "Account created successfully!",
+            description: "Please check your email to verify your account before signing in."
           });
+          setIsLogin(true);
+          setPassword('');
         }
       }
     } catch (error) {
+      console.error('Auth error:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -87,11 +150,21 @@ const Auth = () => {
     }
   };
 
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setPassword('');
+    setFirstName('');
+    setLastName('');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex items-center space-x-2">
+          <div 
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => navigate('/')}
+          >
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">Y</span>
             </div>
@@ -122,60 +195,82 @@ const Auth = () => {
               {!isLogin && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">First Name *</Label>
                     <Input
                       id="firstName"
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       required={!isLogin}
+                      disabled={loading}
+                      placeholder="Enter your first name"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Last Name *</Label>
                     <Input
                       id="lastName"
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       required={!isLogin}
+                      disabled={loading}
+                      placeholder="Enter your last name"
                     />
                   </div>
                 </div>
               )}
               
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={loading}
+                  placeholder="Enter your email"
                 />
               </div>
               
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password *</Label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={loading}
+                  placeholder="Enter your password"
+                  minLength={6}
                 />
+                {!isLogin && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Password must be at least 6 characters long
+                  </p>
+                )}
               </div>
               
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                  </>
+                ) : (
+                  isLogin ? 'Sign In' : 'Sign Up'
+                )}
               </Button>
             </form>
             
             <div className="mt-4 text-center">
               <button
                 type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-sm text-primary hover:underline"
+                onClick={toggleMode}
+                disabled={loading}
+                className="text-sm text-primary hover:underline disabled:opacity-50"
               >
                 {isLogin 
                   ? "Don't have an account? Sign up"
@@ -188,6 +283,7 @@ const Auth = () => {
               <Button
                 variant="ghost"
                 onClick={() => navigate('/')}
+                disabled={loading}
                 className="text-sm"
               >
                 <Home className="w-4 h-4 mr-2" />
