@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
@@ -11,6 +10,7 @@ import { ArrowLeft, Bed, Bath, Square, MapPin, ExternalLink, ImageOff } from 'lu
 export default function PropertyDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [imageError, setImageError] = useState(false);
 
   const { data: property, isLoading, error } = useQuery({
@@ -40,6 +40,14 @@ export default function PropertyDetails() {
   const handleImageError = () => {
     console.log('Property detail image failed to load');
     setImageError(true);
+  };
+
+  const handleBackToSearch = () => {
+    // Get the referrer from the location state or default to search page
+    const searchParams = location.state?.searchParams || new URLSearchParams();
+    const searchPath = `/search?${searchParams.toString()}`;
+    console.log('Navigating back to search with params:', searchPath);
+    navigate(searchPath);
   };
 
   // Helper function to transform text from abbreviations to full phrases
@@ -74,7 +82,7 @@ export default function PropertyDetails() {
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Property Not Found</h2>
             <p className="text-gray-600 mb-6">The property you're looking for doesn't exist or has been removed.</p>
-            <Button onClick={() => navigate('/')}>
+            <Button onClick={handleBackToSearch}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Search
             </Button>
@@ -91,7 +99,7 @@ export default function PropertyDetails() {
         <div className="mb-6">
           <Button 
             variant="ghost" 
-            onClick={() => navigate('/')}
+            onClick={handleBackToSearch}
             className="mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

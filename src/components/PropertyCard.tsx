@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Bed, Bath, Square, MapPin, ImageOff, Sofa } from 'lucide-react';
@@ -22,10 +22,15 @@ interface PropertyCardProps {
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [imageError, setImageError] = useState(false);
 
   const handleViewDetails = () => {
-    navigate(`/property/${property.id}`);
+    // Pass current search parameters to maintain search context
+    const searchParams = new URLSearchParams(location.search);
+    navigate(`/property/${property.id}`, { 
+      state: { searchParams } 
+    });
   };
 
   const handleImageError = () => {
