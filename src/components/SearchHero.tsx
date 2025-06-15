@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { Autocomplete } from '@/components/ui/autocomplete';
-import { israeliCities } from '@/data/israeliCities';
+import { israeliLocations } from '@/data/israeliLocations';
 
 export const SearchHero = () => {
   const [location, setLocation] = useState('');
@@ -61,8 +61,8 @@ export const SearchHero = () => {
                   value={location}
                   onChange={setLocation}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="Enter location (e.g., Tel Aviv, Jerusalem)"
-                  suggestions={israeliCities}
+                  placeholder="Enter city, town, or neighborhood"
+                  suggestions={israeliLocations}
                 />
               </div>
               <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90 px-8">
