@@ -4,6 +4,9 @@ import { Control } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Autocomplete } from '@/components/ui/autocomplete';
+import { israeliLocations } from '@/data/israeliLocations';
+import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
 import { PropertyFormData } from './PropertyFormSchema';
 
 interface LocationSectionProps {
@@ -31,35 +34,43 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={control}
-            name="neighborhood"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Neighborhood</FormLabel>
-                <FormControl>
-                  <Input placeholder="City Center" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>City</FormLabel>
+              <FormControl>
+                <Autocomplete
+                  value={field.value || ''}
+                  onChange={field.onChange}
+                  placeholder="Enter city name"
+                  suggestions={israeliLocations}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={control}
-            name="city"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <Input placeholder="Jerusalem" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={control}
+          name="neighborhood"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Neighborhood</FormLabel>
+              <FormControl>
+                <Autocomplete
+                  value={field.value || ''}
+                  onChange={field.onChange}
+                  placeholder="Enter neighborhood name"
+                  suggestions={getNeighborhoodsForCity(extractCityFromLocation(field.value || ''))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </CardContent>
     </Card>
   );

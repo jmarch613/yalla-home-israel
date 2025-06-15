@@ -148,8 +148,8 @@ const ListProperty = () => {
           
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <BasicInfoSection control={form.control} />
               <LocationSection control={form.control} />
+              <BasicInfoSection control={form.control} />
               <PropertyDetailsSection control={form.control} />
               <FeaturesSection control={form.control} />
               <ImageUploadSection control={form.control} />
