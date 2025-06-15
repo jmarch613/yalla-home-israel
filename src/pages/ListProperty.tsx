@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -11,7 +10,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { propertySchema, type PropertyFormData } from '@/components/property-form/PropertyFormSchema';
 import { BasicInfoSection } from '@/components/property-form/BasicInfoSection';
-import { TypeSection } from '@/components/property-form/TypeSection';
 import { LocationSection } from '@/components/property-form/LocationSection';
 import { PropertyDetailsSection } from '@/components/property-form/PropertyDetailsSection';
 import { FeaturesSection } from '@/components/property-form/FeaturesSection';
@@ -160,7 +158,6 @@ const ListProperty = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <LocationSection control={form.control} />
-              <TypeSection control={form.control} />
               <PropertyDetailsSection control={form.control} />
               <FeaturesSection control={form.control} />
               <ImageUploadSection control={form.control} />
