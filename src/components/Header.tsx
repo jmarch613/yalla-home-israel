@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Heart, User, Menu, LogOut } from 'lucide-react';
+import { Heart, User, Menu, LogOut, List } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { CurrencySelector } from '@/components/CurrencySelector';
 import {
@@ -51,10 +51,21 @@ export const Header = () => {
           
           <div className="flex items-center space-x-4">
             {user && (
-              <Button variant="ghost" size="sm" className="hidden md:flex">
-                <Heart className="w-4 h-4 mr-2" />
-                Saved
-              </Button>
+              <>
+                <Button variant="ghost" size="sm" className="hidden md:flex">
+                  <Heart className="w-4 h-4 mr-2" />
+                  Saved
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="hidden md:flex"
+                  onClick={() => navigate('/my-properties')}
+                >
+                  <List className="w-4 h-4 mr-2" />
+                  My Properties
+                </Button>
+              </>
             )}
             
             {!loading && (
