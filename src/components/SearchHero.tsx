@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, MapPin } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
+import { Autocomplete } from '@/components/ui/autocomplete';
+import { israeliCities } from '@/data/israeliCities';
 
 export const SearchHero = () => {
   const [location, setLocation] = useState('');
@@ -55,14 +56,13 @@ export const SearchHero = () => {
             </div>
             
             <div className="flex flex-col md:flex-row gap-4 mb-6">
-              <div className="relative flex-1">
-                <MapPin className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                <Input
-                  placeholder="Enter location (e.g., Tel Aviv, Jerusalem)"
+              <div className="flex-1">
+                <Autocomplete
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={setLocation}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-10"
+                  placeholder="Enter location (e.g., Tel Aviv, Jerusalem)"
+                  suggestions={israeliCities}
                 />
               </div>
               <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90 px-8">
