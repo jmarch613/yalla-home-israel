@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -21,16 +21,30 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Debounced filtering function
+    const debouncedFilter = useCallback(
+      (() => {
+        let timeoutId: NodeJS.Timeout;
+        return (searchValue: string) => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            if (searchValue.trim().length >= 2) {
+              const filtered = suggestions.filter(suggestion =>
+                suggestion.toLowerCase().includes(searchValue.toLowerCase())
+              ).slice(0, 6); // Reduced to 6 suggestions for cleaner UI
+              setFilteredSuggestions(filtered);
+            } else {
+              setFilteredSuggestions([]);
+            }
+          }, 150); // 150ms debounce
+        };
+      })(),
+      [suggestions]
+    );
+
     useEffect(() => {
-      if (value.trim().length > 0) {
-        const filtered = suggestions.filter(suggestion =>
-          suggestion.toLowerCase().includes(value.toLowerCase())
-        ).slice(0, 8); // Limit to 8 suggestions
-        setFilteredSuggestions(filtered);
-      } else {
-        setFilteredSuggestions([]);
-      }
-    }, [value, suggestions]);
+      debouncedFilter(value);
+    }, [value, debouncedFilter]);
 
     const handleSelect = (suggestion: string) => {
       onChange(suggestion);
@@ -39,19 +53,29 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value);
-      if (!open && e.target.value.trim().length > 0) {
+      const newValue = e.target.value;
+      onChange(newValue);
+      
+      // Only open if we have enough characters and suggestions
+      if (newValue.trim().length >= 2) {
         setOpen(true);
-      }
-      if (e.target.value.trim().length === 0) {
+      } else {
         setOpen(false);
       }
     };
 
     const handleInputFocus = () => {
-      if (value.trim().length > 0) {
+      // Only open if we already have enough text
+      if (value.trim().length >= 2 && filteredSuggestions.length > 0) {
         setOpen(true);
       }
+    };
+
+    const handleInputBlur = () => {
+      // Delay closing to allow for selection
+      setTimeout(() => {
+        setOpen(false);
+      }, 200);
     };
 
     return (
@@ -65,6 +89,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
               onChange={handleInputChange}
               onKeyPress={onKeyPress}
               onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               placeholder={placeholder}
               className={cn("pl-10", className)}
               autoComplete="off"
@@ -73,23 +98,26 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
         </PopoverTrigger>
         <PopoverContent
           onOpenAutoFocus={(e) => e.preventDefault()}
-          className="w-[var(--radix-popover-trigger-width)] p-0"
+          className="w-[var(--radix-popover-trigger-width)] p-0 bg-white border shadow-lg"
           align="start"
+          sideOffset={4}
         >
           <Command>
             <CommandList>
               {filteredSuggestions.length === 0 ? (
-                <CommandEmpty>No locations found.</CommandEmpty>
+                <CommandEmpty className="py-3 text-sm text-gray-500">
+                  {value.trim().length < 2 ? 'Type at least 2 characters to search' : 'No locations found.'}
+                </CommandEmpty>
               ) : (
                 <CommandGroup>
                   {filteredSuggestions.map((suggestion) => (
                     <CommandItem
                       key={suggestion}
                       onSelect={() => handleSelect(suggestion)}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:bg-gray-50 px-3 py-2"
                     >
-                      <MapPin className="mr-2 h-4 w-4" />
-                      {suggestion}
+                      <MapPin className="mr-2 h-4 w-4 text-gray-400" />
+                      <span className="text-sm">{suggestion}</span>
                     </CommandItem>
                   ))}
                 </CommandGroup>
