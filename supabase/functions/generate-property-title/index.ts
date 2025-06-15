@@ -45,18 +45,25 @@ ${propertyData.heating ? '- Heating' : ''}
 ${propertyData.furnished ? '- Furnished' : ''}
 ${propertyData.pets_allowed ? '- Pets allowed' : ''}
 
+IMPORTANT INSTRUCTIONS:
+- DO NOT use abbreviations like "3BR", "2BA", or similar
+- ALWAYS write out full words: "3 bedroom", "2 bathroom"
+- Use complete, descriptive language
+- Avoid any shortened forms or real estate jargon abbreviations
+
 Create a catchy, professional title that would attract potential buyers or renters. The title should be:
 - Concise and impactful (maximum 8-10 words)
 - Include key selling points
 - Mention the location
 - Be engaging and descriptive
+- Use FULL WORDS, never abbreviations
 
 Examples of good titles:
-- "Luxury 3BR Apartment with Balcony in Tel Aviv"
+- "Luxury 3 Bedroom Apartment with Balcony in Tel Aviv"
 - "Modern Furnished Studio in Jerusalem Center"
-- "Spacious Villa with Garden in Herzliya"
+- "Spacious 2 Bedroom Villa with Garden in Herzliya"
 
-Write only the title, nothing else.`;
+Write only the title, nothing else. Do not use quotation marks in your response.`;
 
     console.log('Making request to OpenAI API...');
 
@@ -90,7 +97,7 @@ Write only the title, nothing else.`;
     const data = await response.json();
     console.log('API response data:', data);
     
-    const title = data.choices[0].message.content.trim();
+    const title = data.choices[0].message.content.trim().replace(/^["']|["']$/g, '');
     console.log('Generated title:', title);
 
     return new Response(JSON.stringify({ title }), {

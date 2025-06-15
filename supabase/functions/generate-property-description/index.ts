@@ -48,9 +48,16 @@ ${propertyData.heating ? '- Heating' : ''}
 ${propertyData.furnished ? '- Furnished' : ''}
 ${propertyData.pets_allowed ? '- Pets allowed' : ''}
 
+IMPORTANT WRITING INSTRUCTIONS:
+- DO NOT use any abbreviations like "3BR", "2BA", "sqm", "A/C", or similar
+- ALWAYS write out full words: "3 bedroom", "2 bathroom", "square meters", "air conditioning"
+- Use complete, descriptive language throughout
+- Avoid real estate jargon and shortened forms
+- Write in a natural, flowing style with full descriptive phrases
+
 Write a compelling, professional property description that includes:
 
-1. Property highlights and key features
+1. Property highlights and key features (using full descriptive words)
 2. Location benefits and neighborhood character
 3. Nearby amenities such as:
    - Shopping centers, markets, and restaurants
@@ -67,7 +74,9 @@ Write a compelling, professional property description that includes:
 6. Places of worship nearby (synagogues, mosques, churches, etc.)
 7. Business districts and employment centers
 
-Keep the description engaging, informative, and around 150-200 words. Focus on what makes this location special and convenient for potential ${propertyData.listing_type === 'rent' ? 'tenants' : 'buyers'}. Use warm, inviting language that highlights both the property and its strategic location advantages.`;
+Keep the description engaging, informative, and around 150-200 words. Focus on what makes this location special and convenient for potential ${propertyData.listing_type === 'rent' ? 'tenants' : 'buyers'}. Use warm, inviting language that highlights both the property and its strategic location advantages.
+
+Remember: Use ONLY full words and complete descriptions. No abbreviations whatsoever.`;
 
     console.log('Making request to OpenAI API...');
 
