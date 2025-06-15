@@ -31,6 +31,8 @@ export const propertySchema = z.object({
   heating: z.boolean().default(false),
   furnished: z.boolean().default(false),
   pets_allowed: z.boolean().default(false),
+  safe_room: z.boolean().default(false),
+  bomb_shelter: z.boolean().default(false),
   images: z.array(z.string()).optional(),
   floorplan_url: z.string().optional(),
 });

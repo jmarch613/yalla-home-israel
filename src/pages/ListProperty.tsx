@@ -37,6 +37,8 @@ const ListProperty = () => {
       heating: false,
       furnished: false,
       pets_allowed: false,
+      safe_room: false,
+      bomb_shelter: false,
       images: [],
     },
   });
@@ -93,6 +95,8 @@ const ListProperty = () => {
         heating: data.heating || false,
         furnished: data.furnished || false,
         pets_allowed: data.pets_allowed || false,
+        safe_room: data.safe_room || false,
+        bomb_shelter: data.bomb_shelter || false,
         images: data.images || [],
         floorplan_url: data.floorplan_url || null,
       };
