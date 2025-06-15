@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Control } from 'react-hook-form';
+import { Control, useWatch } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,14 @@ interface LocationSectionProps {
 }
 
 export const LocationSection = ({ control }: LocationSectionProps) => {
+  // Watch the city field to get neighborhoods
+  const cityValue = useWatch({
+    control,
+    name: 'city',
+  });
+
+  const availableNeighborhoods = getNeighborhoodsForCity(extractCityFromLocation(cityValue || ''));
+
   return (
     <Card>
       <CardHeader>
@@ -64,7 +72,7 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
                   value={field.value || ''}
                   onChange={field.onChange}
                   placeholder="Enter neighborhood name"
-                  suggestions={getNeighborhoodsForCity(extractCityFromLocation(field.value || ''))}
+                  suggestions={availableNeighborhoods}
                 />
               </FormControl>
               <FormMessage />
