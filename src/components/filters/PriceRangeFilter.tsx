@@ -36,11 +36,12 @@ export const PriceRangeFilter = ({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Label className="text-xs text-gray-600">Minimum price</Label>
-            <Select value={minPrice} onValueChange={onMinPriceChange}>
+            <Select value={minPrice} onValueChange={(value) => onMinPriceChange(value === 'any' ? '' : value)}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="No min" />
               </SelectTrigger>
               <SelectContent className="bg-white border shadow-lg z-50">
+                <SelectItem value="any">Any</SelectItem>
                 {priceOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
@@ -51,11 +52,12 @@ export const PriceRangeFilter = ({
           </div>
           <div>
             <Label className="text-xs text-gray-600">Maximum price</Label>
-            <Select value={maxPrice} onValueChange={onMaxPriceChange}>
+            <Select value={maxPrice} onValueChange={(value) => onMaxPriceChange(value === 'any' ? '' : value)}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="No max" />
               </SelectTrigger>
               <SelectContent className="bg-white border shadow-lg z-50">
+                <SelectItem value="any">Any</SelectItem>
                 {priceOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}

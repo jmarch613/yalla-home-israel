@@ -26,11 +26,12 @@ export const BedroomsFilter = ({
         <CardTitle className="text-base">Bedrooms</CardTitle>
       </CardHeader>
       <CardContent>
-        <Select value={bedrooms} onValueChange={onBedroomsChange}>
+        <Select value={bedrooms} onValueChange={(value) => onBedroomsChange(value === 'any' ? '' : value)}>
           <SelectTrigger className="h-9">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
+            <SelectItem value="any">Any</SelectItem>
             {bedroomOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}

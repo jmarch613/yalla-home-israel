@@ -74,6 +74,7 @@ export const SearchFiltersSection = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
+            <SelectItem value="any">Any</SelectItem>
             <SelectItem value="this-area">This area only</SelectItem>
             <SelectItem value="1-mile">Within 1 mile</SelectItem>
             <SelectItem value="3-miles">Within 3 miles</SelectItem>
@@ -85,11 +86,12 @@ export const SearchFiltersSection = ({
       {/* Property types - moved before neighborhood */}
       <div>
         <Label className="text-sm font-medium text-gray-700 mb-2 block">Property types</Label>
-        <Select value={searchFilters.propertyType} onValueChange={(value) => onFilterChange('propertyType', value)}>
+        <Select value={searchFilters.propertyType} onValueChange={(value) => onFilterChange('propertyType', value === 'any' ? '' : value)}>
           <SelectTrigger className="h-12">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
+            <SelectItem value="any">Any</SelectItem>
             {propertyTypes.map((type) => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}

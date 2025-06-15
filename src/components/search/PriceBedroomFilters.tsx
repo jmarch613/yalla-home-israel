@@ -46,11 +46,12 @@ export const PriceBedroomFilters = ({
       <div className="md:col-span-2">
         <Label className="text-sm font-medium text-gray-700 mb-2 block">Price range (₪)</Label>
         <div className="grid grid-cols-2 gap-2">
-          <Select value={searchFilters.minPrice} onValueChange={(value) => onFilterChange('minPrice', value)}>
+          <Select value={searchFilters.minPrice} onValueChange={(value) => onFilterChange('minPrice', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-12">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
+              <SelectItem value="any">Any</SelectItem>
               {priceOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -58,11 +59,12 @@ export const PriceBedroomFilters = ({
               ))}
             </SelectContent>
           </Select>
-          <Select value={searchFilters.maxPrice} onValueChange={(value) => onFilterChange('maxPrice', value)}>
+          <Select value={searchFilters.maxPrice} onValueChange={(value) => onFilterChange('maxPrice', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-12">
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
+              <SelectItem value="any">Any</SelectItem>
               {priceOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -77,11 +79,12 @@ export const PriceBedroomFilters = ({
       <div className="md:col-span-2">
         <Label className="text-sm font-medium text-gray-700 mb-2 block">No. of bedrooms</Label>
         <div className="grid grid-cols-2 gap-2">
-          <Select value={searchFilters.bedrooms} onValueChange={(value) => onFilterChange('bedrooms', value)}>
+          <Select value={searchFilters.bedrooms} onValueChange={(value) => onFilterChange('bedrooms', value === 'any' ? '' : value)}>
             <SelectTrigger className="h-12">
               <SelectValue placeholder="No min" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
+              <SelectItem value="any">Any</SelectItem>
               {bedroomOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -94,6 +97,7 @@ export const PriceBedroomFilters = ({
               <SelectValue placeholder="No max" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg z-50">
+              <SelectItem value="any">Any</SelectItem>
               {bedroomOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}

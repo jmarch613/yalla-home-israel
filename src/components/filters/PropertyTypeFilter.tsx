@@ -26,11 +26,12 @@ export const PropertyTypeFilter = ({
         <CardTitle className="text-base">Property type</CardTitle>
       </CardHeader>
       <CardContent>
-        <Select value={propertyType} onValueChange={onPropertyTypeChange}>
+        <Select value={propertyType} onValueChange={(value) => onPropertyTypeChange(value === 'any' ? '' : value)}>
           <SelectTrigger className="h-9">
             <SelectValue placeholder="Any" />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
+            <SelectItem value="any">Any</SelectItem>
             {propertyTypes.map((type) => (
               <SelectItem key={type.value} value={type.value}>
                 {type.label}
