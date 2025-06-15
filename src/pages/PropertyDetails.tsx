@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -41,11 +40,17 @@ export default function PropertyDetails() {
   });
 
   const handleBackToSearch = () => {
-    // Get the search params string from the location state or default to search page
+    // Get the search params string and scroll position from the location state
     const searchParamsString = location.state?.searchParams || '';
+    const scrollPosition = location.state?.scrollPosition || 0;
     const searchPath = searchParamsString ? `/search${searchParamsString}` : '/search';
+    
     console.log('Navigating back to search with path:', searchPath);
-    navigate(searchPath);
+    console.log('Will restore scroll position:', scrollPosition);
+    
+    navigate(searchPath, {
+      state: { restoreScrollPosition: scrollPosition }
+    });
   };
 
   // Helper function to transform text from abbreviations to full phrases

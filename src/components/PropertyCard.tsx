@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,11 +25,19 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const [imageError, setImageError] = useState(false);
 
   const handleViewDetails = () => {
+    // Capture current scroll position
+    const scrollPosition = window.scrollY;
+    
     // Convert search parameters to string to avoid cloning issues
     const searchParamsString = location.search;
     console.log('Navigating to property details with search params:', searchParamsString);
+    console.log('Current scroll position:', scrollPosition);
+    
     navigate(`/property/${property.id}`, { 
-      state: { searchParams: searchParamsString } 
+      state: { 
+        searchParams: searchParamsString,
+        scrollPosition: scrollPosition
+      } 
     });
   };
 

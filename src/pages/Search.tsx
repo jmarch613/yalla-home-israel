@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { PropertyGrid } from '@/components/PropertyGrid';
 import { SearchHeader } from '@/components/search/SearchHeader';
@@ -9,6 +8,7 @@ import { PriceBedroomFilters } from '@/components/search/PriceBedroomFilters';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [searchFilters, setSearchFilters] = useState({
     location: '',
     neighborhood: '',
@@ -43,6 +43,18 @@ const Search = () => {
     setAppliedFilters(initialFilters);
     setSearchLocation(location);
   }, [searchParams]);
+
+  // Restore scroll position when returning from property details
+  useEffect(() => {
+    const restoreScrollPosition = location.state?.restoreScrollPosition;
+    if (restoreScrollPosition) {
+      console.log('Restoring scroll position to:', restoreScrollPosition);
+      // Use setTimeout to ensure the page has rendered before scrolling
+      setTimeout(() => {
+        window.scrollTo(0, restoreScrollPosition);
+      }, 100);
+    }
+  }, [location.state]);
 
   const handleFiltersChange = (filters: typeof searchFilters) => {
     setSearchFilters(filters);
