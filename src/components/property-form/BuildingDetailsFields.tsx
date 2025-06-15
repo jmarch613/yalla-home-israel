@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Control } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -19,12 +18,12 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
   // Generate total floors options 1-50
   const totalFloorsOptions = Array.from({ length: 50 }, (_, i) => i + 1);
   
-  // Generate decade options from 1800s to present
+  // Generate decade options from present day backwards to 1800s
   const currentYear = new Date().getFullYear();
   const currentDecade = Math.floor(currentYear / 10) * 10;
   const decadeOptions = [];
   
-  for (let decade = 1800; decade <= currentDecade; decade += 10) {
+  for (let decade = currentDecade; decade >= 1800; decade -= 10) {
     decadeOptions.push(`${decade}s`);
   }
 
