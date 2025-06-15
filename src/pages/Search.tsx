@@ -6,7 +6,6 @@ import { SearchHeader } from '@/components/search/SearchHeader';
 import { SearchFiltersBar } from '@/components/search/SearchFiltersBar';
 import { BackToTopButton } from '@/components/BackToTopButton';
 import { CurrencySelector } from '@/components/CurrencySelector';
-import { LanguageSelector } from '@/components/LanguageSelector';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -78,9 +77,8 @@ const Search = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      {/* --- Language and currency selectors at very top, right aligned --- */}
+      {/* Currency selector at top right */}
       <div className="container mx-auto px-4 mt-2 flex justify-end gap-2">
-        <LanguageSelector />
         <CurrencySelector />
       </div>
 
