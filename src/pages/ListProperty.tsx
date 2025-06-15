@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -17,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import type { TablesInsert } from '@/integrations/supabase/types';
 
 const propertySchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -84,12 +84,39 @@ const ListProperty = () => {
     setIsSubmitting(true);
 
     try {
+      // Create properly typed insert data
+      const insertData: TablesInsert<'property_listings'> = {
+        user_id: user.id,
+        title: data.title,
+        description: data.description || null,
+        price: data.price || null,
+        property_type: data.property_type,
+        listing_type: data.listing_type,
+        address: data.address,
+        neighborhood: data.neighborhood || null,
+        city: data.city,
+        bedrooms: data.bedrooms || null,
+        bathrooms: data.bathrooms || null,
+        area: data.area || null,
+        floor_number: data.floor_number || null,
+        total_floors: data.total_floors || null,
+        year_built: data.year_built || null,
+        parking_spots: data.parking_spots || 0,
+        contact_name: data.contact_name,
+        contact_phone: data.contact_phone,
+        contact_email: data.contact_email || null,
+        balcony: data.balcony || false,
+        elevator: data.elevator || false,
+        garden: data.garden || false,
+        air_conditioning: data.air_conditioning || false,
+        heating: data.heating || false,
+        furnished: data.furnished || false,
+        pets_allowed: data.pets_allowed || false,
+      };
+
       const { error } = await supabase
         .from('property_listings')
-        .insert({
-          ...data,
-          user_id: user.id,
-        });
+        .insert(insertData);
 
       if (error) throw error;
 
