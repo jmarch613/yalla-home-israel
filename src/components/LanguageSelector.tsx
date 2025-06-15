@@ -1,9 +1,8 @@
-
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 const LANGS = [
-  { code: "en", label: "English", emoji: "🇬🇧" },
+  { code: "en", label: "English", emoji: "EN" },
   { code: "he", label: "עברית", emoji: "🇮🇱" },
   { code: "fr", label: "Français", emoji: "🇫🇷" },
   { code: "ru", label: "Русский", emoji: "🇷🇺" },
