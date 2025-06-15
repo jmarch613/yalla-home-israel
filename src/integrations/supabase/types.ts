@@ -168,6 +168,42 @@ export type Database = {
         }
         Relationships: []
       }
+      scraping_sessions: {
+        Row: {
+          completed_at: string | null
+          completed_pages: number | null
+          created_at: string
+          id: string
+          properties_found: number | null
+          source_url: string
+          started_at: string
+          status: string
+          total_pages: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_pages?: number | null
+          created_at?: string
+          id?: string
+          properties_found?: number | null
+          source_url: string
+          started_at?: string
+          status: string
+          total_pages?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          completed_pages?: number | null
+          created_at?: string
+          id?: string
+          properties_found?: number | null
+          source_url?: string
+          started_at?: string
+          status?: string
+          total_pages?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
