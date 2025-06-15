@@ -19,9 +19,14 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
   // Generate total floors options 1-50
   const totalFloorsOptions = Array.from({ length: 50 }, (_, i) => i + 1);
   
-  // Generate year options from 1700 to current year
+  // Generate decade options from 1800s to present
   const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({ length: currentYear - 1699 }, (_, i) => currentYear - i);
+  const currentDecade = Math.floor(currentYear / 10) * 10;
+  const decadeOptions = [];
+  
+  for (let decade = 1800; decade <= currentDecade; decade += 10) {
+    decadeOptions.push(`${decade}s`);
+  }
 
   return (
     <div className="grid grid-cols-4 gap-4">
@@ -84,16 +89,16 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
         render={({ field }) => (
           <FormItem>
             <FormLabel>Year Built</FormLabel>
-            <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+            <Select onValueChange={(value) => field.onChange(value)} value={field.value?.toString()}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select year" />
+                  <SelectValue placeholder="Select decade" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {yearOptions.map((year) => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
+                {decadeOptions.map((decade) => (
+                  <SelectItem key={decade} value={decade}>
+                    {decade}
                   </SelectItem>
                 ))}
               </SelectContent>
