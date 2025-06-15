@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { PropertyCard } from '@/components/PropertyCard';
 import { useScrapedProperties, useTriggerScraping } from '@/hooks/useScrapedProperties';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, Database } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { PropertyGridHeader } from './PropertyGridHeader';
+import { PropertyGridEmptyState } from './PropertyGridEmptyState';
+import { transformProperties, filterProperties, sortProperties } from '@/utils/propertyFiltering';
 
 interface PropertyGridProps {
   filters: any;
@@ -40,110 +42,22 @@ export const PropertyGrid = ({ filters, sort = 'most-recent', onSortChange }: Pr
     }
   };
 
-  // Transform scraped properties to match PropertyCard interface
-  const allProperties = scrapedProperties?.map((property) => ({
-    id: property.id,
-    title: property.title || 'Property Title',
-    location: property.address || 'Jerusalem',
-    price: property.price || '₪0',
-    type: 'sale',
-    bedrooms: property.bedrooms || 0,
-    bathrooms: property.bathrooms || 0,
-    area: property.area || 0,
-    image: property.image_url || '/placeholder.svg',
-    features: [
-      property.property_type || 'Property',
-      property.neighborhood || 'Jerusalem',
-      'Recently Updated'
-    ].filter(Boolean),
-    created_at: property.created_at
-  })) || [];
-
-  // Apply filters to the properties
-  let filteredProperties = allProperties.filter((property) => {
-    console.log('Filtering property:', property.title, 'with filters:', filters);
-    
-    // Location filter
-    if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) {
-      return false;
-    }
-
-    // Neighborhood filter
-    if (filters.neighborhood && !property.features.some(feature => 
-      feature.toLowerCase().includes(filters.neighborhood.toLowerCase())
-    )) {
-      return false;
-    }
-
-    // Property type filter
-    if (filters.propertyType && !property.features.some(feature => 
-      feature.toLowerCase().includes(filters.propertyType.toLowerCase())
-    )) {
-      return false;
-    }
-
-    // Bedrooms filter
-    if (filters.bedrooms && property.bedrooms < parseInt(filters.bedrooms)) {
-      return false;
-    }
-
-    // Bathrooms filter
-    if (filters.bathrooms && property.bathrooms < parseInt(filters.bathrooms)) {
-      return false;
-    }
-
-    // Price range filters
-    if (filters.minPrice || filters.maxPrice) {
-      const priceString = property.price.replace(/[₪,]/g, '');
-      const price = parseInt(priceString);
-      
-      if (filters.minPrice && price < parseInt(filters.minPrice)) {
-        return false;
-      }
-      
-      if (filters.maxPrice && price > parseInt(filters.maxPrice)) {
-        return false;
-      }
-    }
-
-    // Feature filters - for now we'll simulate these as most properties don't have this data
-    // In a real app, this would check actual property features
-    if (filters.features) {
-      const hasActiveFeatureFilters = Object.values(filters.features).some(Boolean);
-      if (hasActiveFeatureFilters) {
-        // For demo purposes, we'll include properties but in reality 
-        // this would filter based on actual property feature data
-        console.log('Feature filters applied:', filters.features);
-      }
-    }
-
-    return true;
-  });
-
-  // ==== SORTING LOGIC ====
-  filteredProperties = [...filteredProperties];
-  if (sort === 'most-recent') {
-    filteredProperties.sort((a, b) => {
-      // Sort by created_at, newest first
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    });
-  } else if (sort === 'price-low-high') {
-    filteredProperties.sort((a, b) => {
-      // Remove currency and commas, compare as numbers
-      const priceA = parseInt(a.price.replace(/[₪,]/g, '')) || 0;
-      const priceB = parseInt(b.price.replace(/[₪,]/g, '')) || 0;
-      return priceA - priceB;
-    });
-  }
-  // Other sort options ("Price: High to Low", "Size: Largest First") - can add later
-
-  console.log(`Filtered ${filteredProperties.length} properties from ${allProperties.length} total`);
+  // Prepare data
+  const allProperties = transformProperties(scrapedProperties);
+  let filteredProperties = filterProperties(allProperties, filters);
+  filteredProperties = sortProperties(filteredProperties, sort);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-gray-500" />
+          <span className="animate-spin mx-auto mb-4 text-gray-500">
+            {/* Loading spinner icon */}
+            <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12A8 8 0 0 1 20 12"></path>
+            </svg>
+          </span>
           <p className="text-gray-600">Loading properties...</p>
         </div>
       </div>
@@ -154,67 +68,34 @@ export const PropertyGrid = ({ filters, sort = 'most-recent', onSortChange }: Pr
     return (
       <div className="text-center py-12">
         <p className="text-red-600 mb-4">Failed to load properties</p>
-        <Button onClick={() => refetch()} variant="outline">
-          <RefreshCw className="w-4 h-4 mr-2" />
+        <button
+          onClick={() => refetch()}
+          className="inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium border-gray-300 hover:bg-gray-100"
+        >
+          <svg className="w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12A8 8 0 0 1 20 12"></path>
+          </svg>
           Try Again
-        </Button>
+        </button>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <p className="text-gray-700 font-medium">
-            {filteredProperties.length} properties
-            {filteredProperties.length !== allProperties.length && (
-              <span className="text-sm font-normal text-gray-500 ml-2">
-                (filtered from {allProperties.length} total)
-              </span>
-            )}
-          </p>
-          <Button 
-            onClick={handleScrapeData}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <Database className="w-4 h-4" />
-            Update Data
-          </Button>
-        </div>
-        <select
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-          value={sort}
-          onChange={(e) => onSortChange(e.target.value)}
-        >
-          <option value="most-recent">Sort by: Most Recent</option>
-          <option value="price-low-high">Price: Low to High</option>
-          <option value="price-high-low" disabled>Price: High to Low</option>
-          <option value="size-largest" disabled>Size: Largest First</option>
-        </select>
-      </div>
-      
+      <PropertyGridHeader
+        filteredCount={filteredProperties.length}
+        totalCount={allProperties.length}
+        onUpdateData={handleScrapeData}
+        sort={sort}
+        onSortChange={onSortChange}
+      />
       {filteredProperties.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border">
-          <Database className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {allProperties.length === 0 ? 'No properties found' : 'No properties match your filters'}
-          </h3>
-          <p className="text-gray-600 mb-4">
-            {allProperties.length === 0 
-              ? 'Click "Update Data" to scrape the latest properties from remaxjerusalem.com'
-              : 'Try adjusting your search filters to see more results'
-            }
-          </p>
-          {allProperties.length === 0 && (
-            <Button onClick={handleScrapeData}>
-              <Database className="w-4 h-4 mr-2" />
-              Scrape Properties
-            </Button>
-          )}
-        </div>
+        <PropertyGridEmptyState
+          hasAnyProperties={allProperties.length > 0}
+          onScrape={handleScrapeData}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredProperties.map((property) => (
