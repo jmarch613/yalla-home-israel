@@ -45,6 +45,8 @@ export interface PropertyListing {
   heating: boolean;
   furnished: boolean;
   pets_allowed: boolean;
+  images: string[];
+  floorplan_url: string | null;
   created_at: string;
   updated_at: string;
 }

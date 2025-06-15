@@ -15,6 +15,7 @@ import { LocationSection } from '@/components/property-form/LocationSection';
 import { PropertyDetailsSection } from '@/components/property-form/PropertyDetailsSection';
 import { FeaturesSection } from '@/components/property-form/FeaturesSection';
 import { ContactSection } from '@/components/property-form/ContactSection';
+import { ImageUploadSection } from '@/components/property-form/ImageUploadSection';
 import { supabase } from '@/integrations/supabase/client';
 
 const ListProperty = () => {
@@ -36,6 +37,7 @@ const ListProperty = () => {
       heating: false,
       furnished: false,
       pets_allowed: false,
+      images: [],
     },
   });
 
@@ -81,6 +83,8 @@ const ListProperty = () => {
         heating: data.heating || false,
         furnished: data.furnished || false,
         pets_allowed: data.pets_allowed || false,
+        images: data.images || [],
+        floorplan_url: data.floorplan_url || null,
       };
 
       const { error } = await supabase
@@ -143,6 +147,7 @@ const ListProperty = () => {
               <LocationSection control={form.control} />
               <PropertyDetailsSection control={form.control} />
               <FeaturesSection control={form.control} />
+              <ImageUploadSection control={form.control} />
               <ContactSection control={form.control} />
 
               <div className="flex space-x-4">
