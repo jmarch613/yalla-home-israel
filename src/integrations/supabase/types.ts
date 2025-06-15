@@ -17,6 +17,7 @@ export type Database = {
           balcony: boolean | null
           bathrooms: number | null
           bedrooms: number | null
+          bomb_shelter: boolean | null
           city: string
           contact_email: string | null
           contact_name: string
@@ -26,6 +27,7 @@ export type Database = {
           description: string | null
           elevator: boolean | null
           floor_number: number | null
+          floorplan_url: string | null
           furnished: boolean | null
           garden: boolean | null
           heating: boolean | null
@@ -38,6 +40,7 @@ export type Database = {
           pets_allowed: boolean | null
           price: number | null
           property_type: string
+          safe_room: boolean | null
           status: string
           title: string
           total_floors: number | null
@@ -52,6 +55,7 @@ export type Database = {
           balcony?: boolean | null
           bathrooms?: number | null
           bedrooms?: number | null
+          bomb_shelter?: boolean | null
           city: string
           contact_email?: string | null
           contact_name: string
@@ -61,6 +65,7 @@ export type Database = {
           description?: string | null
           elevator?: boolean | null
           floor_number?: number | null
+          floorplan_url?: string | null
           furnished?: boolean | null
           garden?: boolean | null
           heating?: boolean | null
@@ -73,6 +78,7 @@ export type Database = {
           pets_allowed?: boolean | null
           price?: number | null
           property_type: string
+          safe_room?: boolean | null
           status?: string
           title: string
           total_floors?: number | null
@@ -87,6 +93,7 @@ export type Database = {
           balcony?: boolean | null
           bathrooms?: number | null
           bedrooms?: number | null
+          bomb_shelter?: boolean | null
           city?: string
           contact_email?: string | null
           contact_name?: string
@@ -96,6 +103,7 @@ export type Database = {
           description?: string | null
           elevator?: boolean | null
           floor_number?: number | null
+          floorplan_url?: string | null
           furnished?: boolean | null
           garden?: boolean | null
           heating?: boolean | null
@@ -108,6 +116,7 @@ export type Database = {
           pets_allowed?: boolean | null
           price?: number | null
           property_type?: string
+          safe_room?: boolean | null
           status?: string
           title?: string
           total_floors?: number | null
