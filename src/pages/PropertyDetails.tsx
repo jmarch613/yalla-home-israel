@@ -37,15 +37,30 @@ const PropertyDetails = () => {
   const handleBackClick = () => {
     console.log('Back button clicked');
     console.log('Location state:', location.state);
+    console.log('Current pathname:', location.pathname);
+    console.log('Document referrer:', document.referrer);
     
+    // Check if we have search params to return to search page
     if (location.state?.searchParams) {
       console.log('Navigating back to search with params:', location.state.searchParams);
       navigate(`/search${location.state.searchParams}`, { 
         state: { restoreScrollPosition: location.state.scrollPosition } 
       });
-    } else {
-      console.log('No search params found, using browser back');
-      navigate(-1);
+    } 
+    // Check if referrer suggests we came from my-properties
+    else if (document.referrer && document.referrer.includes('/my-properties')) {
+      console.log('Navigating back to my-properties');
+      navigate('/my-properties');
+    }
+    // Check if referrer suggests we came from search
+    else if (document.referrer && document.referrer.includes('/search')) {
+      console.log('Navigating back to search');
+      navigate('/search');
+    }
+    // Default fallback - go to home page
+    else {
+      console.log('No specific referrer found, navigating to home');
+      navigate('/');
     }
   };
 
@@ -73,6 +88,20 @@ const PropertyDetails = () => {
   // Helper function to get listing URL
   const getListingUrl = (prop: any): string | null => {
     return isUserProperty(prop) ? null : prop.listing_url;
+  };
+
+  // Helper function to get back button text
+  const getBackButtonText = (): string => {
+    if (location.state?.searchParams) {
+      return 'Back to Search';
+    }
+    if (document.referrer && document.referrer.includes('/my-properties')) {
+      return 'Back to My Properties';
+    }
+    if (document.referrer && document.referrer.includes('/search')) {
+      return 'Back to Search';
+    }
+    return 'Back to Home';
   };
 
   if (isLoading) {
@@ -122,7 +151,7 @@ const PropertyDetails = () => {
               className="mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to {location.state?.searchParams ? 'Search' : 'Previous Page'}
+              {getBackButtonText()}
             </Button>
           </div>
 
