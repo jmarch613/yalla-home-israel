@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Control } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -24,7 +25,10 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
   const decadeOptions = [];
   
   for (let decade = currentDecade; decade >= 1800; decade -= 10) {
-    decadeOptions.push(`${decade}s`);
+    decadeOptions.push({
+      label: `${decade}s`,
+      value: decade // Store the numeric decade start year
+    });
   }
 
   return (
@@ -88,7 +92,10 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
         render={({ field }) => (
           <FormItem>
             <FormLabel>Year Built</FormLabel>
-            <Select onValueChange={(value) => field.onChange(value)} value={field.value?.toString()}>
+            <Select 
+              onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} 
+              value={field.value?.toString()}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select decade" />
@@ -96,8 +103,8 @@ export const BuildingDetailsFields = ({ control }: BuildingDetailsFieldsProps) =
               </FormControl>
               <SelectContent>
                 {decadeOptions.map((decade) => (
-                  <SelectItem key={decade} value={decade}>
-                    {decade}
+                  <SelectItem key={decade.value} value={decade.value.toString()}>
+                    {decade.label}
                   </SelectItem>
                 ))}
               </SelectContent>
