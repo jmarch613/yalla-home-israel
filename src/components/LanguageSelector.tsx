@@ -1,12 +1,14 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Flag } from "lucide-react";
 
 const LANGS = [
-  { code: "en", label: "English", emoji: "EN" },
-  { code: "he", label: "עברית", emoji: "🇮🇱" },
-  { code: "fr", label: "Français", emoji: "🇫🇷" },
-  { code: "ru", label: "Русский", emoji: "🇷🇺" },
-  { code: "ar", label: "العربية", emoji: "🇸🇦" },
+  { code: "en", label: "English", emoji: "EN", flag: <Flag className="w-4 h-4 mr-1 text-blue-600" /> },
+  { code: "he", label: "עברית", emoji: "🇮🇱", flag: <span className="text-lg mr-1">🇮🇱</span> },
+  { code: "fr", label: "Français", emoji: "🇫🇷", flag: <span className="text-lg mr-1">🇫🇷</span> },
+  { code: "ru", label: "Русский", emoji: "🇷🇺", flag: <span className="text-lg mr-1">🇷🇺</span> },
+  { code: "ar", label: "العربية", emoji: "🇸🇦", flag: <span className="text-lg mr-1">🇸🇦</span> }
 ];
 
 export const LanguageSelector = () => {
@@ -35,7 +37,10 @@ export const LanguageSelector = () => {
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className="text-lg">{lang.emoji}</span>
+        <span className="flex items-center">
+          {lang.flag}
+          <span className="text-lg">{lang.emoji}</span>
+        </span>
         <svg className="ml-1 w-4 h-4 opacity-60" viewBox="0 0 20 20" fill="none">
           <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth={1.5} />
         </svg>
@@ -56,7 +61,10 @@ export const LanguageSelector = () => {
               role="option"
               aria-selected={lang.code === opt.code}
             >
-              <span className="text-lg">{opt.emoji}</span>
+              <span className="flex items-center">
+                {opt.flag}
+                <span className="text-lg">{opt.emoji}</span>
+              </span>
               <span className="text-sm">{opt.label}</span>
             </li>
           ))}
