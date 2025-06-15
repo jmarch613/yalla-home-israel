@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
 
 interface NeighborhoodDropdownProps {
@@ -26,13 +25,12 @@ export const NeighborhoodDropdown = ({
 
   return (
     <div>
-      <Label className="text-sm font-medium text-gray-700 mb-2 block">Neighborhood</Label>
       <Select 
         value={selectedNeighborhood || "any"} 
         onValueChange={handleValueChange}
         disabled={!hasNeighborhoods}
       >
-        <SelectTrigger className="h-12">
+        <SelectTrigger className="h-10 bg-white border-gray-300">
           <SelectValue placeholder={hasNeighborhoods ? "Any neighborhood" : "Select a city first"} />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
