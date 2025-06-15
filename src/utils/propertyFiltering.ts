@@ -13,6 +13,8 @@ export interface PropertyCardType {
   image: string;
   features: string[];
   created_at: string;
+  city?: string; // Add city field for better filtering
+  neighborhood?: string; // Add neighborhood field for better filtering
 }
 
 // Transforms raw scraped properties to the normalized PropertyCardType and removes duplicates
@@ -32,7 +34,9 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
       property.neighborhood || 'Jerusalem',
       'Recently Updated'
     ].filter(Boolean),
-    created_at: property.created_at
+    created_at: property.created_at,
+    city: property.neighborhood || 'Jerusalem', // Add city for filtering
+    neighborhood: property.neighborhood
   }));
 
   // Remove duplicates based on title, address, and price
@@ -52,30 +56,55 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
 
 export function filterProperties(properties: PropertyCardType[], filters: any): PropertyCardType[] {
   return properties.filter((property) => {
-    // Location filter
-    if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) {
-      return false;
+    // Location filter - improved to check multiple fields and be case-insensitive
+    if (filters.location) {
+      const searchLocation = filters.location.toLowerCase();
+      const propertyLocation = (property.location || '').toLowerCase();
+      const propertyCity = (property.city || '').toLowerCase();
+      const propertyFeatures = property.features.map(f => f.toLowerCase()).join(' ');
+      
+      // Check if the search location matches any of: location, city, or features
+      const locationMatch = 
+        propertyLocation.includes(searchLocation) ||
+        propertyCity.includes(searchLocation) ||
+        propertyFeatures.includes(searchLocation);
+      
+      if (!locationMatch) {
+        return false;
+      }
     }
+    
     // Neighborhood filter
-    if (filters.neighborhood && !property.features.some(feature =>
-      feature.toLowerCase().includes(filters.neighborhood.toLowerCase())
-    )) {
-      return false;
+    if (filters.neighborhood) {
+      const searchNeighborhood = filters.neighborhood.toLowerCase();
+      const hasNeighborhoodMatch = property.features.some(feature =>
+        feature.toLowerCase().includes(searchNeighborhood)
+      );
+      if (!hasNeighborhoodMatch) {
+        return false;
+      }
     }
+    
     // Property type filter
-    if (filters.propertyType && !property.features.some(feature =>
-      feature.toLowerCase().includes(filters.propertyType.toLowerCase())
-    )) {
-      return false;
+    if (filters.propertyType) {
+      const hasTypeMatch = property.features.some(feature =>
+        feature.toLowerCase().includes(filters.propertyType.toLowerCase())
+      );
+      if (!hasTypeMatch) {
+        return false;
+      }
     }
+    
     // Bedrooms filter
     if (filters.bedrooms && property.bedrooms < parseInt(filters.bedrooms)) {
       return false;
     }
+    
     // Bathrooms filter
     if (filters.bathrooms && property.bathrooms < parseInt(filters.bathrooms)) {
       return false;
     }
+    
     // Price range filters
     if (filters.minPrice || filters.maxPrice) {
       const priceString = property.price.replace(/[₪,]/g, '');
@@ -87,6 +116,7 @@ export function filterProperties(properties: PropertyCardType[], filters: any): 
         return false;
       }
     }
+    
     // Feature filters (simulate, as before)
     if (filters.features) {
       const hasActiveFeatureFilters = Object.values(filters.features).some(Boolean);

@@ -34,5 +34,7 @@ export function transformUserPropertyToCardType(property: PropertyListing): Prop
       property.created_at ? "User Listing" : "",
     ].filter(Boolean),
     created_at: property.created_at,
+    city: property.city || "Jerusalem", // Add city field for filtering
+    neighborhood: property.neighborhood // Add neighborhood field for filtering
   };
 }
