@@ -20,7 +20,7 @@ export const usePropertyDetails = (id: string) => {
 
       if (!scrapedError && scrapedData) {
         console.log('Found property in scraped_properties');
-        return scrapedData;
+        return scrapedData as ScrapedProperty;
       }
 
       // If not found in scraped_properties, try property_listings
@@ -40,8 +40,8 @@ export const usePropertyDetails = (id: string) => {
       }
 
       console.log('Found property in property_listings');
-      // Return the data directly since it matches PropertyListing type
-      return listingData;
+      // Explicitly cast to PropertyListing type to satisfy TypeScript
+      return listingData as PropertyListing;
     },
   });
 };
