@@ -71,7 +71,11 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
             />
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+        <PopoverContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="start"
+        >
           <Command>
             <CommandList>
               {filteredSuggestions.length === 0 ? (
