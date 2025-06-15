@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
@@ -22,7 +21,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-      if (value.trim().length > 0) {
+      if (value.trim().length > 1) {
         const filtered = suggestions.filter(suggestion =>
           suggestion.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 8); // Limit to 8 suggestions
