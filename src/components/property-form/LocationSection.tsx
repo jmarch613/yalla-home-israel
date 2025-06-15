@@ -6,6 +6,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import { Autocomplete } from '@/components/ui/autocomplete';
 import { israeliLocations } from '@/data/israeliLocations';
+import { israeliStreets } from '@/data/israeliStreets';
 import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
 import { PropertyFormData } from './PropertyFormSchema';
 
@@ -36,7 +37,12 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
               <FormItem>
                 <FormLabel>Road/Street Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Rothschild Boulevard" {...field} />
+                  <Autocomplete
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    placeholder="Enter street name"
+                    suggestions={israeliStreets}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
