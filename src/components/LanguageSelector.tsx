@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Flag } from "lucide-react";
 
 const LANGS = [
-  { code: "en", label: "English", emoji: "EN", flag: <Flag className="w-4 h-4 mr-1 text-blue-600" /> },
+  { code: "en", label: "English", emoji: "🇺🇸", flag: <span className="text-lg mr-1">🇺🇸</span> },
   { code: "he", label: "עברית", emoji: "🇮🇱", flag: <span className="text-lg mr-1">🇮🇱</span> },
-  { code: "fr", label: "Français", emoji: "🇫🇷", flag: <span className="text-lg mr-1">🇫🇷</span> },
+  { code: "fr", label: "Français", emoji: "🇪🇺", flag: <span className="text-lg mr-1">🇪🇺</span> },
   { code: "ru", label: "Русский", emoji: "🇷🇺", flag: <span className="text-lg mr-1">🇷🇺</span> },
   { code: "ar", label: "العربية", emoji: "🇸🇦", flag: <span className="text-lg mr-1">🇸🇦</span> }
 ];
