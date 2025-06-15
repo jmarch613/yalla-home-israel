@@ -20,6 +20,12 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
   // Generate parking options 0-15
   const parkingOptions = Array.from({ length: 16 }, (_, i) => i);
   
+  // Generate floor options: Ground + 1-50
+  const floorOptions = ['Ground', ...Array.from({ length: 50 }, (_, i) => i + 1)];
+  
+  // Generate total floors options 1-50
+  const totalFloorsOptions = Array.from({ length: 50 }, (_, i) => i + 1);
+  
   // Generate year options from 1950 to current year
   const currentYear = new Date().getFullYear();
   const yearOptions = Array.from({ length: currentYear - 1949 }, (_, i) => currentYear - i);
@@ -89,16 +95,19 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Floor</FormLabel>
-                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                <Select 
+                  onValueChange={(value) => field.onChange(value === 'Ground' ? 0 : (value ? parseInt(value) : undefined))} 
+                  value={field.value === 0 ? 'Ground' : field.value?.toString()}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select floor" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {numberOptions.map((num) => (
-                      <SelectItem key={num} value={num.toString()}>
-                        {num}
+                    {floorOptions.map((floor) => (
+                      <SelectItem key={floor} value={floor.toString()}>
+                        {floor}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -121,7 +130,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {numberOptions.map((num) => (
+                    {totalFloorsOptions.map((num) => (
                       <SelectItem key={num} value={num.toString()}>
                         {num}
                       </SelectItem>
