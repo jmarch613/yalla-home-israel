@@ -20,10 +20,49 @@ export function useAllProperties() {
     queryFn: async (): Promise<PropertyListing[]> => {
       const { data, error } = await supabase
         .from("property_listings")
-        .select("*")
+        .select(`
+          id,
+          user_id,
+          title,
+          description,
+          price,
+          property_type,
+          listing_type,
+          address,
+          neighborhood,
+          city,
+          bedrooms,
+          bathrooms,
+          living_rooms,
+          area,
+          floor_number,
+          total_floors,
+          year_built,
+          parking_spots,
+          contact_name,
+          contact_phone,
+          contact_email,
+          balcony,
+          elevator,
+          garden,
+          air_conditioning,
+          heating,
+          furnished,
+          pets_allowed,
+          images,
+          floorplan_url,
+          created_at,
+          updated_at
+        `)
         .in("status", ["approved", "published"]);
       if (error) throw error;
-      return data ?? [];
+      
+      // Transform the data to match PropertyListing interface
+      return (data ?? []).map(item => ({
+        ...item,
+        safe_room: false, // Default value since this field doesn't exist in current schema
+        bomb_shelter: false, // Default value since this field doesn't exist in current schema
+      })) as PropertyListing[];
     },
   });
 
