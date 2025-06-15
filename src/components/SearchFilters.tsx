@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Bed, Bath, Sofa } from 'lucide-react';
 
 interface SearchFiltersProps {
   onFiltersChange: (filters: any) => void;
@@ -157,51 +157,65 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
         </div>
 
         <div>
-          <Label className="text-sm font-medium">Bedrooms</Label>
-          <Select value={filters.bedrooms} onValueChange={(value) => handleInputChange('bedrooms', value)}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select bedrooms" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              {bedroomOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+          <Label className="text-sm font-medium mb-3 block">Rooms</Label>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 text-sm text-gray-600">
+                <Bed className="w-4 h-4" />
+                <span>Bedrooms</span>
+              </div>
+              <Select value={filters.bedrooms} onValueChange={(value) => handleInputChange('bedrooms', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg z-50">
+                  {bedroomOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div>
-          <Label className="text-sm font-medium">Bathrooms</Label>
-          <Select value={filters.bathrooms} onValueChange={(value) => handleInputChange('bathrooms', value)}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select bathrooms" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              {bathroomOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 text-sm text-gray-600">
+                <Bath className="w-4 h-4" />
+                <span>Bathrooms</span>
+              </div>
+              <Select value={filters.bathrooms} onValueChange={(value) => handleInputChange('bathrooms', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg z-50">
+                  {bathroomOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div>
-          <Label className="text-sm font-medium">Living Rooms</Label>
-          <Select value={filters.livingRooms} onValueChange={(value) => handleInputChange('livingRooms', value)}>
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select living rooms" />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              {livingRoomOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 text-sm text-gray-600">
+                <Sofa className="w-4 h-4" />
+                <span>Living Rooms</span>
+              </div>
+              <Select value={filters.livingRooms} onValueChange={(value) => handleInputChange('livingRooms', value)}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border shadow-lg z-50">
+                  {livingRoomOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
         <div>
