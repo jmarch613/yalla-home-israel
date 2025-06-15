@@ -47,9 +47,19 @@ const PropertyDetails = () => {
         state: { restoreScrollPosition: location.state.scrollPosition } 
       });
     } 
+    // Check if we have a specific source in the location state
+    else if (location.state?.from === 'my-properties') {
+      console.log('Navigating back to my-properties from state');
+      navigate('/my-properties');
+    }
     // Check if referrer suggests we came from my-properties
     else if (document.referrer && document.referrer.includes('/my-properties')) {
-      console.log('Navigating back to my-properties');
+      console.log('Navigating back to my-properties from referrer');
+      navigate('/my-properties');
+    }
+    // For user properties (properties with user_id), default to my-properties
+    else if (property && 'user_id' in property) {
+      console.log('User property detected, navigating to my-properties');
       navigate('/my-properties');
     }
     // Check if referrer suggests we came from search
@@ -95,7 +105,13 @@ const PropertyDetails = () => {
     if (location.state?.searchParams) {
       return 'Back to Search';
     }
+    if (location.state?.from === 'my-properties') {
+      return 'Back to My Properties';
+    }
     if (document.referrer && document.referrer.includes('/my-properties')) {
+      return 'Back to My Properties';
+    }
+    if (property && 'user_id' in property) {
       return 'Back to My Properties';
     }
     if (document.referrer && document.referrer.includes('/search')) {
