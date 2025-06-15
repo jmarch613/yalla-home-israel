@@ -88,7 +88,7 @@ export const LocationSection = ({ control }: LocationSectionProps) => {
             name="entrance_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Entrance Number</FormLabel>
+                <FormLabel>Entrance Number (if applicable)</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
