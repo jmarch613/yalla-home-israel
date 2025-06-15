@@ -1,10 +1,9 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { MoreFiltersDialog } from '@/components/search/MoreFiltersDialog';
 import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
 
 interface SearchFiltersBarProps {
@@ -55,13 +54,20 @@ const bedroomOptions = [
   { value: '5', label: '5+' }
 ];
 
+const featureOptions = [
+  { key: 'parking', label: 'Parking' },
+  { key: 'balcony', label: 'Balcony' },
+  { key: 'safeRoom', label: 'Safe Room' },
+  { key: 'bombShelter', label: 'Bomb Shelter' },
+  { key: 'elevator', label: 'Elevator' },
+  { key: 'garden', label: 'Garden' },
+];
+
 export const SearchFiltersBar = ({ 
   searchFilters, 
   onFiltersChange, 
   onFiltersApply 
 }: SearchFiltersBarProps) => {
-  const [showMoreFilters, setShowMoreFilters] = useState(false);
-
   const handleFilterChange = (field: string, value: string) => {
     const updatedFilters = { ...searchFilters, [field]: value };
     
@@ -77,20 +83,20 @@ export const SearchFiltersBar = ({
     onFiltersChange(updatedFilters);
   };
 
-  const handleMoreFiltersApply = (features: any) => {
+  const handleFeatureChange = (key: string, checked: boolean) => {
     const updatedFilters = {
       ...searchFilters,
-      features
+      features: {
+        ...searchFilters.features,
+        [key]: checked
+      }
     };
     onFiltersChange(updatedFilters);
-    onFiltersApply();
-    setShowMoreFilters(false);
   };
 
-  const activeFiltersCount = Object.values(searchFilters.features).filter(Boolean).length;
-
   return (
-    <div className="py-4">
+    <div className="py-4 space-y-4">
+      {/* Main filters row */}
       <div className="flex flex-wrap items-center gap-4">
         {/* Property Type */}
         <div className="min-w-[140px]">
@@ -169,29 +175,6 @@ export const SearchFiltersBar = ({
           </Select>
         </div>
 
-        {/* More Filters Button */}
-        <Dialog open={showMoreFilters} onOpenChange={setShowMoreFilters}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="h-10 border-gray-300 bg-white relative">
-              More filters
-              {activeFiltersCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg bg-white">
-            <DialogHeader>
-              <DialogTitle>More filters</DialogTitle>
-            </DialogHeader>
-            <MoreFiltersDialog 
-              features={searchFilters.features}
-              onApply={handleMoreFiltersApply}
-            />
-          </DialogContent>
-        </Dialog>
-
         {/* Search Button */}
         <Button 
           className="h-10 bg-blue-600 hover:bg-blue-700 text-white px-6"
@@ -199,6 +182,24 @@ export const SearchFiltersBar = ({
         >
           Search
         </Button>
+      </div>
+
+      {/* Feature filters row */}
+      <div className="border-t pt-4">
+        <div className="flex flex-wrap items-center gap-6">
+          {featureOptions.map((option) => (
+            <div key={option.key} className="flex items-center space-x-2">
+              <Checkbox 
+                id={option.key}
+                checked={searchFilters.features[option.key as keyof typeof searchFilters.features]}
+                onCheckedChange={(checked) => handleFeatureChange(option.key, checked as boolean)}
+              />
+              <Label htmlFor={option.key} className="text-sm font-normal">
+                {option.label}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
