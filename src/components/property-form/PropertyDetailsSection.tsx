@@ -113,7 +113,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
           />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <FormField
             control={control}
             name="floor_number"
@@ -191,32 +191,32 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
               </FormItem>
             )}
           />
-        </div>
 
-        <FormField
-          control={control}
-          name="parking_spots"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parking Spots</FormLabel>
-              <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : 0)} value={field.value?.toString()}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select parking spots" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {parkingOptions.map((num) => (
-                    <SelectItem key={num} value={num.toString()}>
-                      {num}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={control}
+            name="parking_spots"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Parking Spots</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : 0)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select parking spots" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {parkingOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </CardContent>
     </Card>
   );
