@@ -9,7 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      scraped_properties: {
+        Row: {
+          address: string | null
+          area: number | null
+          bathrooms: number | null
+          bedrooms: number | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          listing_url: string | null
+          neighborhood: string | null
+          price: string | null
+          property_type: string | null
+          source_website: string | null
+          title: string | null
+        }
+        Insert: {
+          address?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          listing_url?: string | null
+          neighborhood?: string | null
+          price?: string | null
+          property_type?: string | null
+          source_website?: string | null
+          title?: string | null
+        }
+        Update: {
+          address?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          listing_url?: string | null
+          neighborhood?: string | null
+          price?: string | null
+          property_type?: string | null
+          source_website?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

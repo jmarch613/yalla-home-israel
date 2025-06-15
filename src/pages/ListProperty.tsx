@@ -8,9 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import type { TablesInsert } from '@/integrations/supabase/types';
 import { propertySchema, type PropertyFormData } from '@/components/property-form/PropertyFormSchema';
 import { BasicInfoSection } from '@/components/property-form/BasicInfoSection';
 import { LocationSection } from '@/components/property-form/LocationSection';
@@ -54,8 +52,15 @@ const ListProperty = () => {
     setIsSubmitting(true);
 
     try {
-      // Create properly typed insert data
-      const insertData: TablesInsert<'property_listings'> = {
+      // TODO: Enable this once property_listings table is created
+      toast({
+        title: "Property listing feature coming soon!",
+        description: "The property listing functionality is being set up. Please check back soon.",
+      });
+
+      // Temporarily disabled until property_listings table is created
+      /*
+      const insertData: PropertyListing = {
         user_id: user.id,
         title: data.title,
         description: data.description || null,
@@ -96,6 +101,7 @@ const ListProperty = () => {
       });
 
       navigate('/');
+      */
     } catch (error) {
       console.error('Error submitting property:', error);
       toast({

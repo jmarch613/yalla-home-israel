@@ -11,6 +11,7 @@ import { PropertyStatsSection } from '@/components/property-details/PropertyStat
 import { PropertyInfoSection } from '@/components/property-details/PropertyInfoSection';
 import { PropertyDescriptionSection } from '@/components/property-details/PropertyDescriptionSection';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ScrapedProperty } from '@/types/database';
 
 export default function PropertyDetails() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +21,7 @@ export default function PropertyDetails() {
 
   const { data: property, isLoading, error } = useQuery({
     queryKey: ['property', id],
-    queryFn: async () => {
+    queryFn: async (): Promise<ScrapedProperty> => {
       if (!id) throw new Error('Property ID is required');
       
       console.log('Fetching property with ID:', id);
@@ -37,7 +38,7 @@ export default function PropertyDetails() {
       }
       
       console.log('Fetched property data:', data);
-      return data;
+      return data as ScrapedProperty;
     },
     enabled: !!id,
   });

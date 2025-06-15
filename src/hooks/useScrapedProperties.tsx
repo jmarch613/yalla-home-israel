@@ -1,23 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-
-export interface ScrapedProperty {
-  id: string;
-  title: string | null;
-  price: string | null;
-  address: string | null;
-  description: string | null;
-  bedrooms: number | null;
-  bathrooms: number | null;
-  area: number | null;
-  property_type: string | null;
-  neighborhood: string | null;
-  image_url: string | null;
-  listing_url: string | null;
-  source_website: string | null;
-  created_at: string;
-}
+import { ScrapedProperty } from '@/types/database';
 
 export const useScrapedProperties = () => {
   return useQuery({
@@ -36,7 +20,7 @@ export const useScrapedProperties = () => {
       }
 
       console.log('Fetched properties:', data?.length || 0);
-      return data || [];
+      return data as ScrapedProperty[] || [];
     },
   });
 };
