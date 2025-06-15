@@ -33,6 +33,25 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     setImageError(true);
   };
 
+  // Helper function to format bedroom text
+  const formatBedroomText = (bedrooms: number) => {
+    if (bedrooms === 1) return '1 bedroom';
+    return `${bedrooms} bedrooms`;
+  };
+
+  // Helper function to format bathroom text
+  const formatBathroomText = (bathrooms: number) => {
+    if (bathrooms === 1) return '1 bathroom';
+    return `${bathrooms} bathrooms`;
+  };
+
+  // Helper function to transform title text from abbreviations to full phrases
+  const transformTitle = (title: string) => {
+    return title
+      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom${num > 1 ? 's' : ''}`)
+      .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="relative cursor-pointer" onClick={handleViewDetails}>
@@ -75,7 +94,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </div>
         
         <h3 className="font-semibold text-lg mb-2 line-clamp-2 cursor-pointer" onClick={handleViewDetails}>
-          {property.title}
+          {transformTitle(property.title)}
         </h3>
         
         <div className="flex items-center text-gray-600 mb-3">
@@ -86,11 +105,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
           <div className="flex items-center">
             <Bed className="w-4 h-4 mr-1" />
-            <span>{property.bedrooms} bed</span>
+            <span>{formatBedroomText(property.bedrooms)}</span>
           </div>
           <div className="flex items-center">
             <Bath className="w-4 h-4 mr-1" />
-            <span>{property.bathrooms} bath</span>
+            <span>{formatBathroomText(property.bathrooms)}</span>
           </div>
           <div className="flex items-center">
             <Square className="w-4 h-4 mr-1" />

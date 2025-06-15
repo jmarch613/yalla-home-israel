@@ -42,6 +42,14 @@ export default function PropertyDetails() {
     setImageError(true);
   };
 
+  // Helper function to transform text from abbreviations to full phrases
+  const transformText = (text: string) => {
+    if (!text) return text;
+    return text
+      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom${num > 1 ? 's' : ''}`)
+      .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -116,7 +124,7 @@ export default function PropertyDetails() {
           <div>
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {property.title}
+                {transformText(property.title || '')}
               </h1>
               <div className="flex items-center text-gray-600 mb-4">
                 <MapPin className="w-5 h-5 mr-2" />
@@ -133,14 +141,18 @@ export default function PropertyDetails() {
                 <CardContent className="p-4 text-center">
                   <Bed className="w-6 h-6 mx-auto mb-2 text-gray-600" />
                   <div className="text-xl font-semibold">{property.bedrooms || 0}</div>
-                  <div className="text-sm text-gray-600">Bedrooms</div>
+                  <div className="text-sm text-gray-600">
+                    {property.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
+                  </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
                   <Bath className="w-6 h-6 mx-auto mb-2 text-gray-600" />
                   <div className="text-xl font-semibold">{property.bathrooms || 0}</div>
-                  <div className="text-sm text-gray-600">Bathrooms</div>
+                  <div className="text-sm text-gray-600">
+                    {property.bathrooms === 1 ? 'Bathroom' : 'Bathrooms'}
+                  </div>
                 </CardContent>
               </Card>
               <Card>
@@ -185,7 +197,7 @@ export default function PropertyDetails() {
             <Card>
               <CardContent className="p-6">
                 <p className="text-gray-700 leading-relaxed">
-                  {property.description}
+                  {transformText(property.description)}
                 </p>
               </CardContent>
             </Card>
