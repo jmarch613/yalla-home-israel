@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -9,11 +8,13 @@ import { Search as SearchIcon, MapPin, SlidersHorizontal } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
   const [searchFilters, setSearchFilters] = useState({
     location: '',
+    neighborhood: '',
     propertyType: '',
     minPrice: '',
     maxPrice: '',
@@ -36,7 +37,8 @@ const Search = () => {
     setSearchFilters(prev => ({
       ...prev,
       location,
-      type
+      type,
+      neighborhood: '' // Reset neighborhood when location changes from URL
     }));
     setSearchLocation(location);
   }, [searchParams]);
@@ -52,6 +54,18 @@ const Search = () => {
 
   const handleFilterChange = (field: string, value: string) => {
     const updatedFilters = { ...searchFilters, [field]: value };
+    
+    // Reset neighborhood when location changes
+    if (field === 'location') {
+      updatedFilters.neighborhood = '';
+    }
+    
+    setSearchFilters(updatedFilters);
+    handleFiltersChange(updatedFilters);
+  };
+
+  const handleNeighborhoodChange = (neighborhood: string) => {
+    const updatedFilters = { ...searchFilters, neighborhood };
     setSearchFilters(updatedFilters);
     handleFiltersChange(updatedFilters);
   };
@@ -93,6 +107,7 @@ const Search = () => {
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold mb-6">
             Find property {propertyTypeForUrl === 'buy' ? 'for sale' : 'to rent'} in {searchFilters.location || 'Israel'}
+            {searchFilters.neighborhood && `, ${searchFilters.neighborhood}`}
           </h1>
           
           {/* Rightmove-style horizontal filters */}
@@ -114,6 +129,13 @@ const Search = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Neighborhood dropdown */}
+              <NeighborhoodDropdown
+                selectedLocation={searchFilters.location}
+                selectedNeighborhood={searchFilters.neighborhood}
+                onNeighborhoodChange={handleNeighborhoodChange}
+              />
 
               {/* Property types */}
               <div>
