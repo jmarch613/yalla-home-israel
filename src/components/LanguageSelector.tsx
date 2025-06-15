@@ -1,19 +1,22 @@
 
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 const LANGS = [
-  { code: "en", label: "English", flag: "🇺🇸", aria: "United States flag" },
-  { code: "he", label: "עברית", flag: "🇮🇱", aria: "Israel flag" },
-  { code: "fr", label: "Français", flag: "🇪🇺", aria: "European Union flag" },
-  { code: "ru", label: "Русский", flag: "🇷🇺", aria: "Russia flag" },
-  { code: "ar", label: "العربية", flag: "🇸🇦", aria: "Saudi Arabia flag" }
+  { code: "en" as Language, label: "English", flag: "🇺🇸", aria: "United States flag" },
+  { code: "he" as Language, label: "עברית", flag: "🇮🇱", aria: "Israel flag" },
+  { code: "fr" as Language, label: "Français", flag: "🇪🇺", aria: "European Union flag" },
+  { code: "ru" as Language, label: "Русский", flag: "🇷🇺", aria: "Russia flag" },
+  { code: "ar" as Language, label: "العربية", flag: "🇸🇦", aria: "Saudi Arabia flag" }
 ];
 
 export const LanguageSelector = () => {
+  const { currentLanguage, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState(LANGS[0]);
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const currentLang = LANGS.find(lang => lang.code === currentLanguage) || LANGS[0];
 
   // Close dropdown on outside click
   React.useEffect(() => {
@@ -25,6 +28,11 @@ export const LanguageSelector = () => {
     if (open) window.addEventListener("mousedown", handle);
     return () => window.removeEventListener("mousedown", handle);
   }, [open]);
+
+  const handleLanguageSelect = (langCode: Language) => {
+    setLanguage(langCode);
+    setOpen(false);
+  };
 
   return (
     <div className="relative" ref={ref}>
@@ -39,9 +47,9 @@ export const LanguageSelector = () => {
         <span
           className="text-lg mr-1"
           style={{ fontFamily: "Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji, EmojiOne Color, Android Emoji, sans-serif" }}
-          aria-label={lang.aria}
+          aria-label={currentLang.aria}
         >
-          {lang.flag}
+          {currentLang.flag}
         </span>
         <svg className="ml-1 w-4 h-4 opacity-60" viewBox="0 0 20 20" fill="none">
           <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth={1.5} />
@@ -55,13 +63,10 @@ export const LanguageSelector = () => {
           {LANGS.map(opt => (
             <li
               key={opt.code}
-              className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer ${lang.code === opt.code ? "bg-gray-100 font-bold" : ""}`}
-              onClick={() => {
-                setLang(opt);
-                setOpen(false);
-              }}
+              className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer ${currentLanguage === opt.code ? "bg-gray-100 font-bold" : ""}`}
+              onClick={() => handleLanguageSelect(opt.code)}
               role="option"
-              aria-selected={lang.code === opt.code}
+              aria-selected={currentLanguage === opt.code}
             >
               <span
                 className="text-lg mr-1"
