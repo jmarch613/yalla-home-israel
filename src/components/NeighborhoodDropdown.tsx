@@ -30,11 +30,11 @@ export const NeighborhoodDropdown = ({
         disabled={!hasNeighborhoods}
       >
         <SelectTrigger className="h-10 bg-white border-gray-300">
-          <SelectValue placeholder={hasNeighborhoods ? `${city}...` : "Select a city first"} />
+          <SelectValue placeholder={hasNeighborhoods ? "Neighborhood" : "Select a city first"} />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
           <SelectItem value="any">
-            {hasNeighborhoods ? city : "Any neighborhood"}
+            Neighborhood
           </SelectItem>
           {neighborhoods.map((neighborhood) => (
             <SelectItem key={neighborhood} value={neighborhood}>
