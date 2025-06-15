@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -50,10 +49,12 @@ const PhotoManager = () => {
         return;
       }
 
-      // Ensure all required PropertyListing fields are present
+      // Properly map the database result to PropertyListing type
       const propertyData: PropertyListing = {
         ...data,
-        floorplan_url: data.floorplan_url || null
+        property_type: data.property_type as PropertyListing['property_type'],
+        listing_type: data.listing_type as PropertyListing['listing_type'],
+        floorplan_url: null // Set default value since it's not in the database yet
       };
 
       setProperty(propertyData);
