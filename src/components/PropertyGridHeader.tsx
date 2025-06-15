@@ -26,10 +26,10 @@ export const PropertyGridHeader = ({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <p className="text-gray-700 font-medium">
-            {filteredCount} {t('grid.properties')}
+            {filteredCount} properties
             {filteredCount !== totalCount && (
               <span className="text-sm font-normal text-gray-500 ml-2">
-                ({t('grid.filtered')} {totalCount} {t('grid.total')})
+                (filtered from {totalCount} total)
               </span>
             )}
           </p>
@@ -40,7 +40,7 @@ export const PropertyGridHeader = ({
             className="flex items-center gap-2"
           >
             <Database className="w-4 h-4" />
-            {t('grid.update')}
+            Update Data
           </Button>
         </div>
         <select
@@ -48,10 +48,10 @@ export const PropertyGridHeader = ({
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
         >
-          <option value="most-recent">{t('grid.sort.recent')}</option>
-          <option value="price-low-high">{t('grid.sort.price.low')}</option>
-          <option value="price-high-low">{t('grid.sort.price.high')}</option>
-          <option value="size-largest">{t('grid.sort.size')}</option>
+          <option value="most-recent">Most Recent</option>
+          <option value="price-low-high">Price: Low to High</option>
+          <option value="price-high-low">Price: High to Low</option>
+          <option value="size-largest">Size: Largest</option>
         </select>
       </div>
     </div>
