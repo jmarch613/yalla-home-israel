@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Control, useWatch } from 'react-hook-form';
+import { Control, useWatch, useFormContext } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -18,6 +17,7 @@ interface BasicInfoSectionProps {
 
 export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
   const { toast } = useToast();
+  const { setValue } = useFormContext<PropertyFormData>();
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Watch all form fields to get current values for AI generation
@@ -32,13 +32,8 @@ export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
 
       if (error) throw error;
 
-      // Set the generated description in the form
-      control._formValues.description = data.description;
-      // Trigger a re-render by setting the value
-      const descriptionField = control._fields.description;
-      if (descriptionField) {
-        descriptionField._f.onChange(data.description);
-      }
+      // Set the generated description in the form using setValue
+      setValue('description', data.description);
 
       toast({
         title: "Description generated!",
