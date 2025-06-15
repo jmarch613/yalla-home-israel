@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Bed, Bath, Square, MapPin, ExternalLink, ImageOff } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { PropertyImageSection } from '@/components/property-details/PropertyImageSection';
+import { PropertyStatsSection } from '@/components/property-details/PropertyStatsSection';
+import { PropertyInfoSection } from '@/components/property-details/PropertyInfoSection';
+import { PropertyDescriptionSection } from '@/components/property-details/PropertyDescriptionSection';
 
 export default function PropertyDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const [imageError, setImageError] = useState(false);
 
   const { data: property, isLoading, error } = useQuery({
     queryKey: ['property', id],
@@ -36,11 +39,6 @@ export default function PropertyDetails() {
     },
     enabled: !!id,
   });
-
-  const handleImageError = () => {
-    console.log('Property detail image failed to load');
-    setImageError(true);
-  };
 
   const handleBackToSearch = () => {
     // Get the referrer from the location state or default to search page
@@ -109,108 +107,36 @@ export default function PropertyDetails() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Property Image */}
-          <div>
-            {!imageError && property.image_url ? (
-              <img
-                src={property.image_url}
-                alt={property.title || 'Property'}
-                className="w-full h-96 object-cover rounded-lg shadow-lg"
-                onError={handleImageError}
-                onLoad={() => console.log('Property detail image loaded successfully')}
-              />
-            ) : (
-              <div className="w-full h-96 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <ImageOff className="w-16 h-16 mx-auto mb-4" />
-                  <p className="text-lg">Image not available</p>
-                </div>
-              </div>
-            )}
-          </div>
+          <PropertyImageSection 
+            imageUrl={property.image_url}
+            title={property.title}
+          />
 
           {/* Property Details */}
           <div>
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {transformText(property.title || '')}
-              </h1>
-              <div className="flex items-center text-gray-600 mb-4">
-                <MapPin className="w-5 h-5 mr-2" />
-                <span>{property.address}</span>
-              </div>
-              <div className="text-3xl font-bold text-primary">
-                {property.price}
-              </div>
-            </div>
+            <PropertyInfoSection
+              title={property.title}
+              address={property.address}
+              price={property.price}
+              propertyType={property.property_type}
+              neighborhood={property.neighborhood}
+              listingUrl={property.listing_url}
+              transformText={transformText}
+            />
 
-            {/* Property Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Bed className="w-6 h-6 mx-auto mb-2 text-gray-600" />
-                  <div className="text-xl font-semibold">{property.bedrooms || 0}</div>
-                  <div className="text-sm text-gray-600">
-                    {property.bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Bath className="w-6 h-6 mx-auto mb-2 text-gray-600" />
-                  <div className="text-xl font-semibold">{property.bathrooms || 0}</div>
-                  <div className="text-sm text-gray-600">
-                    {property.bathrooms === 1 ? 'Bathroom' : 'Bathrooms'}
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
-                  <Square className="w-6 h-6 mx-auto mb-2 text-gray-600" />
-                  <div className="text-xl font-semibold">{property.area || 0}</div>
-                  <div className="text-sm text-gray-600">m²</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Property Features */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Property Details</h3>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div><span className="font-medium">Type:</span> {property.property_type || 'N/A'}</div>
-                <div><span className="font-medium">Neighborhood:</span> {property.neighborhood || 'N/A'}</div>
-              </div>
-            </div>
-
-            {/* Contact Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="flex-1">
-                Contact Agent
-              </Button>
-              {property.listing_url && (
-                <Button variant="outline" className="flex-1" asChild>
-                  <a href={property.listing_url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    View Original
-                  </a>
-                </Button>
-              )}
-            </div>
+            <PropertyStatsSection
+              bedrooms={property.bedrooms}
+              bathrooms={property.bathrooms}
+              area={property.area}
+            />
           </div>
         </div>
 
         {/* Description */}
-        {property.description && (
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Description</h3>
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-gray-700 leading-relaxed">
-                  {transformText(property.description)}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        <PropertyDescriptionSection
+          description={property.description}
+          transformText={transformText}
+        />
       </div>
     </div>
   );
