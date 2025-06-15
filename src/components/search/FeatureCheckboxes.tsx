@@ -2,7 +2,6 @@
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FeatureCheckboxesProps {
   features: {
@@ -17,15 +16,13 @@ interface FeatureCheckboxesProps {
 }
 
 export const FeatureCheckboxes = ({ features, onFeatureChange }: FeatureCheckboxesProps) => {
-  const { t } = useLanguage();
-
   const featureOptions = [
-    { key: 'parking', label: t('filters.parking') },
-    { key: 'balcony', label: t('filters.balcony') },
-    { key: 'safeRoom', label: t('filters.safe.room') },
-    { key: 'bombShelter', label: t('filters.bomb.shelter') },
-    { key: 'elevator', label: t('filters.elevator') },
-    { key: 'garden', label: t('filters.garden') },
+    { key: 'parking', label: 'Parking' },
+    { key: 'balcony', label: 'Balcony' },
+    { key: 'safeRoom', label: 'Safe Room' },
+    { key: 'bombShelter', label: 'Bomb Shelter' },
+    { key: 'elevator', label: 'Elevator' },
+    { key: 'garden', label: 'Garden' },
   ];
 
   return (

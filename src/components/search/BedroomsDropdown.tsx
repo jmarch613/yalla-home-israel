@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BedroomsDropdownProps {
   value: string;
@@ -9,8 +8,6 @@ interface BedroomsDropdownProps {
 }
 
 export const BedroomsDropdown = ({ value, onChange }: BedroomsDropdownProps) => {
-  const { t } = useLanguage();
-
   const bedroomOptions = [
     { value: '1', label: '1+' },
     { value: '2', label: '2+' },
@@ -27,10 +24,10 @@ export const BedroomsDropdown = ({ value, onChange }: BedroomsDropdownProps) => 
     <div className="min-w-[110px]">
       <Select value={value} onValueChange={handleValueChange}>
         <SelectTrigger className="h-10 bg-white border-gray-300">
-          <SelectValue placeholder={t('filters.bedrooms')} />
+          <SelectValue placeholder="Beds" />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
-          <SelectItem value="any">{t('filters.property.any')}</SelectItem>
+          <SelectItem value="any">Any</SelectItem>
           {bedroomOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
               {option.label}

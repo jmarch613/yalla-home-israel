@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { PropertyTypeDropdown } from './PropertyTypeDropdown';
 import { PriceRangeDropdowns } from './PriceRangeDropdowns';
 import { BedroomsDropdown } from './BedroomsDropdown';
@@ -35,8 +34,6 @@ export const SearchFiltersBar = ({
   onFiltersChange, 
   onFiltersApply 
 }: SearchFiltersBarProps) => {
-  const { t } = useLanguage();
-
   const handleFilterChange = (field: string, value: string) => {
     const updatedFilters = { ...searchFilters, [field]: value };
     
@@ -97,7 +94,7 @@ export const SearchFiltersBar = ({
           className="h-10 bg-blue-600 hover:bg-blue-700 text-white px-6"
           onClick={onFiltersApply}
         >
-          {t('filters.search')}
+          Search
         </Button>
       </div>
 

@@ -1,9 +1,8 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Language, LanguageContextType } from './types';
-import { translations } from '@/translations';
+import React, { createContext, useContext, ReactNode } from 'react';
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+// Simplified context that always returns English text
+const LanguageContext = createContext<{ t: (key: string) => string } | undefined>(undefined);
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
@@ -18,24 +17,68 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
-
-  const setLanguage = (language: Language) => {
-    setCurrentLanguage(language);
-    // Set document direction for RTL languages
-    document.dir = ['he', 'ar'].includes(language) ? 'rtl' : 'ltr';
-  };
-
+  // Simple function that returns the key as-is (fallback to English)
   const t = (key: string): string => {
-    return translations[currentLanguage][key] || key;
+    // Map common keys to English text
+    const englishTexts: Record<string, string> = {
+      'nav.home': 'Home',
+      'nav.search': 'Search',
+      'nav.list': 'List Property',
+      'nav.signin': 'Sign In',
+      'nav.signout': 'Sign Out',
+      'hero.title': 'Find Your Dream Home in Israel',
+      'hero.subtitle': 'Discover the perfect property with our comprehensive search tools',
+      'hero.search.placeholder': 'Enter city or neighborhood',
+      'hero.button.buy': 'Buy',
+      'hero.button.rent': 'Rent',
+      'hero.button.search': 'Search Properties',
+      'filters.property.type': 'Property type',
+      'filters.property.any': 'Any',
+      'filters.property.apartment': 'Apartment',
+      'filters.property.house': 'House',
+      'filters.property.villa': 'Villa',
+      'filters.property.penthouse': 'Penthouse',
+      'filters.property.studio': 'Studio',
+      'filters.bedrooms': 'Beds',
+      'filters.bathrooms': 'Baths',
+      'filters.neighborhood': 'Neighborhood',
+      'filters.search': 'Search',
+      'filters.clear': 'Clear all filters',
+      'filters.parking': 'Parking',
+      'filters.balcony': 'Balcony',
+      'filters.elevator': 'Elevator',
+      'filters.garden': 'Garden',
+      'filters.safe.room': 'Safe Room',
+      'filters.bomb.shelter': 'Bomb Shelter',
+      'details.back': 'Back to Search',
+      'details.contact': 'Contact Agent',
+      'details.original': 'View Original',
+      'details.type': 'Type',
+      'details.neighborhood': 'Neighborhood',
+      'details.description': 'Description',
+      'details.bedrooms': 'bedrooms',
+      'details.bathrooms': 'bathrooms',
+      'details.area': 'Area',
+      'search.results.for.sale': 'Property for sale in',
+      'search.results.to.rent': 'Property to rent in',
+      'search.results.subtitle': 'Search properties to find your perfect home',
+      'property.type.apartment': 'Apartment',
+      'property.type.house': 'House',
+      'property.type.villa': 'Villa',
+      'property.type.penthouse': 'Penthouse',
+      'property.type.studio': 'Studio',
+      'property.type.duplex': 'Duplex',
+      'property.type.cottage': 'Cottage',
+      'property.type.townhouse': 'Townhouse',
+      'common.unavailable': 'N/A'
+    };
+
+    return englishTexts[key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ currentLanguage, setLanguage, t }}>
+    <LanguageContext.Provider value={{ t }}>
       {children}
     </LanguageContext.Provider>
   );
 };
-
-// Re-export the Language type for backward compatibility
-export type { Language } from './types';

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SearchHeaderProps {
   propertyType: string;
@@ -9,10 +8,8 @@ interface SearchHeaderProps {
 }
 
 export const SearchHeader = ({ propertyType, location, neighborhood }: SearchHeaderProps) => {
-  const { t } = useLanguage();
-
   const getResultsText = () => {
-    const type = propertyType === 'buy' ? t('search.results.for.sale') : t('search.results.to.rent');
+    const type = propertyType === 'buy' ? 'Property for sale in' : 'Property to rent in';
     const baseLocation = location || 'Israel';
     const fullLocation = neighborhood ? `${neighborhood}, ${baseLocation}` : baseLocation;
     
@@ -25,7 +22,7 @@ export const SearchHeader = ({ propertyType, location, neighborhood }: SearchHea
         {getResultsText()}
       </h1>
       <p className="text-gray-600 text-sm">
-        {t('search.results.subtitle')}
+        Search properties to find your perfect home
       </p>
     </div>
   );
