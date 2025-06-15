@@ -3,7 +3,7 @@ import React from 'react';
 import { Control } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PropertyFormData } from './PropertyFormSchema';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -13,6 +13,16 @@ interface PropertyDetailsSectionProps {
 
 export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps) => {
   const { t } = useLanguage();
+
+  // Generate number options 1-15
+  const numberOptions = Array.from({ length: 15 }, (_, i) => i + 1);
+  
+  // Generate parking options 0-15
+  const parkingOptions = Array.from({ length: 16 }, (_, i) => i);
+  
+  // Generate year options from 1950 to current year
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: currentYear - 1949 }, (_, i) => currentYear - i);
 
   return (
     <Card>
@@ -26,15 +36,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="bedrooms"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('common.bedrooms')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                  />
-                </FormControl>
+                <FormLabel>Bedrooms</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select bedrooms" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {numberOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -45,15 +61,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="bathrooms"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('common.bathrooms')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                  />
-                </FormControl>
+                <FormLabel>Bathrooms</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select bathrooms" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {numberOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -66,15 +88,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="floor_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('common.floor')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="1"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                  />
-                </FormControl>
+                <FormLabel>Floor</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select floor" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {numberOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -85,15 +113,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="total_floors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('form.total.floors')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="5"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                  />
-                </FormControl>
+                <FormLabel>Total Floors</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select total floors" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {numberOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -104,15 +138,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             name="year_built"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('common.year.built')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="2020"
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                  />
-                </FormControl>
+                <FormLabel>Year Built</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select year" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {yearOptions.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -124,15 +164,21 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
           name="parking_spots"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('form.parking.spots')}</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="0"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : 0)}
-                />
-              </FormControl>
+              <FormLabel>Parking Spots</FormLabel>
+              <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : 0)} value={field.value?.toString()}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select parking spots" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {parkingOptions.map((num) => (
+                    <SelectItem key={num} value={num.toString()}>
+                      {num}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
