@@ -49,6 +49,7 @@ export interface PropertyListing {
   bomb_shelter: boolean;
   images: string[];
   floorplan_url: string | null;
+  status: 'pending' | 'approved' | 'rejected' | 'published';
   created_at: string;
   updated_at: string;
 }
