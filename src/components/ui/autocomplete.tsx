@@ -21,7 +21,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-      if (value.trim().length > 1) {
+      if (value.trim().length > 0) {
         const filtered = suggestions.filter(suggestion =>
           suggestion.toLowerCase().includes(value.toLowerCase())
         ).slice(0, 8); // Limit to 8 suggestions
@@ -66,30 +66,28 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
             />
           </div>
         </PopoverTrigger>
-        {open && filteredSuggestions.length > 0 && (
-          <PopoverContent className="w-full p-0" align="start">
-            <Command>
-              <CommandList>
-                {filteredSuggestions.length === 0 ? (
-                  <CommandEmpty>No locations found.</CommandEmpty>
-                ) : (
-                  <CommandGroup>
-                    {filteredSuggestions.map((suggestion) => (
-                      <CommandItem
-                        key={suggestion}
-                        onSelect={() => handleSelect(suggestion)}
-                        className="cursor-pointer"
-                      >
-                        <MapPin className="mr-2 h-4 w-4" />
-                        {suggestion}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                )}
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        )}
+        <PopoverContent className="w-full p-0" align="start">
+          <Command>
+            <CommandList>
+              {filteredSuggestions.length === 0 ? (
+                <CommandEmpty>No locations found.</CommandEmpty>
+              ) : (
+                <CommandGroup>
+                  {filteredSuggestions.map((suggestion) => (
+                    <CommandItem
+                      key={suggestion}
+                      onSelect={() => handleSelect(suggestion)}
+                      className="cursor-pointer"
+                    >
+                      <MapPin className="mr-2 h-4 w-4" />
+                      {suggestion}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
       </Popover>
     );
   }
