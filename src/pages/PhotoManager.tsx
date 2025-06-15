@@ -50,7 +50,13 @@ const PhotoManager = () => {
         return;
       }
 
-      setProperty(data);
+      // Ensure all required PropertyListing fields are present
+      const propertyData: PropertyListing = {
+        ...data,
+        floorplan_url: data.floorplan_url || null
+      };
+
+      setProperty(propertyData);
       setImages(data.images || []);
     } catch (error) {
       console.error('Error fetching property:', error);
