@@ -40,6 +40,7 @@ export const usePropertyDetails = (id: string) => {
       }
 
       console.log('Found property in property_listings');
+      // Return the data directly since it matches PropertyListing type
       return listingData;
     },
   });

@@ -35,10 +35,16 @@ const PropertyDetails = () => {
   };
 
   const handleBackClick = () => {
+    console.log('Back button clicked');
+    console.log('Location state:', location.state);
+    
     if (location.state?.searchParams) {
       console.log('Navigating back to search with params:', location.state.searchParams);
-      navigate(`/search${location.state.searchParams}`);
+      navigate(`/search${location.state.searchParams}`, { 
+        state: { restoreScrollPosition: location.state.scrollPosition } 
+      });
     } else {
+      console.log('No search params found, using browser back');
       navigate(-1);
     }
   };
