@@ -4,14 +4,17 @@ import { useFormContext } from 'react-hook-form';
 import { FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Eye } from 'lucide-react';
 import { PropertyFormData } from './PropertyFormSchema';
 import { useImageUpload } from './hooks/useImageUpload';
+import { usePhotoAnalysis } from './hooks/usePhotoAnalysis';
+import { PhotoAnalysisDisplay } from './PhotoAnalysisDisplay';
 
 export const PropertyImagesUpload = () => {
   const { setValue, watch } = useFormContext<PropertyFormData>();
   const [uploading, setUploading] = useState(false);
   const { uploadImage } = useImageUpload();
+  const { isAnalyzing, analysis, analyzePhotos } = usePhotoAnalysis();
 
   const images = watch('images') || [];
 
@@ -39,6 +42,10 @@ export const PropertyImagesUpload = () => {
   const removeImage = (indexToRemove: number) => {
     const updatedImages = images.filter((_, index) => index !== indexToRemove);
     setValue('images', updatedImages);
+  };
+
+  const handleAnalyzePhotos = () => {
+    analyzePhotos(images);
   };
 
   return (
@@ -71,25 +78,46 @@ export const PropertyImagesUpload = () => {
 
         {/* Display uploaded images */}
         {images.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-            {images.map((imageUrl, index) => (
-              <div key={index} className="relative group">
-                <img
-                  src={imageUrl}
-                  alt={`Property image ${index + 1}`}
-                  className="w-full h-32 object-cover rounded-lg border"
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => removeImage(index)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
+          <div className="mt-4 space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {images.map((imageUrl, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={imageUrl}
+                    alt={`Property image ${index + 1}`}
+                    className="w-full h-32 object-cover rounded-lg border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeImage(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            
+            {/* AI Analysis Button */}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleAnalyzePhotos}
+              disabled={isAnalyzing || images.length === 0}
+              className="w-full"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {isAnalyzing ? 'Analyzing Photos...' : 'Analyze Property Condition with AI'}
+            </Button>
+          </div>
+        )}
+
+        {/* Display Analysis Results */}
+        {analysis && (
+          <div className="mt-6">
+            <PhotoAnalysisDisplay analysis={analysis} />
           </div>
         )}
       </div>
