@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -5,6 +6,7 @@ import { PropertyGrid } from '@/components/PropertyGrid';
 import { SearchHeader } from '@/components/search/SearchHeader';
 import { SearchFiltersSection } from '@/components/search/SearchFiltersSection';
 import { PriceBedroomFilters } from '@/components/search/PriceBedroomFilters';
+import { BackToTopButton } from '@/components/BackToTopButton';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -132,6 +134,9 @@ const Search = () => {
       <div className="container mx-auto px-4 py-6">
         <PropertyGrid filters={appliedFilters} />
       </div>
+
+      {/* Back to Top Button */}
+      <BackToTopButton />
     </div>
   );
 };
