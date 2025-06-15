@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -5,7 +6,6 @@ import { PropertyGrid } from '@/components/PropertyGrid';
 import { SearchHeader } from '@/components/search/SearchHeader';
 import { SearchFiltersBar } from '@/components/search/SearchFiltersBar';
 import { BackToTopButton } from '@/components/BackToTopButton';
-import { CurrencySelector } from '@/components/CurrencySelector';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -77,10 +77,6 @@ const Search = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      {/* Currency selector at top right */}
-      <div className="container mx-auto px-4 mt-2 flex justify-end gap-2">
-        <CurrencySelector />
-      </div>
 
       {/* Search Header */}
       <div className="bg-white shadow-sm">

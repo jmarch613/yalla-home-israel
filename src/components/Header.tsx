@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Heart, User, Menu, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { CurrencySelector } from '@/components/CurrencySelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,14 +33,17 @@ export const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <div 
-              className="flex items-center space-x-2 cursor-pointer"
-              onClick={() => navigate('/')}
-            >
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Y</span>
+            <div className="flex items-center space-x-4">
+              <div 
+                className="flex items-center space-x-2 cursor-pointer"
+                onClick={() => navigate('/')}
+              >
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">Y</span>
+                </div>
+                <span className="text-xl font-bold text-primary">Yalla Home</span>
               </div>
-              <span className="text-xl font-bold text-primary">Yalla Home</span>
+              <CurrencySelector />
             </div>
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-gray-700 hover:text-primary font-medium">Buy</a>
