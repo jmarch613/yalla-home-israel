@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -29,6 +28,7 @@ const Search = () => {
   });
   const [appliedFilters, setAppliedFilters] = useState(searchFilters);
   const [searchLocation, setSearchLocation] = useState('');
+  const [sort, setSort] = useState('most-recent');
 
   useEffect(() => {
     const location = searchParams.get('location') || '';
@@ -67,6 +67,10 @@ const Search = () => {
     setAppliedFilters({ ...searchFilters });
   };
 
+  const handleSortChange = (newSort: string) => {
+    setSort(newSort);
+  };
+
   const propertyTypeForUrl = searchParams.get('type') || 'buy';
 
   return (
@@ -97,7 +101,11 @@ const Search = () => {
 
       {/* Property results */}
       <div className="container mx-auto px-4 py-6">
-        <PropertyGrid filters={appliedFilters} />
+        <PropertyGrid 
+          filters={appliedFilters} 
+          sort={sort}
+          onSortChange={handleSortChange}
+        />
       </div>
 
       <BackToTopButton />

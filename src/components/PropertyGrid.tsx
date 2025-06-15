@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PropertyCard } from '@/components/PropertyCard';
 import { useScrapedProperties, useTriggerScraping } from '@/hooks/useScrapedProperties';
@@ -8,9 +7,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PropertyGridProps {
   filters: any;
+  sort: string;
+  onSortChange: (sort: string) => void;
 }
 
-export const PropertyGrid = ({ filters }: PropertyGridProps) => {
+export const PropertyGrid = ({ filters, sort = 'most-recent', onSortChange }: PropertyGridProps) => {
   const { data: scrapedProperties, isLoading, error, refetch } = useScrapedProperties();
   const { triggerScraping } = useTriggerScraping();
   const { toast } = useToast();
@@ -54,11 +55,12 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
       property.property_type || 'Property',
       property.neighborhood || 'Jerusalem',
       'Recently Updated'
-    ].filter(Boolean)
+    ].filter(Boolean),
+    created_at: property.created_at
   })) || [];
 
   // Apply filters to the properties
-  const filteredProperties = allProperties.filter((property) => {
+  let filteredProperties = allProperties.filter((property) => {
     console.log('Filtering property:', property.title, 'with filters:', filters);
     
     // Location filter
@@ -118,6 +120,23 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
     return true;
   });
 
+  // ==== SORTING LOGIC ====
+  filteredProperties = [...filteredProperties];
+  if (sort === 'most-recent') {
+    filteredProperties.sort((a, b) => {
+      // Sort by created_at, newest first
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+  } else if (sort === 'price-low-high') {
+    filteredProperties.sort((a, b) => {
+      // Remove currency and commas, compare as numbers
+      const priceA = parseInt(a.price.replace(/[₪,]/g, '')) || 0;
+      const priceB = parseInt(b.price.replace(/[₪,]/g, '')) || 0;
+      return priceA - priceB;
+    });
+  }
+  // Other sort options ("Price: High to Low", "Size: Largest First") - can add later
+
   console.log(`Filtered ${filteredProperties.length} properties from ${allProperties.length} total`);
 
   if (isLoading) {
@@ -165,11 +184,15 @@ export const PropertyGrid = ({ filters }: PropertyGridProps) => {
             Update Data
           </Button>
         </div>
-        <select className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white">
-          <option>Sort by: Most Recent</option>
-          <option>Price: Low to High</option>
-          <option>Price: High to Low</option>
-          <option>Size: Largest First</option>
+        <select
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+          value={sort}
+          onChange={(e) => onSortChange(e.target.value)}
+        >
+          <option value="most-recent">Sort by: Most Recent</option>
+          <option value="price-low-high">Price: Low to High</option>
+          <option value="price-high-low" disabled>Price: High to Low</option>
+          <option value="size-largest" disabled>Size: Largest First</option>
         </select>
       </div>
       
