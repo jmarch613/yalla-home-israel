@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Control } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,9 +25,9 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
   // Generate total floors options 1-50
   const totalFloorsOptions = Array.from({ length: 50 }, (_, i) => i + 1);
   
-  // Generate year options from 1950 to current year
+  // Generate year options from 1700 to current year
   const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({ length: currentYear - 1949 }, (_, i) => currentYear - i);
+  const yearOptions = Array.from({ length: currentYear - 1699 }, (_, i) => currentYear - i);
 
   return (
     <Card>
