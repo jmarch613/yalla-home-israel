@@ -48,7 +48,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   // Helper function to transform title text from abbreviations to full phrases
   const transformTitle = (title: string) => {
     return title
-      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom${num > 1 ? 's' : ''}`)
+      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom`)
       .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
   };
 

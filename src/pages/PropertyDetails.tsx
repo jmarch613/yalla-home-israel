@@ -46,7 +46,7 @@ export default function PropertyDetails() {
   const transformText = (text: string) => {
     if (!text) return text;
     return text
-      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom${num > 1 ? 's' : ''}`)
+      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom`)
       .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
   };
 
