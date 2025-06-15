@@ -14,9 +14,9 @@ export interface PropertyCardType {
   created_at: string;
 }
 
-// Transforms raw scraped properties to the normalized PropertyCardType
+// Transforms raw scraped properties to the normalized PropertyCardType and removes duplicates
 export function transformProperties(scrapedProperties: ScrapedProperty[] = []): PropertyCardType[] {
-  return scrapedProperties.map((property) => ({
+  const transformed = scrapedProperties.map((property) => ({
     id: property.id,
     title: property.title || 'Property Title',
     location: property.address || 'Jerusalem',
@@ -33,6 +33,20 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
     ].filter(Boolean),
     created_at: property.created_at
   }));
+
+  // Remove duplicates based on title, address, and price
+  const seen = new Set();
+  const uniqueProperties = transformed.filter((property) => {
+    const key = `${property.title}-${property.location}-${property.price}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+
+  console.log(`Filtered ${transformed.length - uniqueProperties.length} duplicate properties`);
+  return uniqueProperties;
 }
 
 export function filterProperties(properties: PropertyCardType[], filters: any): PropertyCardType[] {
