@@ -2,6 +2,8 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getNeighborhoodsForCity, extractCityFromLocation } from '@/data/cityNeighborhoods';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { getTranslatedCityName } from '@/data/cityNameTranslations';
 
 interface NeighborhoodDropdownProps {
   selectedLocation: string;
@@ -14,12 +16,12 @@ export const NeighborhoodDropdown = ({
   selectedNeighborhood,
   onNeighborhoodChange
 }: NeighborhoodDropdownProps) => {
+  const { currentLanguage } = useLanguage();
   const city = extractCityFromLocation(selectedLocation);
   const neighborhoods = getNeighborhoodsForCity(city);
   const hasNeighborhoods = neighborhoods.length > 0;
 
   const handleValueChange = (value: string) => {
-    // Convert "any" back to empty string for the parent component
     onNeighborhoodChange(value === "any" ? "" : value);
   };
 
@@ -31,10 +33,12 @@ export const NeighborhoodDropdown = ({
         disabled={!hasNeighborhoods}
       >
         <SelectTrigger className="h-10 bg-white border-gray-300">
-          <SelectValue placeholder={hasNeighborhoods ? "Any neighborhood" : "Select a city first"} />
+          <SelectValue placeholder={hasNeighborhoods ? getTranslatedCityName(city, currentLanguage) + "…" : "Select a city first"} />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
-          <SelectItem value="any">Any neighborhood</SelectItem>
+          <SelectItem value="any">
+            {hasNeighborhoods ? getTranslatedCityName(city, currentLanguage) : "Any neighborhood"}
+          </SelectItem>
           {neighborhoods.map((neighborhood) => (
             <SelectItem key={neighborhood} value={neighborhood}>
               {neighborhood}
