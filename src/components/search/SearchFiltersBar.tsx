@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { NeighborhoodDropdown } from '@/components/NeighborhoodDropdown';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { PropertyTypeDropdown } from './PropertyTypeDropdown';
+import { PriceRangeDropdowns } from './PriceRangeDropdowns';
+import { BedroomsDropdown } from './BedroomsDropdown';
+import { FeatureCheckboxes } from './FeatureCheckboxes';
 
 interface SearchFiltersBarProps {
   searchFilters: {
@@ -35,41 +36,6 @@ export const SearchFiltersBar = ({
   onFiltersApply 
 }: SearchFiltersBarProps) => {
   const { t } = useLanguage();
-
-  const propertyTypes = [
-    { value: 'apartment', label: t('filters.property.apartment') },
-    { value: 'house', label: t('filters.property.house') },
-    { value: 'villa', label: t('filters.property.villa') },
-    { value: 'penthouse', label: t('filters.property.penthouse') },
-    { value: 'studio', label: t('filters.property.studio') }
-  ];
-
-  const priceOptions = [
-    { value: '500000', label: '₪500,000' },
-    { value: '750000', label: '₪750,000' },
-    { value: '1000000', label: '₪1,000,000' },
-    { value: '1500000', label: '₪1,500,000' },
-    { value: '2000000', label: '₪2,000,000' },
-    { value: '3000000', label: '₪3,000,000' },
-    { value: '5000000', label: '₪5,000,000+' }
-  ];
-
-  const bedroomOptions = [
-    { value: '1', label: '1+' },
-    { value: '2', label: '2+' },
-    { value: '3', label: '3+' },
-    { value: '4', label: '4+' },
-    { value: '5', label: '5+' }
-  ];
-
-  const featureOptions = [
-    { key: 'parking', label: t('filters.parking') },
-    { key: 'balcony', label: t('filters.balcony') },
-    { key: 'safeRoom', label: t('filters.safe.room') },
-    { key: 'bombShelter', label: t('filters.bomb.shelter') },
-    { key: 'elevator', label: t('filters.elevator') },
-    { key: 'garden', label: t('filters.garden') },
-  ];
 
   const handleFilterChange = (field: string, value: string) => {
     const updatedFilters = { ...searchFilters, [field]: value };
@@ -101,24 +67,11 @@ export const SearchFiltersBar = ({
     <div className="py-4 space-y-4">
       {/* Main filters row */}
       <div className="flex flex-wrap items-center gap-4">
-        {/* Property Type */}
-        <div className="min-w-[140px]">
-          <Select value={searchFilters.propertyType} onValueChange={(value) => handleFilterChange('propertyType', value === 'any' ? '' : value)}>
-            <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder={t('filters.property.type')} />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">{t('filters.property.any')}</SelectItem>
-              {propertyTypes.map((type) => (
-                <SelectItem key={type.value} value={type.value}>
-                  {type.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <PropertyTypeDropdown
+          value={searchFilters.propertyType}
+          onChange={(value) => handleFilterChange('propertyType', value)}
+        />
 
-        {/* Neighborhood */}
         <div className="min-w-[140px]">
           <NeighborhoodDropdown
             selectedLocation={searchFilters.location}
@@ -127,56 +80,17 @@ export const SearchFiltersBar = ({
           />
         </div>
 
-        {/* Min Price */}
-        <div className="min-w-[120px]">
-          <Select value={searchFilters.minPrice} onValueChange={(value) => handleFilterChange('minPrice', value === 'any' ? '' : value)}>
-            <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder={t('filters.price.min')} />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">{t('filters.price.no.min')}</SelectItem>
-              {priceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <PriceRangeDropdowns
+          minPrice={searchFilters.minPrice}
+          maxPrice={searchFilters.maxPrice}
+          onMinPriceChange={(value) => handleFilterChange('minPrice', value)}
+          onMaxPriceChange={(value) => handleFilterChange('maxPrice', value)}
+        />
 
-        {/* Max Price */}
-        <div className="min-w-[120px]">
-          <Select value={searchFilters.maxPrice} onValueChange={(value) => handleFilterChange('maxPrice', value === 'any' ? '' : value)}>
-            <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder={t('filters.price.max')} />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">{t('filters.price.no.max')}</SelectItem>
-              {priceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Bedrooms */}
-        <div className="min-w-[110px]">
-          <Select value={searchFilters.bedrooms} onValueChange={(value) => handleFilterChange('bedrooms', value === 'any' ? '' : value)}>
-            <SelectTrigger className="h-10 bg-white border-gray-300">
-              <SelectValue placeholder={t('filters.bedrooms')} />
-            </SelectTrigger>
-            <SelectContent className="bg-white border shadow-lg z-50">
-              <SelectItem value="any">{t('filters.property.any')}</SelectItem>
-              {bedroomOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <BedroomsDropdown
+          value={searchFilters.bedrooms}
+          onChange={(value) => handleFilterChange('bedrooms', value)}
+        />
 
         {/* Search Button */}
         <Button 
@@ -188,22 +102,10 @@ export const SearchFiltersBar = ({
       </div>
 
       {/* Feature filters row */}
-      <div className="border-t pt-4">
-        <div className="flex flex-wrap items-center gap-6">
-          {featureOptions.map((option) => (
-            <div key={option.key} className="flex items-center space-x-2">
-              <Checkbox 
-                id={option.key}
-                checked={searchFilters.features[option.key as keyof typeof searchFilters.features]}
-                onCheckedChange={(checked) => handleFeatureChange(option.key, checked as boolean)}
-              />
-              <Label htmlFor={option.key} className="text-sm font-normal">
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
+      <FeatureCheckboxes
+        features={searchFilters.features}
+        onFeatureChange={handleFeatureChange}
+      />
     </div>
   );
 };
