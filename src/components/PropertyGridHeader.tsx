@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Database } from 'lucide-react';
+import { CurrencySelector } from './CurrencySelector';
 
 interface PropertyGridHeaderProps {
   filteredCount: number;
@@ -18,35 +19,40 @@ export const PropertyGridHeader = ({
   sort,
   onSortChange
 }: PropertyGridHeaderProps) => (
-  <div className="flex justify-between items-center mb-6">
-    <div className="flex items-center gap-4">
-      <p className="text-gray-700 font-medium">
-        {filteredCount} properties
-        {filteredCount !== totalCount && (
-          <span className="text-sm font-normal text-gray-500 ml-2">
-            (filtered from {totalCount} total)
-          </span>
-        )}
-      </p>
-      <Button
-        onClick={onUpdateData}
-        variant="outline"
-        size="sm"
-        className="flex items-center gap-2"
-      >
-        <Database className="w-4 h-4" />
-        Update Data
-      </Button>
+  <div className="mb-6">
+    <div className="flex justify-end items-center mb-2">
+      <CurrencySelector />
     </div>
-    <select
-      className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-      value={sort}
-      onChange={(e) => onSortChange(e.target.value)}
-    >
-      <option value="most-recent">Sort by: Most Recent</option>
-      <option value="price-low-high">Price: Low to High</option>
-      <option value="price-high-low">Price: High to Low</option>
-      <option value="size-largest">Size: Largest First</option>
-    </select>
+    <div className="flex justify-between items-center">
+      <div className="flex items-center gap-4">
+        <p className="text-gray-700 font-medium">
+          {filteredCount} properties
+          {filteredCount !== totalCount && (
+            <span className="text-sm font-normal text-gray-500 ml-2">
+              (filtered from {totalCount} total)
+            </span>
+          )}
+        </p>
+        <Button
+          onClick={onUpdateData}
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <Database className="w-4 h-4" />
+          Update Data
+        </Button>
+      </div>
+      <select
+        className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+        value={sort}
+        onChange={(e) => onSortChange(e.target.value)}
+      >
+        <option value="most-recent">Sort by: Most Recent</option>
+        <option value="price-low-high">Price: Low to High</option>
+        <option value="price-high-low">Price: High to Low</option>
+        <option value="size-largest">Size: Largest First</option>
+      </select>
+    </div>
   </div>
 );
