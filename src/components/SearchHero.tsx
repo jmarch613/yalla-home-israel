@@ -61,7 +61,7 @@ export const SearchHero = () => {
                   value={location}
                   onChange={setLocation}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  placeholder="Enter city, town, or neighborhood"
+                  placeholder="Enter city or town"
                   suggestions={israeliLocations}
                 />
               </div>
