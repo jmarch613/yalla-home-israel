@@ -23,6 +23,7 @@ const ListProperty = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [propertyId, setPropertyId] = useState<string | null>(null);
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -87,11 +88,15 @@ const ListProperty = () => {
         floorplan_url: data.floorplan_url || null,
       };
 
-      const { error } = await supabase
+      const { data: result, error } = await supabase
         .from('property_listings')
-        .insert(insertData);
+        .insert(insertData)
+        .select()
+        .single();
 
       if (error) throw error;
+
+      setPropertyId(result.id);
 
       toast({
         title: "Property listed successfully!",
@@ -158,6 +163,19 @@ const ListProperty = () => {
                   Cancel
                 </Button>
               </div>
+              
+              {propertyId && (
+                <div className="mt-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => navigate(`/property/${propertyId}/photos`)}
+                    className="w-full"
+                  >
+                    Manage Photos Order
+                  </Button>
+                </div>
+              )}
             </form>
           </Form>
         </div>
