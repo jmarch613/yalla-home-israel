@@ -55,7 +55,10 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
 }
 
 export function filterProperties(properties: PropertyCardType[], filters: any): PropertyCardType[] {
-  return properties.filter((property) => {
+  console.log('Filtering properties. Total before filter:', properties.length);
+  console.log('Applied filters:', filters);
+  
+  const filtered = properties.filter((property) => {
     // Location filter - improved to check multiple fields and be case-insensitive
     if (filters.location) {
       const searchLocation = filters.location.toLowerCase();
@@ -63,11 +66,19 @@ export function filterProperties(properties: PropertyCardType[], filters: any): 
       const propertyCity = (property.city || '').toLowerCase();
       const propertyFeatures = property.features.map(f => f.toLowerCase()).join(' ');
       
+      console.log(`Checking property: ${property.title}`);
+      console.log(`  - Property location: "${propertyLocation}"`);
+      console.log(`  - Property city: "${propertyCity}"`);
+      console.log(`  - Property features: "${propertyFeatures}"`);
+      console.log(`  - Search location: "${searchLocation}"`);
+      
       // Check if the search location matches any of: location, city, or features
       const locationMatch = 
         propertyLocation.includes(searchLocation) ||
         propertyCity.includes(searchLocation) ||
         propertyFeatures.includes(searchLocation);
+      
+      console.log(`  - Location match: ${locationMatch}`);
       
       if (!locationMatch) {
         return false;
@@ -126,6 +137,9 @@ export function filterProperties(properties: PropertyCardType[], filters: any): 
     }
     return true;
   });
+  
+  console.log('Properties after filtering:', filtered.length);
+  return filtered;
 }
 
 export function sortProperties(properties: PropertyCardType[], sort: string): PropertyCardType[] {

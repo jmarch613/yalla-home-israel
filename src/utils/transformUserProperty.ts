@@ -6,10 +6,12 @@ import type { PropertyListing } from "@/types/database";
 import type { PropertyCardType } from "@/utils/propertyFiltering";
 
 export function transformUserPropertyToCardType(property: PropertyListing): PropertyCardType {
+  console.log('Transforming user property:', property.title, 'City:', property.city, 'Address:', property.address);
+  
   return {
     id: property.id,
     title: property.title || "Property Title",
-    location: property.address || property.city || "Jerusalem",
+    location: property.city || property.address || "Jerusalem", // Use city first, then address
     price: property.price ? `₪${property.price}` : "₪0",
     type: property.listing_type ?? "sale",
     bedrooms: property.bedrooms ?? 0,
@@ -31,7 +33,7 @@ export function transformUserPropertyToCardType(property: PropertyListing): Prop
       ...(property.pets_allowed ? ["Pets Allowed"] : []),
       ...(property.safe_room ? ["Safe Room"] : []),
       ...(property.bomb_shelter ? ["Bomb Shelter"] : []),
-      property.created_at ? "User Listing" : "",
+      "User Listing", // Always add this to distinguish user listings
     ].filter(Boolean),
     created_at: property.created_at,
     city: property.city || "Jerusalem", // Add city field for filtering
