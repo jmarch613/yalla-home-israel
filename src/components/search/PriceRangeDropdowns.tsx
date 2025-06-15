@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface PriceRangeDropdownsProps {
   minPrice: string;
@@ -16,17 +16,24 @@ export const PriceRangeDropdowns = ({
   onMinPriceChange, 
   onMaxPriceChange 
 }: PriceRangeDropdownsProps) => {
-  const { t } = useLanguage();
+  const { convertPrice, getCurrencySymbol, selectedCurrency } = useCurrency();
 
-  const priceOptions = [
-    { value: '500000', label: '₪500,000' },
-    { value: '750000', label: '₪750,000' },
-    { value: '1000000', label: '₪1,000,000' },
-    { value: '1500000', label: '₪1,500,000' },
-    { value: '2000000', label: '₪2,000,000' },
-    { value: '3000000', label: '₪3,000,000' },
-    { value: '5000000', label: '₪5,000,000+' }
+  // Base price options in ILS
+  const basePriceOptions = [
+    { value: '500000', ilsPrice: '₪500,000' },
+    { value: '750000', ilsPrice: '₪750,000' },
+    { value: '1000000', ilsPrice: '₪1,000,000' },
+    { value: '1500000', ilsPrice: '₪1,500,000' },
+    { value: '2000000', ilsPrice: '₪2,000,000' },
+    { value: '3000000', ilsPrice: '₪3,000,000' },
+    { value: '5000000', ilsPrice: '₪5,000,000+' }
   ];
+
+  // Convert prices to selected currency for display
+  const priceOptions = basePriceOptions.map(option => ({
+    ...option,
+    label: convertPrice(option.ilsPrice)
+  }));
 
   const handleMinPriceChange = (value: string) => {
     onMinPriceChange(value === 'any' ? '' : value);
@@ -42,10 +49,10 @@ export const PriceRangeDropdowns = ({
       <div className="min-w-[120px]">
         <Select value={minPrice} onValueChange={handleMinPriceChange}>
           <SelectTrigger className="h-10 bg-white border-gray-300">
-            <SelectValue placeholder={t('filters.price.min')} />
+            <SelectValue placeholder="Min Price" />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
-            <SelectItem value="any">{t('filters.price.no.min')}</SelectItem>
+            <SelectItem value="any">No Min</SelectItem>
             {priceOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -59,10 +66,10 @@ export const PriceRangeDropdowns = ({
       <div className="min-w-[120px]">
         <Select value={maxPrice} onValueChange={handleMaxPriceChange}>
           <SelectTrigger className="h-10 bg-white border-gray-300">
-            <SelectValue placeholder={t('filters.price.max')} />
+            <SelectValue placeholder="Max Price" />
           </SelectTrigger>
           <SelectContent className="bg-white border shadow-lg z-50">
-            <SelectItem value="any">{t('filters.price.no.max')}</SelectItem>
+            <SelectItem value="any">No Max</SelectItem>
             {priceOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}

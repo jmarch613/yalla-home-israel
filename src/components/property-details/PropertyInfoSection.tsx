@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, ExternalLink } from 'lucide-react';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface PropertyInfoSectionProps {
   title: string | null;
@@ -22,6 +23,8 @@ export const PropertyInfoSection = ({
   listingUrl, 
   transformText 
 }: PropertyInfoSectionProps) => {
+  const { convertPrice } = useCurrency();
+
   // Function to format property type
   const formatPropertyType = (type: string | null) => {
     if (!type) return 'N/A';
@@ -29,6 +32,9 @@ export const PropertyInfoSection = ({
     // Capitalize first letter
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
+
+  // Convert price to selected currency
+  const convertedPrice = price ? convertPrice(price) : 'N/A';
 
   return (
     <div>
@@ -41,7 +47,7 @@ export const PropertyInfoSection = ({
           <span>{address}</span>
         </div>
         <div className="text-3xl font-bold text-primary">
-          {price}
+          {convertedPrice}
         </div>
       </div>
 

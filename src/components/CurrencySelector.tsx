@@ -2,9 +2,10 @@
 import React, { useState, useRef } from "react";
 import { DollarSign, Euro, PoundSterling } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCurrency, Currency } from "@/contexts/CurrencyContext";
 
 interface CurrencyOption {
-  code: "ILS" | "USD" | "EUR" | "GBP";
+  code: Currency;
   label: string;
   icon: React.ReactNode;
   symbol: string;
@@ -39,8 +40,10 @@ const options: CurrencyOption[] = [
 
 export const CurrencySelector = () => {
   const [open, setOpen] = useState(false);
-  const [currency, setCurrency] = useState<CurrencyOption>(options[0]);
+  const { selectedCurrency, setSelectedCurrency, getCurrencySymbol } = useCurrency();
   const containerRef = useRef<HTMLDivElement|null>(null);
+
+  const currentOption = options.find(opt => opt.code === selectedCurrency) || options[0];
 
   // Close on outside click
   React.useEffect(() => {
@@ -53,6 +56,11 @@ export const CurrencySelector = () => {
     return () => window.removeEventListener("mousedown", handle);
   }, [open]);
 
+  const handleCurrencySelect = (currency: Currency) => {
+    setSelectedCurrency(currency);
+    setOpen(false);
+  };
+
   return (
     <div className="relative" ref={containerRef}>
       <Button
@@ -63,8 +71,7 @@ export const CurrencySelector = () => {
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        {/* Only show the icon/symbol */}
-        <span className="flex items-center justify-center text-lg">{currency.symbol}</span>
+        <span className="flex items-center justify-center text-lg">{getCurrencySymbol(selectedCurrency)}</span>
         <svg className="ml-1 w-4 h-4 opacity-60" viewBox="0 0 20 20" fill="none">
           <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth={1.5} />
         </svg>
@@ -77,15 +84,11 @@ export const CurrencySelector = () => {
           {options.map((opt) => (
             <li
               key={opt.code}
-              className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer ${currency.code === opt.code ? "bg-gray-100 font-bold" : ""}`}
-              onClick={() => {
-                setCurrency(opt);
-                setOpen(false);
-              }}
+              className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer ${selectedCurrency === opt.code ? "bg-gray-100 font-bold" : ""}`}
+              onClick={() => handleCurrencySelect(opt.code)}
               role="option"
-              aria-selected={currency.code === opt.code}
+              aria-selected={selectedCurrency === opt.code}
             >
-              {/* Only show the symbol */}
               <span className="flex items-center text-lg">{opt.symbol}</span>
             </li>
           ))}

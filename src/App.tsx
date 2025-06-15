@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Search from "./pages/Search";
@@ -19,7 +19,7 @@ const App = () => (
     <Toaster />
     <Sonner />
     <BrowserRouter>
-      <LanguageProvider>
+      <CurrencyProvider>
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -31,7 +31,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
-      </LanguageProvider>
+      </CurrencyProvider>
     </BrowserRouter>
   </QueryClientProvider>
 );

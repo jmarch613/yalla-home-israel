@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Bed, Bath, Square, MapPin, ImageOff, Sofa } from 'lucide-react';
+import { Heart, Bed, Bath, Square, MapPin, ImageOff } from 'lucide-react';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface PropertyCardProps {
   property: {
@@ -23,6 +25,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [imageError, setImageError] = useState(false);
+  const { convertPrice } = useCurrency();
 
   const handleViewDetails = () => {
     // Capture current scroll position
@@ -65,6 +68,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
   };
 
+  // Convert price to selected currency
+  const convertedPrice = convertPrice(property.price);
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="relative cursor-pointer" onClick={handleViewDetails}>
@@ -102,7 +108,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
       
       <CardContent className="p-4">
         <div className="mb-2">
-          <p className="text-2xl font-bold text-primary">{property.price}</p>
+          <p className="text-2xl font-bold text-primary">{convertedPrice}</p>
           {property.type === 'rent' && <p className="text-sm text-gray-600">per month</p>}
         </div>
         
