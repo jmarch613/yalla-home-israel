@@ -4,29 +4,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 
-interface SearchHeroProps {
-  onSearch: (filters: any) => void;
-}
-
-export const SearchHero = ({ onSearch }: SearchHeroProps) => {
+export const SearchHero = () => {
   const [location, setLocation] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
+  const navigate = useNavigate();
 
   const popularAreas = [
     'Tel Aviv', 'Jerusalem', 'Haifa', 'Herzliya', 'Ramat Gan', 'Netanya'
   ];
 
   const handleSearch = () => {
-    onSearch({
-      location,
-      type: activeTab,
-      propertyType: 'all',
-      minPrice: '',
-      maxPrice: '',
-      bedrooms: '',
-      bathrooms: ''
-    });
+    if (location.trim()) {
+      navigate(`/search?location=${encodeURIComponent(location)}&type=${activeTab}`);
+    }
+  };
+
+  const handlePopularAreaClick = (area: string) => {
+    navigate(`/search?location=${encodeURIComponent(area)}&type=${activeTab}`);
   };
 
   return (
@@ -65,6 +61,7 @@ export const SearchHero = ({ onSearch }: SearchHeroProps) => {
                   placeholder="Enter location (e.g., Tel Aviv, Jerusalem)"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10"
                 />
               </div>
@@ -82,7 +79,7 @@ export const SearchHero = ({ onSearch }: SearchHeroProps) => {
                     key={area}
                     variant="outline"
                     size="sm"
-                    onClick={() => setLocation(area)}
+                    onClick={() => handlePopularAreaClick(area)}
                     className="text-xs"
                   >
                     {area}
