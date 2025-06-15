@@ -1,12 +1,13 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Bed, Bath, Square, MapPin } from 'lucide-react';
 
 interface PropertyCardProps {
   property: {
-    id: number;
+    id: number | string;
     title: string;
     location: string;
     price: string;
@@ -20,9 +21,15 @@ interface PropertyCardProps {
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
+  const navigate = useNavigate();
+
+  const handleViewDetails = () => {
+    navigate(`/property/${property.id}`);
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="relative">
+      <div className="relative cursor-pointer" onClick={handleViewDetails}>
         <img
           src={property.image}
           alt={property.title}
@@ -32,6 +39,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           variant="ghost"
           size="sm"
           className="absolute top-2 right-2 bg-white/90 hover:bg-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            // Handle favorite functionality here
+          }}
         >
           <Heart className="w-4 h-4" />
         </Button>
@@ -46,7 +57,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           {property.type === 'rent' && <p className="text-sm text-gray-600">per month</p>}
         </div>
         
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">{property.title}</h3>
+        <h3 className="font-semibold text-lg mb-2 line-clamp-2 cursor-pointer" onClick={handleViewDetails}>
+          {property.title}
+        </h3>
         
         <div className="flex items-center text-gray-600 mb-3">
           <MapPin className="w-4 h-4 mr-1" />
@@ -79,7 +92,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           ))}
         </div>
         
-        <Button className="w-full bg-primary hover:bg-primary/90">
+        <Button 
+          className="w-full bg-primary hover:bg-primary/90"
+          onClick={handleViewDetails}
+        >
           View Details
         </Button>
       </CardContent>

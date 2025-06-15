@@ -1,48 +1,52 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PropertyCard } from '@/components/PropertyCard';
-
-const featuredProperties = [
-  {
-    id: 1,
-    title: 'Luxury Penthouse in Herzliya Marina',
-    location: 'Marina, Herzliya',
-    price: '₪12,000,000',
-    type: 'sale',
-    bedrooms: 5,
-    bathrooms: 4,
-    area: 280,
-    image: '/placeholder.svg',
-    features: ['Sea View', 'Private Pool', 'Parking', 'Storage']
-  },
-  {
-    id: 2,
-    title: 'Historic Apartment in Old Jaffa',
-    location: 'Old Jaffa, Tel Aviv',
-    price: '₪7,500,000',
-    type: 'sale',
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 110,
-    image: '/placeholder.svg',
-    features: ['Historic Building', 'Renovated', 'Sea View']
-  },
-  {
-    id: 3,
-    title: 'Modern Villa in Caesarea',
-    location: 'Caesarea',
-    price: '₪18,500,000',
-    type: 'sale',
-    bedrooms: 6,
-    bathrooms: 5,
-    area: 400,
-    image: '/placeholder.svg',
-    features: ['Pool', 'Garden', 'Golf Course View', 'Security']
-  }
-];
+import { useScrapedProperties } from '@/hooks/useScrapedProperties';
+import { RefreshCw } from 'lucide-react';
 
 export const FeaturedProperties = () => {
+  const { data: scrapedProperties, isLoading } = useScrapedProperties();
+
+  // Get the top 3 most expensive properties as featured
+  const featuredProperties = scrapedProperties
+    ?.sort((a, b) => {
+      const priceA = parseFloat(a.price?.replace(/[^\d]/g, '') || '0');
+      const priceB = parseFloat(b.price?.replace(/[^\d]/g, '') || '0');
+      return priceB - priceA;
+    })
+    .slice(0, 3)
+    .map((property) => ({
+      id: property.id,
+      title: property.title || 'Featured Property',
+      location: property.address || 'Jerusalem',
+      price: property.price || '₪0',
+      type: 'sale',
+      bedrooms: property.bedrooms || 0,
+      bathrooms: property.bathrooms || 0,
+      area: property.area || 0,
+      image: property.image_url || '/placeholder.svg',
+      features: [
+        property.property_type || 'Property',
+        property.neighborhood || 'Jerusalem',
+        'Featured'
+      ].filter(Boolean)
+    })) || [];
+
+  if (isLoading) {
+    return (
+      <div className="mb-12">
+        <h2 className="text-3xl font-bold mb-6">Featured Properties</h2>
+        <div className="flex items-center justify-center py-12">
+          <RefreshCw className="w-8 h-8 animate-spin text-gray-500" />
+        </div>
+      </div>
+    );
+  }
+
+  if (featuredProperties.length === 0) {
+    return null; // Don't show featured section if no properties
+  }
+
   return (
     <div className="mb-12">
       <h2 className="text-3xl font-bold mb-6">Featured Properties</h2>
