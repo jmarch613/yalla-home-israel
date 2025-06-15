@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Control, useWatch, useFormContext } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,13 +19,42 @@ interface BasicInfoSectionProps {
 export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
   const { toast } = useToast();
   const { setValue } = useFormContext<PropertyFormData>();
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+  const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
 
   // Watch all form fields to get current values for AI generation
   const formValues = useWatch({ control });
 
+  const generateTitle = async () => {
+    setIsGeneratingTitle(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-property-title', {
+        body: { propertyData: formValues }
+      });
+
+      if (error) throw error;
+
+      // Set the generated title in the form using setValue
+      setValue('title', data.title);
+
+      toast({
+        title: "Title generated!",
+        description: "AI has created a property title based on your details.",
+      });
+    } catch (error) {
+      console.error('Error generating title:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate title. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingTitle(false);
+    }
+  };
+
   const generateDescription = async () => {
-    setIsGenerating(true);
+    setIsGeneratingDescription(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-property-description', {
         body: { propertyData: formValues }
@@ -47,7 +77,7 @@ export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIsGeneratingDescription(false);
     }
   };
 
@@ -57,19 +87,41 @@ export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
         <CardTitle>Basic Information</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <FormField
-          control={control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Beautiful apartment in the city center" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        <div className="space-y-2">
+          <FormField
+            control={control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Beautiful apartment in the city center" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={generateTitle}
+            disabled={isGeneratingTitle || !formValues.city}
+            className="w-full"
+          >
+            {isGeneratingTitle ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Sparkles className="w-4 h-4 mr-2" />
+            )}
+            {isGeneratingTitle ? 'Generating...' : 'Generate Title with AI'}
+          </Button>
+          {!formValues.city && (
+            <p className="text-sm text-muted-foreground">
+              Please fill in the location details first to generate a title.
+            </p>
           )}
-        />
+        </div>
 
         <div className="space-y-2">
           <FormField
@@ -94,15 +146,15 @@ export const BasicInfoSection = ({ control }: BasicInfoSectionProps) => {
             variant="outline"
             size="sm"
             onClick={generateDescription}
-            disabled={isGenerating || !formValues.city}
+            disabled={isGeneratingDescription || !formValues.city}
             className="w-full"
           >
-            {isGenerating ? (
+            {isGeneratingDescription ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
               <Sparkles className="w-4 h-4 mr-2" />
             )}
-            {isGenerating ? 'Generating...' : 'Generate with AI'}
+            {isGeneratingDescription ? 'Generating...' : 'Generate Description with AI'}
           </Button>
           {!formValues.city && (
             <p className="text-sm text-muted-foreground">
