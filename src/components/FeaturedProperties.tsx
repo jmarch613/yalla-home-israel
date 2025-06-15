@@ -3,34 +3,22 @@ import React from 'react';
 import { PropertyCard } from '@/components/PropertyCard';
 import { useScrapedProperties } from '@/hooks/useScrapedProperties';
 import { RefreshCw } from 'lucide-react';
+import { transformProperties } from '@/utils/propertyFiltering';
 
 export const FeaturedProperties = () => {
   const { data: scrapedProperties, isLoading } = useScrapedProperties();
 
-  // Get the top 3 most expensive properties as featured
-  const featuredProperties = scrapedProperties
+  // Use the deduplication transform to ensure uniqueness
+  const transformed = transformProperties(scrapedProperties);
+
+  // Get the top 3 most expensive unique properties as featured
+  const featuredProperties = transformed
     ?.sort((a, b) => {
       const priceA = parseFloat(a.price?.replace(/[^\d]/g, '') || '0');
       const priceB = parseFloat(b.price?.replace(/[^\d]/g, '') || '0');
       return priceB - priceA;
     })
-    .slice(0, 3)
-    .map((property) => ({
-      id: property.id,
-      title: property.title || 'Featured Property',
-      location: property.address || 'Jerusalem',
-      price: property.price || '₪0',
-      type: 'sale',
-      bedrooms: property.bedrooms || 0,
-      bathrooms: property.bathrooms || 0,
-      area: property.area || 0,
-      image: property.image_url || '/placeholder.svg',
-      features: [
-        property.property_type || 'Property',
-        property.neighborhood || 'Jerusalem',
-        'Featured'
-      ].filter(Boolean)
-    })) || [];
+    .slice(0, 3);
 
   if (isLoading) {
     return (
@@ -43,7 +31,7 @@ export const FeaturedProperties = () => {
     );
   }
 
-  if (featuredProperties.length === 0) {
+  if (!featuredProperties || featuredProperties.length === 0) {
     return null; // Don't show featured section if no properties
   }
 
