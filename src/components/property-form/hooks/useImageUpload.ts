@@ -11,15 +11,23 @@ export const useImageUpload = () => {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `${fileName}`;
 
+      console.log('Uploading image to bucket:', 'property-images');
+      console.log('File path:', filePath);
+
       const { error: uploadError } = await supabase.storage
         .from('property-images')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('property-images')
         .getPublicUrl(filePath);
+
+      console.log('Generated public URL:', publicUrl);
 
       toast({
         title: isFloorplan ? "Floorplan uploaded" : "Images uploaded",
