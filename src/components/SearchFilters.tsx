@@ -63,6 +63,20 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
     { value: '4', label: '4+' }
   ];
 
+  const priceOptions = [
+    { value: '500000', label: '₪500,000' },
+    { value: '750000', label: '₪750,000' },
+    { value: '1000000', label: '₪1,000,000' },
+    { value: '1500000', label: '₪1,500,000' },
+    { value: '2000000', label: '₪2,000,000' },
+    { value: '2500000', label: '₪2,500,000' },
+    { value: '3000000', label: '₪3,000,000' },
+    { value: '4000000', label: '₪4,000,000' },
+    { value: '5000000', label: '₪5,000,000' },
+    { value: '7500000', label: '₪7,500,000' },
+    { value: '10000000', label: '₪10,000,000+' }
+  ];
+
   const handleInputChange = (field: string, value: string) => {
     const updatedFilters = { ...filters, [field]: value };
     setFilters(updatedFilters);
@@ -141,18 +155,32 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
         </div>
 
         <div>
-          <Label className="text-sm font-medium">Price Range (₪)</Label>
+          <Label className="text-sm font-medium">Price Range</Label>
           <div className="mt-2 grid grid-cols-2 gap-2">
-            <Input 
-              placeholder="Min price" 
-              value={filters.minPrice}
-              onChange={(e) => handleInputChange('minPrice', e.target.value)}
-            />
-            <Input 
-              placeholder="Max price" 
-              value={filters.maxPrice}
-              onChange={(e) => handleInputChange('maxPrice', e.target.value)}
-            />
+            <Select value={filters.minPrice} onValueChange={(value) => handleInputChange('minPrice', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Min price" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border shadow-lg z-50">
+                {priceOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={filters.maxPrice} onValueChange={(value) => handleInputChange('maxPrice', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Max price" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border shadow-lg z-50">
+                {priceOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
