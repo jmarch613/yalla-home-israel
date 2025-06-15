@@ -1,51 +1,26 @@
-
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/components/ui/use-toast';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 import { PropertyListing } from '@/types/database';
 
-export const usePhotoManager = (id: string | undefined) => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+export const usePhotoManager = (propertyId: string) => {
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
-  const [property, setProperty] = useState<PropertyListing | null>(null);
-  const [images, setImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!user || !id) {
-      navigate('/auth');
-      return;
-    }
-    fetchProperty();
-  }, [user, id, navigate]);
-
-  const fetchProperty = async () => {
-    try {
+  const { data: property, isLoading } = useQuery({
+    queryKey: ['property', propertyId],
+    queryFn: async (): Promise<PropertyListing> => {
       const { data, error } = await supabase
         .from('property_listings')
         .select('*')
-        .eq('id', id)
-        .eq('user_id', user?.id)
+        .eq('id', propertyId)
         .single();
 
       if (error) throw error;
-
-      if (!data) {
-        toast({
-          title: "Property not found",
-          description: "The property you're looking for doesn't exist or you don't have permission to view it.",
-          variant: "destructive",
-        });
-        navigate('/');
-        return;
-      }
-
-      // Properly map the database result to PropertyListing type
-      const propertyData: PropertyListing = {
+      
+      return {
         id: data.id,
         user_id: data.user_id,
         title: data.title,
@@ -74,79 +49,95 @@ export const usePhotoManager = (id: string | undefined) => {
         heating: data.heating,
         furnished: data.furnished,
         pets_allowed: data.pets_allowed,
-        safe_room: false, // Default value since this field doesn't exist in current schema
-        bomb_shelter: false, // Default value since this field doesn't exist in current schema
-        images: data.images,
-        floorplan_url: null, // Default value since this field doesn't exist in current schema
+        safe_room: data.safe_room || false,
+        bomb_shelter: data.bomb_shelter || false,
+        images: data.images || [],
+        floorplan_url: data.floorplan_url,
+        status: data.status as PropertyListing['status'],
         created_at: data.created_at,
         updated_at: data.updated_at,
       };
+    },
+  });
 
-      setProperty(propertyData);
-      setImages(data.images || []);
-    } catch (error) {
-      console.error('Error fetching property:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load property data.",
-        variant: "destructive",
-      });
-      navigate('/');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const reorderImages = (draggedIndex: number, dropIndex: number) => {
-    if (draggedIndex === dropIndex) return;
-
-    const newImages = [...images];
-    const draggedImage = newImages[draggedIndex];
-    
-    newImages.splice(draggedIndex, 1);
-    newImages.splice(dropIndex, 0, draggedImage);
-    
-    setImages(newImages);
-  };
-
-  const removeImage = (indexToRemove: number) => {
-    const updatedImages = images.filter((_, index) => index !== indexToRemove);
-    setImages(updatedImages);
-  };
-
-  const saveImageOrder = async () => {
-    setSaving(true);
-    try {
+  const updateImagesMutation = useMutation({
+    mutationFn: async (newImages: string[]) => {
       const { error } = await supabase
         .from('property_listings')
-        .update({ images })
-        .eq('id', id);
+        .update({ images: newImages })
+        .eq('id', propertyId);
 
       if (error) throw error;
-
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['property', propertyId] });
       toast({
         title: "Success",
-        description: "Photo order has been saved successfully.",
+        description: "Property images updated successfully",
       });
-    } catch (error) {
-      console.error('Error saving image order:', error);
+    },
+    onError: (error) => {
+      console.error('Error updating images:', error);
       toast({
         title: "Error",
-        description: "Failed to save photo order.",
+        description: "Failed to update property images",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const uploadImages = async (files: File[]) => {
+    setIsUploading(true);
+    const uploadedUrls: string[] = [];
+
+    try {
+      for (const file of files) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `property-images/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('property-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('property-images')
+          .getPublicUrl(filePath);
+
+        uploadedUrls.push(publicUrl);
+      }
+
+      const currentImages = property?.images || [];
+      const newImages = [...currentImages, ...uploadedUrls];
+      
+      await updateImagesMutation.mutateAsync(newImages);
+      
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload images",
         variant: "destructive",
       });
     } finally {
-      setSaving(false);
+      setIsUploading(false);
     }
+  };
+
+  const removeImage = async (imageUrl: string) => {
+    if (!property) return;
+    
+    const newImages = property.images.filter(img => img !== imageUrl);
+    await updateImagesMutation.mutateAsync(newImages);
   };
 
   return {
     property,
-    images,
-    loading,
-    saving,
-    reorderImages,
+    isLoading,
+    isUploading,
+    uploadImages,
     removeImage,
-    saveImageOrder
   };
 };
