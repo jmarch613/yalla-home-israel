@@ -89,7 +89,11 @@ export const Header = () => {
               </Button>
             )}
             
-            <Button size="sm" className="bg-primary hover:bg-primary/90">
+            <Button 
+              size="sm" 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => navigate('/list-property')}
+            >
               List Property
             </Button>
             <Button variant="ghost" size="sm" className="md:hidden">
