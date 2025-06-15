@@ -19,19 +19,24 @@ export const NeighborhoodDropdown = ({
   const neighborhoods = getNeighborhoodsForCity(city);
   const hasNeighborhoods = neighborhoods.length > 0;
 
+  const handleValueChange = (value: string) => {
+    // Convert "any" back to empty string for the parent component
+    onNeighborhoodChange(value === "any" ? "" : value);
+  };
+
   return (
     <div>
       <Label className="text-sm font-medium text-gray-700 mb-2 block">Neighborhood</Label>
       <Select 
-        value={selectedNeighborhood} 
-        onValueChange={onNeighborhoodChange}
+        value={selectedNeighborhood || "any"} 
+        onValueChange={handleValueChange}
         disabled={!hasNeighborhoods}
       >
         <SelectTrigger className="h-12">
           <SelectValue placeholder={hasNeighborhoods ? "Any neighborhood" : "Select a city first"} />
         </SelectTrigger>
         <SelectContent className="bg-white border shadow-lg z-50">
-          <SelectItem value="">Any neighborhood</SelectItem>
+          <SelectItem value="any">Any neighborhood</SelectItem>
           {neighborhoods.map((neighborhood) => (
             <SelectItem key={neighborhood} value={neighborhood}>
               {neighborhood}
