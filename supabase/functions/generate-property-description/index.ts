@@ -41,7 +41,26 @@ ${propertyData.heating ? '- Heating' : ''}
 ${propertyData.furnished ? '- Furnished' : ''}
 ${propertyData.pets_allowed ? '- Pets allowed' : ''}
 
-Write a compelling, professional property description that highlights the key features and location benefits. Keep it concise but informative, around 100-150 words. Write in a warm, inviting tone that would appeal to potential buyers or renters.`;
+Write a compelling, professional property description that includes:
+
+1. Property highlights and key features
+2. Location benefits and neighborhood character
+3. Nearby amenities such as:
+   - Shopping centers, markets, and restaurants
+   - Schools and educational institutions
+   - Medical facilities and hospitals
+   - Parks and recreational areas
+   - Cultural venues and entertainment
+4. Tourist attractions and places of interest in the area
+5. Public transportation accessibility:
+   - Bus stops and routes
+   - Train stations or light rail access
+   - Major highways and roads
+   - Walking/cycling infrastructure
+6. Places of worship nearby (synagogues, mosques, churches, etc.)
+7. Business districts and employment centers
+
+Keep the description engaging, informative, and around 150-200 words. Focus on what makes this location special and convenient for potential ${propertyData.listing_type === 'rent' ? 'tenants' : 'buyers'}. Use warm, inviting language that highlights both the property and its strategic location advantages.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -52,10 +71,10 @@ Write a compelling, professional property description that highlights the key fe
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'You are a professional real estate copywriter who creates engaging property descriptions.' },
+          { role: 'system', content: 'You are a professional real estate copywriter with extensive knowledge of Israeli cities, neighborhoods, and local amenities. You create engaging property descriptions that highlight both property features and location advantages.' },
           { role: 'user', content: prompt }
         ],
-        max_tokens: 300,
+        max_tokens: 400,
         temperature: 0.7,
       }),
     });

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -76,7 +77,7 @@ export const usePhotoManager = (id: string | undefined) => {
         safe_room: false, // Default value since this field doesn't exist in current schema
         bomb_shelter: false, // Default value since this field doesn't exist in current schema
         images: data.images,
-        floorplan_url: data.floorplan_url || null,
+        floorplan_url: null, // Default value since this field doesn't exist in current schema
         created_at: data.created_at,
         updated_at: data.updated_at,
       };
