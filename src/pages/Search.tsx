@@ -32,26 +32,22 @@ const Search = () => {
   const [sort, setSort] = useState('most-recent');
   const [hasSearched, setHasSearched] = useState(false);
 
+  // On mount or when URL query params change, initialize filters, but do NOT trigger the search/results
   useEffect(() => {
-    const location = searchParams.get('location') || '';
+    const locationParam = searchParams.get('location') || '';
     const type = searchParams.get('type') || 'buy';
-    
     const initialFilters = {
       ...searchFilters,
-      location,
+      location: locationParam,
       type,
       neighborhood: ''
     };
-    
     setSearchFilters(initialFilters);
     setAppliedFilters(initialFilters);
-    setSearchLocation(location);
-    
-    // If there's a location in the URL, consider it as a search has been performed
-    if (location) {
-      setHasSearched(true);
-    }
-  }, [searchParams]);
+    setSearchLocation(locationParam);
+    setHasSearched(false); // always reset -- never auto-trigger results!
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   // Restore scroll position when returning from property details
   useEffect(() => {
@@ -72,7 +68,7 @@ const Search = () => {
   const handleFiltersApply = () => {
     console.log('Applying filters:', searchFilters);
     setAppliedFilters({ ...searchFilters });
-    setHasSearched(true);
+    setHasSearched(true); // only set true after user manually applies
   };
 
   const handleSortChange = (newSort: string) => {
@@ -135,3 +131,4 @@ const Search = () => {
 };
 
 export default Search;
+
