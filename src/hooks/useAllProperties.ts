@@ -58,11 +58,45 @@ export function useAllProperties() {
       if (error) throw error;
       
       // Transform the data to match PropertyListing interface
-      return (data ?? []).map(item => ({
-        ...item,
-        safe_room: false, // Default value since this field doesn't exist in current schema
-        bomb_shelter: false, // Default value since this field doesn't exist in current schema
-      })) as PropertyListing[];
+      return (data ?? []).map(item => {
+        if (!item) return null;
+        return {
+          id: item.id,
+          user_id: item.user_id,
+          title: item.title,
+          description: item.description,
+          price: item.price,
+          property_type: item.property_type,
+          listing_type: item.listing_type,
+          address: item.address,
+          neighborhood: item.neighborhood,
+          city: item.city,
+          bedrooms: item.bedrooms,
+          bathrooms: item.bathrooms,
+          living_rooms: item.living_rooms,
+          area: item.area,
+          floor_number: item.floor_number,
+          total_floors: item.total_floors,
+          year_built: item.year_built,
+          parking_spots: item.parking_spots,
+          contact_name: item.contact_name,
+          contact_phone: item.contact_phone,
+          contact_email: item.contact_email,
+          balcony: item.balcony,
+          elevator: item.elevator,
+          garden: item.garden,
+          air_conditioning: item.air_conditioning,
+          heating: item.heating,
+          furnished: item.furnished,
+          pets_allowed: item.pets_allowed,
+          safe_room: false, // Default value since this field doesn't exist in current schema
+          bomb_shelter: false, // Default value since this field doesn't exist in current schema
+          images: item.images,
+          floorplan_url: item.floorplan_url,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        } as PropertyListing;
+      }).filter(Boolean) as PropertyListing[];
     },
   });
 

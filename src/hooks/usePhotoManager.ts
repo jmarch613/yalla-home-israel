@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -46,10 +45,40 @@ export const usePhotoManager = (id: string | undefined) => {
 
       // Properly map the database result to PropertyListing type
       const propertyData: PropertyListing = {
-        ...data,
+        id: data.id,
+        user_id: data.user_id,
+        title: data.title,
+        description: data.description,
+        price: data.price,
         property_type: data.property_type as PropertyListing['property_type'],
         listing_type: data.listing_type as PropertyListing['listing_type'],
-        floorplan_url: null // Set default value since it's not in the database yet
+        address: data.address,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        living_rooms: data.living_rooms,
+        area: data.area,
+        floor_number: data.floor_number,
+        total_floors: data.total_floors,
+        year_built: data.year_built,
+        parking_spots: data.parking_spots,
+        contact_name: data.contact_name,
+        contact_phone: data.contact_phone,
+        contact_email: data.contact_email,
+        balcony: data.balcony,
+        elevator: data.elevator,
+        garden: data.garden,
+        air_conditioning: data.air_conditioning,
+        heating: data.heating,
+        furnished: data.furnished,
+        pets_allowed: data.pets_allowed,
+        safe_room: false, // Default value since this field doesn't exist in current schema
+        bomb_shelter: false, // Default value since this field doesn't exist in current schema
+        images: data.images,
+        floorplan_url: data.floorplan_url || null,
+        created_at: data.created_at,
+        updated_at: data.updated_at,
       };
 
       setProperty(propertyData);
