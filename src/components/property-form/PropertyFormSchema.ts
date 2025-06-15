@@ -12,6 +12,7 @@ export const propertySchema = z.object({
   city: z.string().min(1, 'City is required'),
   bedrooms: z.number().min(0).optional(),
   bathrooms: z.number().min(0).optional(),
+  living_rooms: z.number().min(0).optional(),
   area: z.number().min(1, 'Area must be greater than 0').optional(),
   floor_number: z.number().optional(),
   total_floors: z.number().optional(),

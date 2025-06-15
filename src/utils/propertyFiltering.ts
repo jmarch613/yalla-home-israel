@@ -1,4 +1,5 @@
-import { ScrapedProperty } from '@/hooks/useScrapedProperties';
+
+import { ScrapedProperty } from '@/types/database';
 
 export interface PropertyCardType {
   id: string;

@@ -36,7 +36,7 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
         <CardTitle>{t('details.type')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <FormField
             control={control}
             name="bedrooms"
@@ -72,6 +72,31 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select bathrooms" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {numberOptions.map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="living_rooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Living Rooms</FormLabel>
+                <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select living rooms" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

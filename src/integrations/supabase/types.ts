@@ -9,6 +9,114 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      property_listings: {
+        Row: {
+          address: string
+          air_conditioning: boolean | null
+          area: number | null
+          balcony: boolean | null
+          bathrooms: number | null
+          bedrooms: number | null
+          city: string
+          contact_email: string | null
+          contact_name: string
+          contact_phone: string
+          created_at: string
+          currency: string | null
+          description: string | null
+          elevator: boolean | null
+          floor_number: number | null
+          furnished: boolean | null
+          garden: boolean | null
+          heating: boolean | null
+          id: string
+          images: string[] | null
+          listing_type: string
+          living_rooms: number | null
+          neighborhood: string | null
+          parking_spots: number | null
+          pets_allowed: boolean | null
+          price: number | null
+          property_type: string
+          status: string
+          title: string
+          total_floors: number | null
+          updated_at: string
+          user_id: string | null
+          year_built: number | null
+        }
+        Insert: {
+          address: string
+          air_conditioning?: boolean | null
+          area?: number | null
+          balcony?: boolean | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city: string
+          contact_email?: string | null
+          contact_name: string
+          contact_phone: string
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          elevator?: boolean | null
+          floor_number?: number | null
+          furnished?: boolean | null
+          garden?: boolean | null
+          heating?: boolean | null
+          id?: string
+          images?: string[] | null
+          listing_type: string
+          living_rooms?: number | null
+          neighborhood?: string | null
+          parking_spots?: number | null
+          pets_allowed?: boolean | null
+          price?: number | null
+          property_type: string
+          status?: string
+          title: string
+          total_floors?: number | null
+          updated_at?: string
+          user_id?: string | null
+          year_built?: number | null
+        }
+        Update: {
+          address?: string
+          air_conditioning?: boolean | null
+          area?: number | null
+          balcony?: boolean | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city?: string
+          contact_email?: string | null
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          elevator?: boolean | null
+          floor_number?: number | null
+          furnished?: boolean | null
+          garden?: boolean | null
+          heating?: boolean | null
+          id?: string
+          images?: string[] | null
+          listing_type?: string
+          living_rooms?: number | null
+          neighborhood?: string | null
+          parking_spots?: number | null
+          pets_allowed?: boolean | null
+          price?: number | null
+          property_type?: string
+          status?: string
+          title?: string
+          total_floors?: number | null
+          updated_at?: string
+          user_id?: string | null
+          year_built?: number | null
+        }
+        Relationships: []
+      }
       scraped_properties: {
         Row: {
           address: string | null

@@ -29,6 +29,7 @@ export interface PropertyListing {
   city: string;
   bedrooms: number | null;
   bathrooms: number | null;
+  living_rooms: number | null;
   area: number | null;
   floor_number: number | null;
   total_floors: number | null;

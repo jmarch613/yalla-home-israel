@@ -15,6 +15,7 @@ import { LocationSection } from '@/components/property-form/LocationSection';
 import { PropertyDetailsSection } from '@/components/property-form/PropertyDetailsSection';
 import { FeaturesSection } from '@/components/property-form/FeaturesSection';
 import { ContactSection } from '@/components/property-form/ContactSection';
+import { supabase } from '@/integrations/supabase/client';
 
 const ListProperty = () => {
   const { user } = useAuth();
@@ -52,15 +53,7 @@ const ListProperty = () => {
     setIsSubmitting(true);
 
     try {
-      // TODO: Enable this once property_listings table is created
-      toast({
-        title: "Property listing feature coming soon!",
-        description: "The property listing functionality is being set up. Please check back soon.",
-      });
-
-      // Temporarily disabled until property_listings table is created
-      /*
-      const insertData: PropertyListing = {
+      const insertData = {
         user_id: user.id,
         title: data.title,
         description: data.description || null,
@@ -72,6 +65,7 @@ const ListProperty = () => {
         city: data.city,
         bedrooms: data.bedrooms || null,
         bathrooms: data.bathrooms || null,
+        living_rooms: data.living_rooms || null,
         area: data.area || null,
         floor_number: data.floor_number || null,
         total_floors: data.total_floors || null,
@@ -101,7 +95,6 @@ const ListProperty = () => {
       });
 
       navigate('/');
-      */
     } catch (error) {
       console.error('Error submitting property:', error);
       toast({
