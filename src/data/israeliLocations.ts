@@ -76,13 +76,23 @@ export const israeliLocations = [
 
   // Jerusalem Neighborhoods
   'Baka, Jerusalem',
+  'Ein Kerem, Jerusalem',
+  'French Hill, Jerusalem',
   'German Colony, Jerusalem',
   'Gilo, Jerusalem',
+  'Givat Ram, Jerusalem',
   'Katamon, Jerusalem',
+  'Mea Shearim, Jerusalem',
+  'Mount of Olives, Jerusalem',
   'Nachlaot, Jerusalem',
+  'Old City, Jerusalem',
+  'Pisgat Ze\'ev, Jerusalem',
   'Ramat Eshkol, Jerusalem',
   'Rehavia, Jerusalem',
+  'Silwan, Jerusalem',
+  'Talbieh, Jerusalem',
   'Talpiot, Jerusalem',
+  'Yemin Moshe, Jerusalem',
 
   // Haifa Neighborhoods
   'Bat Galim, Haifa',
