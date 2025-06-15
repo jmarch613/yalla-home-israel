@@ -47,14 +47,7 @@ export const SearchFiltersSection = ({
         </Select>
       </div>
 
-      {/* Neighborhood dropdown */}
-      <NeighborhoodDropdown
-        selectedLocation={searchFilters.location}
-        selectedNeighborhood={searchFilters.neighborhood}
-        onNeighborhoodChange={onNeighborhoodChange}
-      />
-
-      {/* Property types */}
+      {/* Property types - moved before neighborhood */}
       <div>
         <Label className="text-sm font-medium text-gray-700 mb-2 block">Property types</Label>
         <Select value={searchFilters.propertyType} onValueChange={(value) => onFilterChange('propertyType', value)}>
@@ -70,6 +63,13 @@ export const SearchFiltersSection = ({
           </SelectContent>
         </Select>
       </div>
+
+      {/* Neighborhood dropdown - moved after property types */}
+      <NeighborhoodDropdown
+        selectedLocation={searchFilters.location}
+        selectedNeighborhood={searchFilters.neighborhood}
+        onNeighborhoodChange={onNeighborhoodChange}
+      />
 
       {/* Added to site */}
       <div>
