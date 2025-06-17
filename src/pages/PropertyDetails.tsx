@@ -1,13 +1,13 @@
-
 import React, { useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { PropertyImageSection } from '@/components/property-details/PropertyImageSection';
+import { PropertyPhotoViewer } from '@/components/property-details/PropertyPhotoViewer';
 import { PropertyInfoSection } from '@/components/property-details/PropertyInfoSection';
 import { PropertyStatsSection } from '@/components/property-details/PropertyStatsSection';
 import { PropertyDescriptionSection } from '@/components/property-details/PropertyDescriptionSection';
+import { FloorplanViewer } from '@/components/property-details/FloorplanViewer';
 import { usePropertyDetails } from '@/hooks/usePropertyDetails';
 
 const PropertyDetails = () => {
@@ -79,12 +79,12 @@ const PropertyDetails = () => {
     return 'user_id' in prop && 'listing_type' in prop;
   };
 
-  // Helper function to get image URL based on property type
-  const getImageUrl = (prop: any): string | null => {
+  // Helper function to get images array based on property type
+  const getImages = (prop: any): string[] => {
     if (isUserProperty(prop)) {
-      return prop.images && prop.images.length > 0 ? prop.images[0] : null;
+      return prop.images && Array.isArray(prop.images) ? prop.images : [];
     }
-    return prop.image_url;
+    return prop.image_url ? [prop.image_url] : [];
   };
 
   // Helper function to get price display
@@ -98,6 +98,11 @@ const PropertyDetails = () => {
   // Helper function to get listing URL
   const getListingUrl = (prop: any): string | null => {
     return isUserProperty(prop) ? null : prop.listing_url;
+  };
+
+  // Helper function to get floorplan URL
+  const getFloorplanUrl = (prop: any): string | null => {
+    return isUserProperty(prop) ? prop.floorplan_url || null : null;
   };
 
   // Helper function to get back button text
@@ -174,14 +179,14 @@ const PropertyDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Images */}
             <div>
-              <PropertyImageSection
-                imageUrl={getImageUrl(property)}
-                title={property.title}
+              <PropertyPhotoViewer
+                images={getImages(property)}
+                title={property.title || 'Property'}
               />
             </div>
 
             {/* Right Column - Property Info */}
-            <div>
+            <div className="space-y-4">
               <PropertyInfoSection
                 title={property.title}
                 address={property.address}
@@ -191,6 +196,14 @@ const PropertyDetails = () => {
                 listingUrl={getListingUrl(property)}
                 transformText={transformText}
               />
+              
+              {/* Floorplan Button */}
+              {getFloorplanUrl(property) && (
+                <FloorplanViewer
+                  floorplanUrl={getFloorplanUrl(property)!}
+                  title={property.title || 'Property'}
+                />
+              )}
             </div>
           </div>
 
