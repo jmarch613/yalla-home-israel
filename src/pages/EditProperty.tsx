@@ -14,11 +14,11 @@ const EditProperty = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { property, isLoading, error } = usePropertyDetails(id);
+  const { data: property, isLoading, error } = usePropertyDetails(id || '');
   const { isSubmitting, updateProperty } = usePropertySubmission(user?.id, id);
 
   useEffect(() => {
-    if (property && property.user_id !== user?.id) {
+    if (property && 'user_id' in property && property.user_id !== user?.id) {
       navigate('/my-properties');
     }
   }, [property, user?.id, navigate]);
@@ -46,6 +46,18 @@ const EditProperty = () => {
   }
 
   if (error || !property) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <ErrorState onRetry={() => navigate('/my-properties')} />
+        </div>
+      </div>
+    );
+  }
+
+  // Only allow editing of PropertyListing type (not ScrapedProperty)
+  if (!('user_id' in property)) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
