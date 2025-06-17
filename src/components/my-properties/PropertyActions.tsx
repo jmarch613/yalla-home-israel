@@ -19,13 +19,15 @@ export const PropertyActions = ({ property, onDelete }: PropertyActionsProps) =>
         variant="ghost"
         size="sm"
         onClick={() => navigate(`/property/${property.id}`)}
+        title="View Property"
       >
         <Eye className="w-4 h-4" />
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => navigate(`/property/${property.id}/photos`)}
+        onClick={() => navigate(`/edit-property/${property.id}`)}
+        title="Edit Property"
       >
         <Edit className="w-4 h-4" />
       </Button>
@@ -33,6 +35,7 @@ export const PropertyActions = ({ property, onDelete }: PropertyActionsProps) =>
         variant="ghost"
         size="sm"
         onClick={() => onDelete(property.id)}
+        title="Delete Property"
       >
         <Trash2 className="w-4 h-4" />
       </Button>

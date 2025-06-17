@@ -91,11 +91,38 @@ export const useMyProperties = () => {
     }
   };
 
+  const handleStatusUpdate = async (propertyId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('property_listings')
+        .update({ status: newStatus })
+        .eq('id', propertyId)
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Status updated",
+        description: `Property status has been updated to ${newStatus.replace('_', ' ')}.`,
+      });
+
+      refetch();
+    } catch (error) {
+      console.error('Error updating property status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update property status. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return {
     properties,
     isLoading,
     error,
     refetch,
     handleDelete,
+    handleStatusUpdate,
   };
 };

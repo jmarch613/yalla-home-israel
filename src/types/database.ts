@@ -49,7 +49,7 @@ export interface PropertyListing {
   bomb_shelter: boolean;
   images: string[];
   floorplan_url: string | null;
-  status: 'pending' | 'approved' | 'rejected' | 'published';
+  status: 'pending' | 'approved' | 'rejected' | 'published' | 'under_offer' | 'sold' | 'withdrawn' | 'price_reduced';
   created_at: string;
   updated_at: string;
 }

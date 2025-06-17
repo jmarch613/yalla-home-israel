@@ -17,7 +17,7 @@ import { EmptyPropertiesState } from './EmptyPropertiesState';
 
 export const MyPropertiesTable = () => {
   const { user } = useAuth();
-  const { properties, isLoading, error, refetch, handleDelete } = useMyProperties();
+  const { properties, isLoading, error, refetch, handleDelete, handleStatusUpdate } = useMyProperties();
 
   if (!user) {
     return null;
@@ -59,6 +59,7 @@ export const MyPropertiesTable = () => {
                 key={property.id}
                 property={property}
                 onDelete={handleDelete}
+                onStatusUpdate={handleStatusUpdate}
               />
             ))}
           </TableBody>
