@@ -91,7 +91,7 @@ export const PropertyForm = ({ onSubmit, isSubmitting, propertyId, initialData }
         <LocationSection control={form.control} />
         <PropertyDetailsSection control={form.control} />
         <FeaturesSection control={form.control} />
-        <ImageUploadSection control={form.control} />
+        <ImageUploadSection control={form.control} propertyId={propertyId} />
         <BasicInfoSection control={form.control} />
         <ContactSection control={form.control} />
 
@@ -103,19 +103,6 @@ export const PropertyForm = ({ onSubmit, isSubmitting, propertyId, initialData }
             Cancel
           </Button>
         </div>
-        
-        {propertyId && (
-          <div className="mt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => navigate(`/property/${propertyId}/photos`)}
-              className="w-full"
-            >
-              Manage Photos Order
-            </Button>
-          </div>
-        )}
       </form>
     </Form>
   );

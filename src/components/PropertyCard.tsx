@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Bed, Bath, Square, MapPin, ImageOff } from 'lucide-react';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { PropertyStatusBanner } from './PropertyStatusBanner';
 
 interface PropertyCardProps {
   property: {
@@ -18,6 +19,7 @@ interface PropertyCardProps {
     area: number;
     image: string;
     features: string[];
+    status?: string;
   };
 }
 
@@ -72,7 +74,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const convertedPrice = convertPrice(property.price);
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 relative">
       <div className="relative cursor-pointer" onClick={handleViewDetails}>
         {!imageError ? (
           <img
@@ -90,10 +92,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </div>
           </div>
         )}
+        
+        {/* Status Banner */}
+        {property.status && <PropertyStatusBanner status={property.status} />}
+        
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-2 right-2 bg-white/90 hover:bg-white"
+          className="absolute top-2 left-2 bg-white/90 hover:bg-white"
           onClick={(e) => {
             e.stopPropagation();
             // Handle favorite functionality here
@@ -101,7 +107,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         >
           <Heart className="w-4 h-4" />
         </Button>
-        <div className="absolute top-2 left-2 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
+        <div className="absolute bottom-2 left-2 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
           {property.type === 'sale' ? 'For Sale' : 'For Rent'}
         </div>
       </div>
