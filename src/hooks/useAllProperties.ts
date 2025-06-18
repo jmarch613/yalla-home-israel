@@ -67,6 +67,7 @@ export function useAllProperties() {
       }
       
       console.log('Raw user listed data from DB:', data?.length || 0, 'properties');
+      console.log('Raw user data details:', data);
       
       // Transform the data to match PropertyListing interface
       const transformedData = (data ?? []).map(item => {
@@ -128,10 +129,12 @@ export function useAllProperties() {
       : [];
 
   console.log('User listed properties after transformation:', allUserListed.length);
+  console.log('User listed properties details:', allUserListed);
   console.log('Total scraped properties:', allScraped.length);
 
   const allProperties: PropertyCardType[] = [...allUserListed, ...allScraped];
   console.log('Combined properties count:', allProperties.length);
+  console.log('Final combined properties:', allProperties);
 
   return {
     allProperties,

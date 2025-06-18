@@ -3,6 +3,8 @@ import { PropertyListing } from '@/types/database';
 import { PropertyCardType } from '@/utils/propertyFiltering';
 
 export const transformUserPropertyToCardType = (property: PropertyListing): PropertyCardType => {
+  console.log('Transforming user property:', property.title, 'ID:', property.id);
+  
   // Get the first image or use a placeholder
   const image = property.images && property.images.length > 0 
     ? property.images[0] 
@@ -23,7 +25,7 @@ export const transformUserPropertyToCardType = (property: PropertyListing): Prop
     features.push(`${property.parking_spots} Parking`);
   }
 
-  return {
+  const transformed = {
     id: property.id,
     title: property.title,
     location: `${property.neighborhood ? property.neighborhood + ', ' : ''}${property.city}`,
@@ -37,4 +39,7 @@ export const transformUserPropertyToCardType = (property: PropertyListing): Prop
     status: property.status,
     created_at: property.created_at,
   };
+
+  console.log('Transformed property result:', transformed);
+  return transformed;
 };
