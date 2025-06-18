@@ -18,6 +18,8 @@ export function useAllProperties() {
   } = useQuery({
     queryKey: ["property_listings"],
     queryFn: async (): Promise<PropertyListing[]> => {
+      console.log('Fetching user-listed properties...');
+      
       const { data, error } = await supabase
         .from("property_listings")
         .select(`
@@ -57,11 +59,14 @@ export function useAllProperties() {
           created_at,
           updated_at
         `);
-        // Removed the .in("status", ["approved", "published"]) filter to include all statuses
-      if (error) throw error;
+        // No status filter - show all properties regardless of status
+        
+      if (error) {
+        console.error('Error fetching user properties:', error);
+        throw error;
+      }
       
-      console.log('Raw user listed data from DB:', data);
-      console.log('Number of user properties from DB:', data?.length || 0);
+      console.log('Raw user listed data from DB:', data?.length || 0, 'properties');
       
       // Transform the data to match PropertyListing interface
       const transformedData = (data ?? []).map(item => {
@@ -105,12 +110,13 @@ export function useAllProperties() {
           bomb_shelter: item.bomb_shelter || false,
           images: item.images,
           floorplan_url: item.floorplan_url,
+          status: item.status,
           created_at: item.created_at,
           updated_at: item.updated_at,
         } as PropertyListing;
       }).filter(Boolean) as PropertyListing[];
       
-      console.log('Transformed user properties:', transformedData.length);
+      console.log('Successfully transformed user properties:', transformedData.length);
       return transformedData;
     },
   });
@@ -121,9 +127,8 @@ export function useAllProperties() {
       ? userListedData.map(transformUserPropertyToCardType)
       : [];
 
-  console.log('User listed properties after transformation:', allUserListed);
+  console.log('User listed properties after transformation:', allUserListed.length);
   console.log('Total scraped properties:', allScraped.length);
-  console.log('Total user properties:', allUserListed.length);
 
   const allProperties: PropertyCardType[] = [...allUserListed, ...allScraped];
   console.log('Combined properties count:', allProperties.length);

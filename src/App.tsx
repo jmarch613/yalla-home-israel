@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Search from "./pages/Search";
 import PropertyDetails from "./pages/PropertyDetails";
 import ListProperty from "./pages/ListProperty";
+import EditProperty from "./pages/EditProperty";
 import PhotoManager from "./pages/PhotoManager";
 import MyProperties from "./pages/MyProperties";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/search" element={<Search />} />
               <Route path="/property/:id" element={<PropertyDetails />} />
               <Route path="/list-property" element={<ListProperty />} />
+              <Route path="/edit-property/:id" element={<EditProperty />} />
               <Route path="/my-properties" element={<MyProperties />} />
               <Route path="/property/:id/photos" element={<PhotoManager />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
