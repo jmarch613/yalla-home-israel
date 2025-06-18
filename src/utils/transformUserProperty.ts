@@ -35,5 +35,6 @@ export const transformUserPropertyToCardType = (property: PropertyListing): Prop
     image,
     features,
     status: property.status,
+    created_at: property.created_at,
   };
 };
