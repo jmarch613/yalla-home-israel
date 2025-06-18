@@ -3,6 +3,7 @@ import React from 'react';
 import { Control } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RoomDetailsFields } from './RoomDetailsFields';
 import { BuildingDetailsFields } from './BuildingDetailsFields';
@@ -69,6 +70,25 @@ export const PropertyDetailsSection = ({ control }: PropertyDetailsSectionProps)
             )}
           />
         </div>
+
+        <FormField
+          control={control}
+          name="area"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Size (sqm)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="Enter property size in square meters"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <RoomDetailsFields control={control} />
         <BuildingDetailsFields control={control} />
