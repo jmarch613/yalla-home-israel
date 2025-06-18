@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Bed, Bath, Square, MapPin, ImageOff } from 'lucide-react';
+import { Heart, Bed, Bath, Square, MapPin, ImageOff, Wind, Thermometer, Home, TreePine, Car, Shield, ShieldCheck } from 'lucide-react';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { PropertyStatusBanner } from './PropertyStatusBanner';
 
@@ -68,6 +68,33 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     return title
       .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom`)
       .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
+  };
+
+  // Helper function to get icon for feature
+  const getFeatureIcon = (feature: string) => {
+    const featureLower = feature.toLowerCase();
+    if (featureLower.includes('ac') || featureLower.includes('air conditioning')) {
+      return <Wind className="w-3 h-3" />;
+    }
+    if (featureLower.includes('heating')) {
+      return <Thermometer className="w-3 h-3" />;
+    }
+    if (featureLower.includes('furnished')) {
+      return <Home className="w-3 h-3" />;
+    }
+    if (featureLower.includes('garden')) {
+      return <TreePine className="w-3 h-3" />;
+    }
+    if (featureLower.includes('parking')) {
+      return <Car className="w-3 h-3" />;
+    }
+    if (featureLower.includes('safe room')) {
+      return <Shield className="w-3 h-3" />;
+    }
+    if (featureLower.includes('bomb shelter')) {
+      return <ShieldCheck className="w-3 h-3" />;
+    }
+    return null;
   };
 
   // Convert price to selected currency
@@ -143,14 +170,23 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </div>
         
         <div className="flex flex-wrap gap-1 mb-3">
-          {property.features.slice(0, 3).map((feature) => (
-            <span
-              key={feature}
-              className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
-            >
-              {feature}
+          {property.features.slice(0, 4).map((feature) => {
+            const icon = getFeatureIcon(feature);
+            return (
+              <span
+                key={feature}
+                className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs flex items-center gap-1"
+              >
+                {icon}
+                {feature}
+              </span>
+            );
+          })}
+          {property.features.length > 4 && (
+            <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+              +{property.features.length - 4} more
             </span>
-          ))}
+          )}
         </div>
         
         <Button 

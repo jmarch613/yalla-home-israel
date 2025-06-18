@@ -8,7 +8,7 @@ export const transformUserPropertyToCardType = (property: PropertyListing): Prop
     ? property.images[0] 
     : '/placeholder.svg';
 
-  // Create features array from boolean fields
+  // Create features array from boolean fields - include ALL possible features
   const features: string[] = [];
   if (property.balcony) features.push('Balcony');
   if (property.elevator) features.push('Elevator');
