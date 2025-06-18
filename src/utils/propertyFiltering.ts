@@ -1,4 +1,3 @@
-
 import { ScrapedProperty } from '@/types/database';
 
 export interface PropertyCardType {
@@ -15,6 +14,7 @@ export interface PropertyCardType {
   created_at: string;
   city?: string; // Add city field for better filtering
   neighborhood?: string; // Add neighborhood field for better filtering
+  status?: string; // Add status field for property status banners
 }
 
 // Transforms raw scraped properties to the normalized PropertyCardType and removes duplicates
