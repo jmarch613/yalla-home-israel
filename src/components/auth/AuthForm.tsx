@@ -7,6 +7,7 @@ import { toast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { AuthFormFields } from './AuthFormFields';
 import { AuthToggle } from './AuthToggle';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
 
 interface AuthFormProps {
   isLogin: boolean;
@@ -19,8 +20,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({ isLogin, setIsLogin }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   
   const { signIn, signUp } = useAuth();
+
+  // Show forgot password form if requested
+  if (showForgotPassword) {
+    return (
+      <ForgotPasswordForm 
+        onBackToLogin={() => setShowForgotPassword(false)} 
+      />
+    );
+  }
 
   const validateForm = () => {
     if (!email || !password) {
@@ -189,6 +200,19 @@ export const AuthForm: React.FC<AuthFormProps> = ({ isLogin, setIsLogin }) => {
             )}
           </Button>
         </form>
+        
+        {isLogin && (
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              disabled={loading}
+              className="text-sm text-primary hover:underline disabled:opacity-50"
+            >
+              Forgot your password?
+            </button>
+          </div>
+        )}
         
         <AuthToggle
           isLogin={isLogin}
