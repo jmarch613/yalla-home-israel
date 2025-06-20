@@ -3,6 +3,7 @@ import React from 'react';
 import { PropertyPhotoViewer } from '@/components/property-details/PropertyPhotoViewer';
 import { PropertyInfoSection } from '@/components/property-details/PropertyInfoSection';
 import { PropertyStatsSection } from '@/components/property-details/PropertyStatsSection';
+import { PropertyFeaturesSection } from '@/components/property-details/PropertyFeaturesSection';
 import { PropertyDescriptionSection } from '@/components/property-details/PropertyDescriptionSection';
 import { FloorplanViewer } from '@/components/property-details/FloorplanViewer';
 import { PropertyDetailsType } from '@/hooks/usePropertyDetails';
@@ -83,6 +84,9 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
         bathrooms={property.bathrooms}
         area={property.area}
       />
+
+      {/* Features & Amenities */}
+      <PropertyFeaturesSection property={property} />
 
       {/* Description */}
       <PropertyDescriptionSection

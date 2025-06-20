@@ -170,7 +170,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </div>
         
         <div className="flex flex-wrap gap-1 mb-3">
-          {property.features.slice(0, 4).map((feature) => {
+          {property.features.map((feature) => {
             const icon = getFeatureIcon(feature);
             return (
               <span
@@ -182,11 +182,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
               </span>
             );
           })}
-          {property.features.length > 4 && (
-            <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-              +{property.features.length - 4} more
-            </span>
-          )}
         </div>
         
         <Button 
