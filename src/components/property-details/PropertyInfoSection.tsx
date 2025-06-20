@@ -33,8 +33,48 @@ export const PropertyInfoSection = ({
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
+  // Function to sanitize address - remove specific numbers and details
+  const sanitizeAddress = (fullAddress: string | null) => {
+    if (!fullAddress) return 'Address not available';
+    
+    let sanitized = fullAddress;
+    
+    // Remove patterns like "123", "Apt 4", "Building A", "Entrance 2", etc.
+    sanitized = sanitized
+      // Remove standalone numbers (likely house/building numbers)
+      .replace(/\b\d+[a-zA-Z]?\b/g, '')
+      // Remove apartment/flat references
+      .replace(/\b(apt|apartment|flat|unit)\s*\d+[a-zA-Z]?/gi, '')
+      // Remove building references
+      .replace(/\b(building|bldg)\s*[a-zA-Z0-9]+/gi, '')
+      // Remove entrance references
+      .replace(/\b(entrance|entry)\s*[a-zA-Z0-9]+/gi, '')
+      // Remove floor references
+      .replace(/\b(floor|fl)\s*\d+/gi, '')
+      // Clean up multiple spaces and commas
+      .replace(/\s+/g, ' ')
+      .replace(/,\s*,/g, ',')
+      .replace(/^\s*,\s*/, '')
+      .replace(/\s*,\s*$/, '')
+      .trim();
+    
+    return sanitized || 'General area';
+  };
+
+  // Function to handle map click - opens Google Maps with the address
+  const handleMapClick = () => {
+    if (!address) return;
+    
+    // Use the full address for map search but could be the sanitized one for privacy
+    const searchAddress = encodeURIComponent(address);
+    const mapUrl = `https://www.google.com/maps/search/${searchAddress}`;
+    window.open(mapUrl, '_blank', 'noopener,noreferrer');
+  };
+
   // Convert price to selected currency
   const convertedPrice = price ? convertPrice(price) : 'N/A';
+
+  const sanitizedAddress = sanitizeAddress(address);
 
   return (
     <div>
@@ -42,9 +82,13 @@ export const PropertyInfoSection = ({
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {transformText(title || '')}
         </h1>
-        <div className="flex items-center text-gray-600 mb-4">
-          <MapPin className="w-5 h-5 mr-2" />
-          <span>{address}</span>
+        <div 
+          className="flex items-center text-gray-600 mb-4 cursor-pointer hover:text-blue-600 transition-colors group"
+          onClick={handleMapClick}
+          title="Click to view on map"
+        >
+          <MapPin className="w-5 h-5 mr-2 group-hover:text-blue-600" />
+          <span className="group-hover:underline">{sanitizedAddress}</span>
         </div>
         <div className="text-3xl font-bold text-primary">
           {convertedPrice}
