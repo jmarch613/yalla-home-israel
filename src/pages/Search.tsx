@@ -18,6 +18,7 @@ const Search = () => {
     maxPrice: '',
     bedrooms: '',
     bathrooms: '',
+    type: 'buy', // Add type to filters
     features: {
       parking: false,
       balcony: false,
@@ -131,4 +132,3 @@ const Search = () => {
 };
 
 export default Search;
-

@@ -1,3 +1,4 @@
+
 import { ScrapedProperty } from '@/types/database';
 
 export interface PropertyCardType {
@@ -15,6 +16,7 @@ export interface PropertyCardType {
   city?: string; // Add city field for better filtering
   neighborhood?: string; // Add neighborhood field for better filtering
   status?: string; // Add status field for property status banners
+  listing_type?: string; // Add listing_type for filtering
 }
 
 // Transforms raw scraped properties to the normalized PropertyCardType and removes duplicates
@@ -25,6 +27,7 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
     location: property.address || 'Jerusalem',
     price: property.price || '₪0',
     type: 'sale',
+    listing_type: 'sale', // Default scraped properties to sale
     bedrooms: property.bedrooms || 0,
     bathrooms: property.bathrooms || 0,
     area: property.area || 0,
@@ -59,6 +62,24 @@ export function filterProperties(properties: PropertyCardType[], filters: any): 
   console.log('Applied filters:', filters);
   
   const filtered = properties.filter((property) => {
+    // Property type filter (Buy/Rent) - This is the key fix
+    if (filters.type) {
+      const searchType = filters.type.toLowerCase();
+      const propertyListingType = (property.listing_type || property.type || 'sale').toLowerCase();
+      
+      console.log(`Checking property: ${property.title}`);
+      console.log(`  - Search type: "${searchType}"`);
+      console.log(`  - Property listing type: "${propertyListingType}"`);
+      
+      // Map 'buy' to 'sale' for consistency
+      const normalizedSearchType = searchType === 'buy' ? 'sale' : searchType;
+      
+      if (propertyListingType !== normalizedSearchType) {
+        console.log(`  - Type mismatch: skipping property`);
+        return false;
+      }
+    }
+    
     // Location filter - improved to check multiple fields and be case-insensitive
     if (filters.location) {
       const searchLocation = filters.location.toLowerCase();
@@ -96,7 +117,7 @@ export function filterProperties(properties: PropertyCardType[], filters: any): 
       }
     }
     
-    // Property type filter
+    // Property type filter (apartment, house, etc.)
     if (filters.propertyType) {
       const hasTypeMatch = property.features.some(feature =>
         feature.toLowerCase().includes(filters.propertyType.toLowerCase())
