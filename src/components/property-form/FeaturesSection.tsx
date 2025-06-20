@@ -21,6 +21,7 @@ export const FeaturesSection = ({ control }: FeaturesSectionProps) => {
     { name: 'pets_allowed', label: 'Pets Allowed' },
     { name: 'safe_room', label: 'Safe Room' },
     { name: 'bomb_shelter', label: 'Bomb Shelter' },
+    { name: 'sukkah_balcony', label: 'Sukkah Balcony' },
   ];
 
   return (
