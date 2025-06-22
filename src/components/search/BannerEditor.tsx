@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Trash2, GripVertical } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Upload, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Tables, TablesInsert } from '@/integrations/supabase/types';
@@ -33,6 +32,7 @@ interface BannerEditorProps {
 export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorProps) => {
   const [slides, setSlides] = useState<BannerSlideForm[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploadingSlides, setUploadingSlides] = useState<Set<number>>(new Set());
   const { toast } = useToast();
 
   const fetchSlides = async () => {
@@ -67,6 +67,65 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
       fetchSlides();
     }
   }, [isOpen]);
+
+  const uploadImage = async (file: File, slideIndex: number) => {
+    try {
+      setUploadingSlides(prev => new Set(prev).add(slideIndex));
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `banner-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      console.log('Uploading banner image to bucket:', 'property-images');
+      console.log('File path:', filePath);
+
+      const { error: uploadError } = await supabase.storage
+        .from('property-images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('property-images')
+        .getPublicUrl(filePath);
+
+      console.log('Generated public URL:', publicUrl);
+
+      // Update the slide with the new image URL
+      updateSlide(slideIndex, 'image_url', publicUrl);
+
+      toast({
+        title: "Image uploaded",
+        description: "Banner image uploaded successfully.",
+      });
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to upload banner image. Please try again.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setUploadingSlides(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(slideIndex);
+        return newSet;
+      });
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, slideIndex: number) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await uploadImage(file, slideIndex);
+    }
+  };
 
   const addSlide = () => {
     const newSlide: BannerSlideForm = {
@@ -188,14 +247,49 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor={`image-${index}`}>Image URL *</Label>
-                  <Input
-                    id={`image-${index}`}
-                    value={slide.image_url}
-                    onChange={(e) => updateSlide(index, 'image_url', e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
+                <div className="space-y-3">
+                  <Label>Banner Image *</Label>
+                  
+                  {/* File Upload Section */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, index)}
+                      className="hidden"
+                      id={`file-upload-${index}`}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById(`file-upload-${index}`)?.click()}
+                      disabled={uploadingSlides.has(index)}
+                      className="flex items-center gap-2"
+                    >
+                      {uploadingSlides.has(index) ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4" />
+                          Upload Image
+                        </>
+                      )}
+                    </Button>
+                    <span className="text-sm text-gray-500">or</span>
+                  </div>
+
+                  {/* URL Input Section */}
+                  <div>
+                    <Input
+                      id={`image-${index}`}
+                      value={slide.image_url}
+                      onChange={(e) => updateSlide(index, 'image_url', e.target.value)}
+                      placeholder="Enter image URL (https://example.com/image.jpg)"
+                    />
+                  </div>
                 </div>
 
                 <div>
