@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       banner_slides: {
         Row: {
+          auto_scroll_interval: number
           created_at: string
           id: string
           image_url: string
@@ -22,6 +23,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          auto_scroll_interval?: number
           created_at?: string
           id?: string
           image_url: string
@@ -33,6 +35,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          auto_scroll_interval?: number
           created_at?: string
           id?: string
           image_url?: string
