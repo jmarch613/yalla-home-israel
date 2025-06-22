@@ -118,7 +118,7 @@ export const AdBanner = () => {
                 <CarouselItem key={slide.id}>
                   <Card className="overflow-hidden">
                     <div 
-                      className="relative h-48 md:h-64"
+                      className="relative h-48 md:h-64 flex items-center justify-center"
                       style={{
                         backgroundColor: '#f9fafb',
                         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.4'%3E%3Cpath d='M30 10L35 20H25L30 10ZM20 25H40V35H35V30H25V35H20V25ZM22 37H38V45H35V40H25V45H22V37Z'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -130,18 +130,12 @@ export const AdBanner = () => {
                       <img
                         src={slide.image_url}
                         alt={slide.title}
-                        className="absolute inset-0 w-full h-full object-contain z-10"
+                        className="max-w-full max-h-full object-contain relative z-10 bg-white/90 rounded-lg shadow-lg"
                       />
-                      <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white p-6 z-20">
-                        <h3 className="text-2xl md:text-3xl font-bold text-center mb-2 drop-shadow-lg">
-                          {slide.title}
-                        </h3>
-                        {slide.subtitle && (
-                          <p className="text-lg text-center mb-4 drop-shadow-md">
-                            {slide.subtitle}
-                          </p>
-                        )}
-                        {slide.link_url && (
+                      
+                      {/* Only show link button if there's a link URL */}
+                      {slide.link_url && (
+                        <div className="absolute bottom-4 right-4 z-20">
                           <Button
                             asChild
                             className="bg-white text-black hover:bg-gray-100 drop-shadow-md"
@@ -150,8 +144,8 @@ export const AdBanner = () => {
                               Learn More
                             </a>
                           </Button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </Card>
                 </CarouselItem>
