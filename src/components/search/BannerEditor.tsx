@@ -9,8 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Tables, TablesInsert } from '@/integrations/supabase/types';
 
-interface BannerSlide {
+type BannerSlide = Tables<'banner_slides'>;
+type BannerSlideInsert = TablesInsert<'banner_slides'>;
+
+interface BannerSlideForm extends Omit<BannerSlideInsert, 'id' | 'created_at' | 'updated_at'> {
   id?: string;
   title: string;
   subtitle: string;
@@ -27,21 +31,31 @@ interface BannerEditorProps {
 }
 
 export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorProps) => {
-  const [slides, setSlides] = useState<BannerSlide[]>([]);
+  const [slides, setSlides] = useState<BannerSlideForm[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchSlides = async () => {
     try {
       const { data, error } = await supabase
-        .from('banner_slides' as any)
+        .from('banner_slides')
         .select('*')
         .order('order_index', { ascending: true });
 
       if (error) {
         console.error('Error fetching slides:', error);
       } else {
-        setSlides((data as BannerSlide[]) || []);
+        // Transform the data to match our form structure
+        const formSlides: BannerSlideForm[] = (data || []).map(slide => ({
+          id: slide.id,
+          title: slide.title,
+          subtitle: slide.subtitle || '',
+          image_url: slide.image_url,
+          link_url: slide.link_url || '',
+          order_index: slide.order_index,
+          is_active: slide.is_active,
+        }));
+        setSlides(formSlides);
       }
     } catch (error) {
       console.error('Error fetching slides:', error);
@@ -55,7 +69,7 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
   }, [isOpen]);
 
   const addSlide = () => {
-    const newSlide: BannerSlide = {
+    const newSlide: BannerSlideForm = {
       title: '',
       subtitle: '',
       image_url: '',
@@ -66,7 +80,7 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
     setSlides([...slides, newSlide]);
   };
 
-  const updateSlide = (index: number, field: keyof BannerSlide, value: any) => {
+  const updateSlide = (index: number, field: keyof BannerSlideForm, value: any) => {
     const updatedSlides = [...slides];
     updatedSlides[index] = { ...updatedSlides[index], [field]: value };
     setSlides(updatedSlides);
@@ -85,13 +99,21 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
     setLoading(true);
     try {
       // Delete all existing slides first
-      await supabase.from('banner_slides' as any).delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('banner_slides').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
       // Insert new slides
       if (slides.length > 0) {
-        const slidesToInsert = slides.map(({ id, ...slide }) => slide);
+        const slidesToInsert: BannerSlideInsert[] = slides.map(({ id, ...slide }) => ({
+          title: slide.title,
+          subtitle: slide.subtitle || null,
+          image_url: slide.image_url,
+          link_url: slide.link_url || null,
+          order_index: slide.order_index,
+          is_active: slide.is_active,
+        }));
+        
         const { error } = await supabase
-          .from('banner_slides' as any)
+          .from('banner_slides')
           .insert(slidesToInsert);
 
         if (error) {

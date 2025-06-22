@@ -7,16 +7,9 @@ import { Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BannerEditor } from './BannerEditor';
 import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 
-interface BannerSlide {
-  id: string;
-  title: string;
-  subtitle?: string;
-  image_url: string;
-  link_url?: string;
-  order_index: number;
-  is_active: boolean;
-}
+type BannerSlide = Tables<'banner_slides'>;
 
 export const AdBanner = () => {
   const [slides, setSlides] = useState<BannerSlide[]>([]);
@@ -30,7 +23,7 @@ export const AdBanner = () => {
   const fetchSlides = async () => {
     try {
       const { data, error } = await supabase
-        .from('banner_slides' as any)
+        .from('banner_slides')
         .select('*')
         .eq('is_active', true)
         .order('order_index', { ascending: true });
@@ -38,7 +31,7 @@ export const AdBanner = () => {
       if (error) {
         console.error('Error fetching slides:', error);
       } else {
-        setSlides((data as BannerSlide[]) || []);
+        setSlides(data || []);
       }
     } catch (error) {
       console.error('Error fetching slides:', error);
