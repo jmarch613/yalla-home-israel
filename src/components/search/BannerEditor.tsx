@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
@@ -35,14 +34,14 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
   const fetchSlides = async () => {
     try {
       const { data, error } = await supabase
-        .from('banner_slides')
+        .from('banner_slides' as any)
         .select('*')
         .order('order_index', { ascending: true });
 
       if (error) {
         console.error('Error fetching slides:', error);
       } else {
-        setSlides(data || []);
+        setSlides((data as BannerSlide[]) || []);
       }
     } catch (error) {
       console.error('Error fetching slides:', error);
@@ -86,13 +85,13 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
     setLoading(true);
     try {
       // Delete all existing slides first
-      await supabase.from('banner_slides').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabase.from('banner_slides' as any).delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
       // Insert new slides
       if (slides.length > 0) {
         const slidesToInsert = slides.map(({ id, ...slide }) => slide);
         const { error } = await supabase
-          .from('banner_slides')
+          .from('banner_slides' as any)
           .insert(slidesToInsert);
 
         if (error) {

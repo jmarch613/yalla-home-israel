@@ -30,7 +30,7 @@ export const AdBanner = () => {
   const fetchSlides = async () => {
     try {
       const { data, error } = await supabase
-        .from('banner_slides')
+        .from('banner_slides' as any)
         .select('*')
         .eq('is_active', true)
         .order('order_index', { ascending: true });
@@ -38,7 +38,7 @@ export const AdBanner = () => {
       if (error) {
         console.error('Error fetching slides:', error);
       } else {
-        setSlides(data || []);
+        setSlides((data as BannerSlide[]) || []);
       }
     } catch (error) {
       console.error('Error fetching slides:', error);
