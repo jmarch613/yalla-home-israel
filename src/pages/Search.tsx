@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { PropertyGrid } from '@/components/PropertyGrid';
 import { SearchHeader } from '@/components/search/SearchHeader';
 import { SearchFiltersBar } from '@/components/search/SearchFiltersBar';
+import { AdBanner } from '@/components/search/AdBanner';
 import { BackToTopButton } from '@/components/BackToTopButton';
 
 const Search = () => {
@@ -92,6 +93,9 @@ const Search = () => {
           />
         </div>
       </div>
+
+      {/* Advertisement Banner */}
+      <AdBanner />
 
       {/* Filters Bar */}
       <div className="bg-white border-b">
