@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CarouselApi } from '@/components/ui/carousel';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Settings } from 'lucide-react';
@@ -15,6 +15,7 @@ export const AdBanner = () => {
   const [slides, setSlides] = useState<BannerSlide[]>([]);
   const [showEditor, setShowEditor] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [api, setApi] = useState<CarouselApi>();
   const { user } = useAuth();
 
   // Check if user is admin (you can adjust this logic based on your admin system)
@@ -43,6 +44,22 @@ export const AdBanner = () => {
   useEffect(() => {
     fetchSlides();
   }, []);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (!api || slides.length <= 1) return;
+
+    // Get the auto-scroll interval from the first slide (assuming all slides use the same interval)
+    const autoScrollInterval = slides[0]?.auto_scroll_interval || 0;
+    
+    if (autoScrollInterval === 0) return; // No auto-scroll if interval is 0
+
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, autoScrollInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [api, slides]);
 
   if (loading) {
     return (
@@ -88,24 +105,32 @@ export const AdBanner = () => {
             )}
           </div>
         ) : (
-          <Carousel className="max-w-4xl mx-auto">
+          <Carousel 
+            className="max-w-4xl mx-auto"
+            setApi={setApi}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
             <CarouselContent>
               {slides.map((slide) => (
                 <CarouselItem key={slide.id}>
                   <Card className="overflow-hidden">
                     <div 
-                      className="relative h-48 md:h-64"
+                      className="relative h-48 md:h-64 bg-gray-50"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.1'%3E%3Cpath d='M30 5l15 10v20L30 45 15 35V15l15-10zm0 5L20 17v16l10 7 10-7V17L30 10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                        backgroundColor: '#f8fafc'
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d1d5db' fill-opacity='0.3'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'repeat'
                       }}
                     >
                       <img
                         src={slide.image_url}
                         alt={slide.title}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain relative z-10"
                       />
-                      <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-white p-6">
+                      <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white p-6 z-20">
                         <h3 className="text-2xl md:text-3xl font-bold text-center mb-2 drop-shadow-lg">
                           {slide.title}
                         </h3>

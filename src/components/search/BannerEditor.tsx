@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Trash2, GripVertical, Upload, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Upload, Timer } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Tables, TablesInsert } from '@/integrations/supabase/types';
@@ -21,6 +22,7 @@ interface BannerSlideForm extends Omit<BannerSlideInsert, 'id' | 'created_at' | 
   link_url: string;
   order_index: number;
   is_active: boolean;
+  auto_scroll_interval: number;
 }
 
 interface BannerEditorProps {
@@ -29,10 +31,20 @@ interface BannerEditorProps {
   onSlidesUpdated: () => void;
 }
 
+const AUTO_SCROLL_OPTIONS = [
+  { value: 0, label: 'No auto-scroll' },
+  { value: 2, label: '2 seconds' },
+  { value: 3, label: '3 seconds' },
+  { value: 5, label: '5 seconds' },
+  { value: 10, label: '10 seconds' },
+  { value: 20, label: '20 seconds' },
+];
+
 export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorProps) => {
   const [slides, setSlides] = useState<BannerSlideForm[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadingSlides, setUploadingSlides] = useState<Set<number>>(new Set());
+  const [globalAutoScroll, setGlobalAutoScroll] = useState(0);
   const { toast } = useToast();
 
   const fetchSlides = async () => {
@@ -54,8 +66,14 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
           link_url: slide.link_url || '',
           order_index: slide.order_index,
           is_active: slide.is_active,
+          auto_scroll_interval: slide.auto_scroll_interval || 0,
         }));
         setSlides(formSlides);
+        
+        // Set global auto scroll from first slide
+        if (formSlides.length > 0) {
+          setGlobalAutoScroll(formSlides[0].auto_scroll_interval || 0);
+        }
       }
     } catch (error) {
       console.error('Error fetching slides:', error);
@@ -67,6 +85,16 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
       fetchSlides();
     }
   }, [isOpen]);
+
+  // Update all slides when global auto scroll changes
+  const updateGlobalAutoScroll = (interval: number) => {
+    setGlobalAutoScroll(interval);
+    const updatedSlides = slides.map(slide => ({
+      ...slide,
+      auto_scroll_interval: interval
+    }));
+    setSlides(updatedSlides);
+  };
 
   const uploadImage = async (file: File, slideIndex: number) => {
     try {
@@ -135,6 +163,7 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
       link_url: '',
       order_index: slides.length,
       is_active: true,
+      auto_scroll_interval: globalAutoScroll,
     };
     setSlides([...slides, newSlide]);
   };
@@ -169,6 +198,7 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
           link_url: slide.link_url || null,
           order_index: slide.order_index,
           is_active: slide.is_active,
+          auto_scroll_interval: slide.auto_scroll_interval,
         }));
         
         const { error } = await supabase
@@ -206,7 +236,44 @@ export const BannerEditor = ({ isOpen, onClose, onSlidesUpdated }: BannerEditorP
           <DialogTitle>Edit Banner Slides</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
+          {/* Global Auto-Scroll Setting */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Timer className="w-4 h-4" />
+                Auto-Scroll Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <Label>Auto-scroll interval (applies to all slides)</Label>
+                <Select 
+                  value={globalAutoScroll.toString()} 
+                  onValueChange={(value) => updateGlobalAutoScroll(parseInt(value))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select auto-scroll interval" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {AUTO_SCROLL_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value.toString()}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-gray-500">
+                  {globalAutoScroll === 0 
+                    ? "Slides will not auto-scroll. Users can navigate manually." 
+                    : `Slides will automatically advance every ${globalAutoScroll} seconds.`
+                  }
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Individual Slides */}
           {slides.map((slide, index) => (
             <Card key={index}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
