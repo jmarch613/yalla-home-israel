@@ -28,6 +28,7 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
   // Helper function to get images array based on property type
   const getImages = (prop: any): string[] => {
     if (isSampleProperty(prop)) {
+      // For sample properties, use the image property
       return prop.image ? [prop.image] : [];
     }
     if (isUserProperty(prop)) {
@@ -95,6 +96,15 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
     return prop.neighborhood;
   };
 
+  // Helper function to get description
+  const getDescription = (prop: any): string | null => {
+    if (isSampleProperty(prop)) {
+      // Sample properties don't have descriptions
+      return null;
+    }
+    return prop.description || null;
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -140,7 +150,7 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
 
       {/* Description */}
       <PropertyDescriptionSection
-        description={property.description || null}
+        description={getDescription(property)}
         transformText={transformText}
       />
     </>

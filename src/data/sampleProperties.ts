@@ -5,6 +5,15 @@ import type { PropertyCardType } from '@/utils/propertyFiltering';
 const propertyTypes = ['apartment', 'house', 'villa', 'penthouse', 'studio'];
 const listingTypes = ['sale', 'rent'];
 
+// Real property images from Unsplash
+const propertyImages = [
+  'https://images.unsplash.com/photo-1721322800607-8c38375eef04',
+  'https://images.unsplash.com/photo-1487958449943-2429e8be8625',
+  'https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a',
+  'https://images.unsplash.com/photo-1460574283810-2aab119d8511',
+  'https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace'
+];
+
 // Sample property features for variety
 const featureOptions = [
   ['Renovated', 'Elevator', 'Parking'],
@@ -76,6 +85,10 @@ export const generateSampleProperties = (): PropertyCardType[] => {
       const streetNumber = streetNumbers[Math.floor(Math.random() * streetNumbers.length)];
       const streetName = streetNames[Math.floor(Math.random() * streetNames.length)];
       
+      // Select a random property image
+      const imageIndex = Math.floor(Math.random() * propertyImages.length);
+      const selectedImage = propertyImages[imageIndex];
+      
       const property: PropertyCardType = {
         id: `sample-${city.toLowerCase().replace(/\s+/g, '-')}-${i}`,
         title,
@@ -86,7 +99,7 @@ export const generateSampleProperties = (): PropertyCardType[] => {
         bedrooms,
         bathrooms,
         area,
-        image: `/placeholder.svg`,
+        image: selectedImage,
         features: randomFeatures,
         created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(), // Random date within last 30 days
         city,
