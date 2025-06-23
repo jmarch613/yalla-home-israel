@@ -8,6 +8,7 @@ import { PropertyDescriptionSection } from '@/components/property-details/Proper
 import { FloorplanViewer } from '@/components/property-details/FloorplanViewer';
 import { PropertyDetailsType } from '@/hooks/usePropertyDetails';
 import { PropertyCardType } from '@/utils/propertyFiltering';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PropertyDetailsContentProps {
   property: PropertyDetailsType;
@@ -15,6 +16,8 @@ interface PropertyDetailsContentProps {
 }
 
 export const PropertyDetailsContent = ({ property, transformText }: PropertyDetailsContentProps) => {
+  const { t } = useLanguage();
+
   // Helper function to check if property is a sample property
   const isSampleProperty = (prop: any): prop is PropertyCardType => {
     return typeof prop.id === 'string' && prop.id.startsWith('sample-');
@@ -61,20 +64,24 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
     return isUserProperty(prop) ? prop.floorplan_url || null : null;
   };
 
-  // Helper function to get title
+  // Helper function to get title with translation
   const getTitle = (prop: any): string => {
-    return prop.title || 'Property';
+    const title = prop.title || t('property.type.apartment');
+    return transformText(title);
   };
 
-  // Helper function to get address
+  // Helper function to get address with translation
   const getAddress = (prop: any): string => {
+    let address = '';
     if (isSampleProperty(prop)) {
-      return prop.location;
+      address = prop.location;
+    } else {
+      address = prop.address || prop.location || '';
     }
-    return prop.address || prop.location || '';
+    return transformText(address);
   };
 
-  // Helper function to get property type
+  // Helper function to get property type with translation
   const getPropertyType = (prop: any): string | null => {
     if (isSampleProperty(prop)) {
       // Extract property type from features array
@@ -83,26 +90,45 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
           feature.toLowerCase().includes(type.toLowerCase())
         )
       );
-      return typeFeature || null;
+      
+      if (typeFeature) {
+        const lowerType = typeFeature.toLowerCase();
+        if (lowerType.includes('apartment')) return t('property.type.apartment');
+        if (lowerType.includes('house')) return t('property.type.house');
+        if (lowerType.includes('villa')) return t('property.type.villa');
+        if (lowerType.includes('penthouse')) return t('property.type.penthouse');
+        if (lowerType.includes('studio')) return t('property.type.studio');
+      }
+      return null;
     }
-    return prop.property_type;
+    
+    const propertyType = prop.property_type;
+    if (!propertyType) return null;
+    
+    // Translate property type
+    const typeKey = `property.type.${propertyType.toLowerCase()}`;
+    return t(typeKey);
   };
 
-  // Helper function to get neighborhood
+  // Helper function to get neighborhood with translation
   const getNeighborhood = (prop: any): string | null => {
+    let neighborhood = '';
     if (isSampleProperty(prop)) {
-      return prop.neighborhood || prop.city || null;
+      neighborhood = prop.neighborhood || prop.city || '';
+    } else {
+      neighborhood = prop.neighborhood || '';
     }
-    return prop.neighborhood;
+    return neighborhood ? transformText(neighborhood) : null;
   };
 
-  // Helper function to get description
+  // Helper function to get description with translation
   const getDescription = (prop: any): string | null => {
     if (isSampleProperty(prop)) {
       // Sample properties don't have descriptions
       return null;
     }
-    return prop.description || null;
+    const description = prop.description || null;
+    return description ? transformText(description) : null;
   };
 
   return (

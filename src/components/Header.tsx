@@ -1,9 +1,12 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Heart, User, Menu, LogOut, List } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { CurrencySelector } from '@/components/CurrencySelector';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +17,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 export const Header = () => {
   const { user, signOut, loading } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -42,8 +46,8 @@ export const Header = () => {
               <span className="text-xl font-bold text-primary">Yalla Home</span>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="#" className="text-gray-700 hover:text-primary font-medium">Buy</a>
-              <a href="#" className="text-gray-700 hover:text-primary font-medium">Rent</a>
+              <a href="#" className="text-gray-700 hover:text-primary font-medium">{t('nav.buy')}</a>
+              <a href="#" className="text-gray-700 hover:text-primary font-medium">{t('nav.rent')}</a>
             </nav>
           </div>
           
@@ -52,7 +56,7 @@ export const Header = () => {
               <>
                 <Button variant="ghost" size="sm" className="hidden md:flex">
                   <Heart className="w-4 h-4 mr-2" />
-                  Saved
+                  {t('nav.saved')}
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -61,7 +65,7 @@ export const Header = () => {
                   onClick={() => navigate('/my-properties')}
                 >
                   <List className="w-4 h-4 mr-2" />
-                  My Properties
+                  {t('nav.my.properties')}
                 </Button>
               </>
             )}
@@ -76,13 +80,13 @@ export const Header = () => {
                           {getInitials(user)}
                         </AvatarFallback>
                       </Avatar>
-                      Account
+                      {t('nav.account')}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleSignOut}>
                       <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
+                      {t('nav.signout')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -94,18 +98,19 @@ export const Header = () => {
                   onClick={() => navigate('/auth')}
                 >
                   <User className="w-4 h-4 mr-2" />
-                  Sign in
+                  {t('nav.signin')}
                 </Button>
               )
             )}
             
+            <LanguageSelector />
             <CurrencySelector />
             <Button 
               size="sm" 
               className="bg-primary hover:bg-primary/90"
               onClick={() => navigate('/list-property')}
             >
-              List Property
+              {t('nav.list')}
             </Button>
             <Button variant="ghost" size="sm" className="md:hidden">
               <Menu className="w-4 h-4" />
