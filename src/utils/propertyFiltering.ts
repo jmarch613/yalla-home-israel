@@ -1,5 +1,6 @@
 
 import { ScrapedProperty } from '@/types/database';
+import { sampleProperties } from '@/data/sampleProperties';
 
 export interface PropertyCardType {
   id: string;
@@ -54,7 +55,12 @@ export function transformProperties(scrapedProperties: ScrapedProperty[] = []): 
   });
 
   console.log(`Filtered ${transformed.length - uniqueProperties.length} duplicate properties`);
-  return uniqueProperties;
+  
+  // Combine with sample properties
+  const allProperties = [...uniqueProperties, ...sampleProperties];
+  console.log(`Total properties including samples: ${allProperties.length}`);
+  
+  return allProperties;
 }
 
 export function filterProperties(properties: PropertyCardType[], filters: any): PropertyCardType[] {
