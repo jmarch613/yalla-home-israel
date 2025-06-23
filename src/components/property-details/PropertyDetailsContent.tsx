@@ -7,6 +7,7 @@ import { PropertyFeaturesSection } from '@/components/property-details/PropertyF
 import { PropertyDescriptionSection } from '@/components/property-details/PropertyDescriptionSection';
 import { FloorplanViewer } from '@/components/property-details/FloorplanViewer';
 import { PropertyDetailsType } from '@/hooks/usePropertyDetails';
+import { PropertyCardType } from '@/utils/propertyFiltering';
 
 interface PropertyDetailsContentProps {
   property: PropertyDetailsType;
@@ -14,13 +15,21 @@ interface PropertyDetailsContentProps {
 }
 
 export const PropertyDetailsContent = ({ property, transformText }: PropertyDetailsContentProps) => {
+  // Helper function to check if property is a sample property
+  const isSampleProperty = (prop: any): prop is PropertyCardType => {
+    return typeof prop.id === 'string' && prop.id.startsWith('sample-');
+  };
+
   // Helper function to check if property is from property_listings table
   const isUserProperty = (prop: any): boolean => {
-    return 'user_id' in prop && 'listing_type' in prop;
+    return 'user_id' in prop && 'listing_type' in prop && !isSampleProperty(prop);
   };
 
   // Helper function to get images array based on property type
   const getImages = (prop: any): string[] => {
+    if (isSampleProperty(prop)) {
+      return prop.image ? [prop.image] : [];
+    }
     if (isUserProperty(prop)) {
       return prop.images && Array.isArray(prop.images) ? prop.images : [];
     }
@@ -29,6 +38,9 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
 
   // Helper function to get price display
   const getPriceDisplay = (prop: any): string | null => {
+    if (isSampleProperty(prop)) {
+      return prop.price;
+    }
     if (isUserProperty(prop)) {
       return prop.price ? `₪${prop.price.toLocaleString()}` : null;
     }
@@ -37,12 +49,50 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
 
   // Helper function to get listing URL
   const getListingUrl = (prop: any): string | null => {
-    return isUserProperty(prop) ? null : prop.listing_url;
+    if (isSampleProperty(prop) || isUserProperty(prop)) {
+      return null;
+    }
+    return prop.listing_url;
   };
 
   // Helper function to get floorplan URL
   const getFloorplanUrl = (prop: any): string | null => {
     return isUserProperty(prop) ? prop.floorplan_url || null : null;
+  };
+
+  // Helper function to get title
+  const getTitle = (prop: any): string => {
+    return prop.title || 'Property';
+  };
+
+  // Helper function to get address
+  const getAddress = (prop: any): string => {
+    if (isSampleProperty(prop)) {
+      return prop.location;
+    }
+    return prop.address || prop.location || '';
+  };
+
+  // Helper function to get property type
+  const getPropertyType = (prop: any): string | null => {
+    if (isSampleProperty(prop)) {
+      // Extract property type from features array
+      const typeFeature = prop.features?.find((feature: string) => 
+        ['apartment', 'house', 'villa', 'penthouse', 'studio'].some(type => 
+          feature.toLowerCase().includes(type.toLowerCase())
+        )
+      );
+      return typeFeature || null;
+    }
+    return prop.property_type;
+  };
+
+  // Helper function to get neighborhood
+  const getNeighborhood = (prop: any): string | null => {
+    if (isSampleProperty(prop)) {
+      return prop.neighborhood || prop.city || null;
+    }
+    return prop.neighborhood;
   };
 
   return (
@@ -52,18 +102,18 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
         <div>
           <PropertyPhotoViewer
             images={getImages(property)}
-            title={property.title || 'Property'}
+            title={getTitle(property)}
           />
         </div>
 
         {/* Right Column - Property Info */}
         <div className="space-y-4">
           <PropertyInfoSection
-            title={property.title}
-            address={property.address}
+            title={getTitle(property)}
+            address={getAddress(property)}
             price={getPriceDisplay(property)}
-            propertyType={property.property_type}
-            neighborhood={property.neighborhood}
+            propertyType={getPropertyType(property)}
+            neighborhood={getNeighborhood(property)}
             listingUrl={getListingUrl(property)}
             transformText={transformText}
           />
@@ -72,7 +122,7 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
           {getFloorplanUrl(property) && (
             <FloorplanViewer
               floorplanUrl={getFloorplanUrl(property)!}
-              title={property.title || 'Property'}
+              title={getTitle(property)}
             />
           )}
         </div>
@@ -90,7 +140,7 @@ export const PropertyDetailsContent = ({ property, transformText }: PropertyDeta
 
       {/* Description */}
       <PropertyDescriptionSection
-        description={property.description}
+        description={property.description || null}
         transformText={transformText}
       />
     </>
