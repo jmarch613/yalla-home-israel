@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -45,7 +44,6 @@ export const Header = () => {
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-gray-700 hover:text-primary font-medium">Buy</a>
               <a href="#" className="text-gray-700 hover:text-primary font-medium">Rent</a>
-              <a href="#" className="text-gray-700 hover:text-primary font-medium">House Prices</a>
             </nav>
           </div>
           
