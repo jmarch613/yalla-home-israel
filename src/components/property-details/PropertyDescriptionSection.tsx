@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PropertyDescriptionSectionProps {
   description: string | null;
@@ -8,6 +9,8 @@ interface PropertyDescriptionSectionProps {
 }
 
 export const PropertyDescriptionSection = ({ description, transformText }: PropertyDescriptionSectionProps) => {
+  const { t } = useLanguage();
+
   if (!description) return null;
 
   // Split description into paragraphs and filter out empty ones
@@ -18,7 +21,7 @@ export const PropertyDescriptionSection = ({ description, transformText }: Prope
 
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-semibold mb-4">Description</h3>
+      <h3 className="text-xl font-semibold mb-4">{t('details.description')}</h3>
       <Card>
         <CardContent className="p-6">
           <div className="space-y-4">
