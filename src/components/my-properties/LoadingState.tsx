@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const LoadingState = () => {
+  const { t } = useLanguage();
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -25,7 +28,7 @@ export const LoadingState = () => {
                 />
               </svg>
             </div>
-            <p className="text-gray-600">Loading your properties...</p>
+            <p className="text-gray-600">{t('my.properties.loading')}</p>
           </div>
         </div>
       </CardContent>

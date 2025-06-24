@@ -1,4 +1,3 @@
-
 export const ruTranslations = {
   'nav.home': 'Главная',
   'nav.search': 'Поиск',
@@ -78,5 +77,29 @@ export const ruTranslations = {
   'property.sort.price.low.high': 'Цена: От Низкой к Высокой',
   'property.sort.price.high.low': 'Цена: От Высокой к Низкой',
   'property.sort.area.large.small': 'Площадь: От Большой к Маленькой',
-  'property.sort.area.small.large': 'Площадь: От Маленькой к Большой'
+  'property.sort.area.small.large': 'Площадь: От Маленькой к Большой',
+  'my.properties.your.listings': 'Ваши Объявления',
+  'my.properties.title': 'Название',
+  'my.properties.type': 'Тип',
+  'my.properties.price': 'Цена',
+  'my.properties.status': 'Статус',
+  'my.properties.location': 'Местоположение',
+  'my.properties.created': 'Создано',
+  'my.properties.actions': 'Действия',
+  'my.properties.error.loading': 'Не удалось загрузить вашу недвижимость',
+  'my.properties.empty.message': 'Вы еще не разместили недвижимость.',
+  'my.properties.list.first': 'Разместить Первую Недвижимость',
+  'my.properties.loading': 'Загрузка вашей недвижимости...',
+  'my.properties.view.property': 'Посмотреть Недвижимость',
+  'my.properties.edit.property': 'Редактировать Недвижимость',
+  'my.properties.delete.property': 'Удалить Недвижимость',
+  'my.properties.price.on.request': 'Цена по запросу',
+  'status.approved': 'Одобрено',
+  'status.published': 'Опубликовано',
+  'status.pending': 'Ожидание',
+  'status.rejected': 'Отклонено',
+  'status.under_offer': 'Под Предложением',
+  'status.sold': 'Продано',
+  'status.withdrawn': 'Снято',
+  'status.price_reduced': 'Цена Снижена'
 };

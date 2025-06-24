@@ -14,9 +14,11 @@ import { PropertyRow } from './PropertyRow';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import { EmptyPropertiesState } from './EmptyPropertiesState';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const MyPropertiesTable = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { properties, isLoading, error, refetch, handleDelete, handleStatusUpdate } = useMyProperties();
 
   if (!user) {
@@ -38,19 +40,19 @@ export const MyPropertiesTable = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Your Property Listings ({properties.length})</CardTitle>
+        <CardTitle>{t('my.properties.your.listings')} ({properties.length})</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>{t('my.properties.title')}</TableHead>
+              <TableHead>{t('my.properties.type')}</TableHead>
+              <TableHead>{t('my.properties.price')}</TableHead>
+              <TableHead>{t('my.properties.status')}</TableHead>
+              <TableHead>{t('my.properties.location')}</TableHead>
+              <TableHead>{t('my.properties.created')}</TableHead>
+              <TableHead>{t('my.properties.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

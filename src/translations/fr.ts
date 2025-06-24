@@ -1,4 +1,3 @@
-
 export const frTranslations = {
   'nav.home': 'Accueil',
   'nav.search': 'Rechercher',
@@ -78,5 +77,29 @@ export const frTranslations = {
   'property.sort.price.low.high': 'Prix: Bas à Élevé',
   'property.sort.price.high.low': 'Prix: Élevé à Bas',
   'property.sort.area.large.small': 'Surface: Grande à Petite',
-  'property.sort.area.small.large': 'Surface: Petite à Grande'
+  'property.sort.area.small.large': 'Surface: Petite à Grande',
+  'my.properties.your.listings': 'Vos Annonces Immobilières',
+  'my.properties.title': 'Titre',
+  'my.properties.type': 'Type',
+  'my.properties.price': 'Prix',
+  'my.properties.status': 'Statut',
+  'my.properties.location': 'Emplacement',
+  'my.properties.created': 'Créé',
+  'my.properties.actions': 'Actions',
+  'my.properties.error.loading': 'Échec du chargement de vos propriétés',
+  'my.properties.empty.message': "Vous n'avez pas encore listé de propriétés.",
+  'my.properties.list.first': 'Lister Votre Première Propriété',
+  'my.properties.loading': 'Chargement de vos propriétés...',
+  'my.properties.view.property': 'Voir Propriété',
+  'my.properties.edit.property': 'Modifier Propriété',
+  'my.properties.delete.property': 'Supprimer Propriété',
+  'my.properties.price.on.request': 'Prix sur demande',
+  'status.approved': 'Approuvé',
+  'status.published': 'Publié',
+  'status.pending': 'En Attente',
+  'status.rejected': 'Rejeté',
+  'status.under_offer': 'Sous Offre',
+  'status.sold': 'Vendu',
+  'status.withdrawn': 'Retiré',
+  'status.price_reduced': 'Prix Réduit'
 };

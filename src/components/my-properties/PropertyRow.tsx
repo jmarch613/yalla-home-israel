@@ -5,6 +5,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { PropertyActions } from './PropertyActions';
 import { StatusUpdateDropdown } from './StatusUpdateDropdown';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PropertyRowProps {
   property: PropertyListing;
@@ -13,6 +14,8 @@ interface PropertyRowProps {
 }
 
 export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowProps) => {
+  const { t } = useLanguage();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved':
@@ -36,7 +39,13 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
   };
 
   const formatStatus = (status: string) => {
-    return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const statusKey = `status.${status}`;
+    return t(statusKey);
+  };
+
+  const formatPrice = (price: number | null) => {
+    if (!price) return t('my.properties.price.on.request');
+    return `₪${price.toLocaleString()}`;
   };
 
   return (
@@ -45,11 +54,11 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
         {property.title}
       </TableCell>
       <TableCell>
-        <span className="capitalize">{property.property_type}</span>
-        <span className="text-gray-500 ml-2">({property.listing_type})</span>
+        <span className="capitalize">{t(`property.type.${property.property_type}`)}</span>
+        <span className="text-gray-500 ml-2">({t(`nav.${property.listing_type}`)})</span>
       </TableCell>
       <TableCell>
-        {property.price ? `₪${property.price.toLocaleString()}` : 'Price on request'}
+        {formatPrice(property.price)}
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">

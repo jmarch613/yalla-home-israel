@@ -1,4 +1,3 @@
-
 export const heTranslations = {
   'nav.home': 'בית',
   'nav.search': 'חיפוש',
@@ -78,5 +77,29 @@ export const heTranslations = {
   'property.sort.price.low.high': 'מחיר: נמוך לגבוה',
   'property.sort.price.high.low': 'מחיר: גבוה לנמוך',
   'property.sort.area.large.small': 'שטח: גדול לקטן',
-  'property.sort.area.small.large': 'שטח: קטן לגדול'
+  'property.sort.area.small.large': 'שטח: קטן לגדול',
+  'my.properties.your.listings': 'רישומי הנכסים שלך',
+  'my.properties.title': 'כותרת',
+  'my.properties.type': 'סוג',
+  'my.properties.price': 'מחיר',
+  'my.properties.status': 'סטטוס',
+  'my.properties.location': 'מיקום',
+  'my.properties.created': 'נוצר',
+  'my.properties.actions': 'פעולות',
+  'my.properties.error.loading': 'נכשל בטעינת הנכסים שלך',
+  'my.properties.empty.message': 'עדיין לא רשמת נכסים.',
+  'my.properties.list.first': 'רשום את הנכס הראשון שלך',
+  'my.properties.loading': 'טוען את הנכסים שלך...',
+  'my.properties.view.property': 'צפה בנכס',
+  'my.properties.edit.property': 'ערוך נכס',
+  'my.properties.delete.property': 'מחק נכס',
+  'my.properties.price.on.request': 'מחיר לפי פנייה',
+  'status.approved': 'מאושר',
+  'status.published': 'פורסם',
+  'status.pending': 'ממתין',
+  'status.rejected': 'נדחה',
+  'status.under_offer': 'תחת הצעה',
+  'status.sold': 'נמכר',
+  'status.withdrawn': 'נמשך',
+  'status.price_reduced': 'מחיר הופחת'
 };

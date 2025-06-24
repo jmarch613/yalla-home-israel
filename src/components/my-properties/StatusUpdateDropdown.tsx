@@ -8,23 +8,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StatusUpdateDropdownProps {
   currentStatus: string;
   onStatusChange: (newStatus: string) => void;
 }
 
-const statusOptions = [
-  { value: 'approved', label: 'Approved' },
-  { value: 'published', label: 'Published' },
-  { value: 'under_offer', label: 'Under Offer' },
-  { value: 'sold', label: 'Sold' },
-  { value: 'withdrawn', label: 'Withdrawn' },
-  { value: 'price_reduced', label: 'Price Reduced' },
-  { value: 'pending', label: 'Pending' },
-];
-
 export const StatusUpdateDropdown = ({ currentStatus, onStatusChange }: StatusUpdateDropdownProps) => {
+  const { t } = useLanguage();
+
+  const statusOptions = [
+    { value: 'approved', label: t('status.approved') },
+    { value: 'published', label: t('status.published') },
+    { value: 'under_offer', label: t('status.under_offer') },
+    { value: 'sold', label: t('status.sold') },
+    { value: 'withdrawn', label: t('status.withdrawn') },
+    { value: 'price_reduced', label: t('status.price_reduced') },
+    { value: 'pending', label: t('status.pending') },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

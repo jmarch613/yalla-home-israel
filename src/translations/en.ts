@@ -1,4 +1,3 @@
-
 export const enTranslations = {
   'nav.home': 'Home',
   'nav.search': 'Search',
@@ -78,5 +77,29 @@ export const enTranslations = {
   'property.sort.price.low.high': 'Price: Low to High',
   'property.sort.price.high.low': 'Price: High to Low',
   'property.sort.area.large.small': 'Area: Large to Small',
-  'property.sort.area.small.large': 'Area: Small to Large'
+  'property.sort.area.small.large': 'Area: Small to Large',
+  'my.properties.your.listings': 'Your Property Listings',
+  'my.properties.title': 'Title',
+  'my.properties.type': 'Type',
+  'my.properties.price': 'Price',
+  'my.properties.status': 'Status',
+  'my.properties.location': 'Location',
+  'my.properties.created': 'Created',
+  'my.properties.actions': 'Actions',
+  'my.properties.error.loading': 'Failed to load your properties',
+  'my.properties.empty.message': "You haven't listed any properties yet.",
+  'my.properties.list.first': 'List Your First Property',
+  'my.properties.loading': 'Loading your properties...',
+  'my.properties.view.property': 'View Property',
+  'my.properties.edit.property': 'Edit Property',
+  'my.properties.delete.property': 'Delete Property',
+  'my.properties.price.on.request': 'Price on request',
+  'status.approved': 'Approved',
+  'status.published': 'Published',
+  'status.pending': 'Pending',
+  'status.rejected': 'Rejected',
+  'status.under_offer': 'Under Offer',
+  'status.sold': 'Sold',
+  'status.withdrawn': 'Withdrawn',
+  'status.price_reduced': 'Price Reduced'
 };
