@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Bed, Bath, Square, MapPin, ImageOff, Wind, Thermometer, Home, TreePine, Car, Shield, ShieldCheck } from 'lucide-react';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { PropertyStatusBanner } from './PropertyStatusBanner';
 
 interface PropertyCardProps {
@@ -28,6 +29,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const location = useLocation();
   const [imageError, setImageError] = useState(false);
   const { convertPrice } = useCurrency();
+  const { t } = useLanguage();
 
   const handleViewDetails = () => {
     // Capture current scroll position
@@ -53,21 +55,21 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
 
   // Helper function to format bedroom text
   const formatBedroomText = (bedrooms: number) => {
-    if (bedrooms === 1) return '1 bedroom';
-    return `${bedrooms} bedrooms`;
+    if (bedrooms === 1) return `1 ${t('details.bedrooms').slice(0, -1)}`; // Remove 's' for singular
+    return `${bedrooms} ${t('details.bedrooms')}`;
   };
 
   // Helper function to format bathroom text
   const formatBathroomText = (bathrooms: number) => {
-    if (bathrooms === 1) return '1 bathroom';
-    return `${bathrooms} bathrooms`;
+    if (bathrooms === 1) return `1 ${t('details.bathrooms').slice(0, -1)}`; // Remove 's' for singular
+    return `${bathrooms} ${t('details.bathrooms')}`;
   };
 
   // Helper function to transform title text from abbreviations to full phrases
   const transformTitle = (title: string) => {
     return title
-      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom`)
-      .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
+      .replace(/(\d+)BR/gi, (match, num) => `${num} ${num > 1 ? t('details.bedrooms') : t('details.bedrooms').slice(0, -1)}`)
+      .replace(/(\d+)BA/gi, (match, num) => `${num} ${num > 1 ? t('details.bathrooms') : t('details.bathrooms').slice(0, -1)}`);
   };
 
   // Helper function to get icon for feature
@@ -115,7 +117,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
             <div className="text-center text-gray-500">
               <ImageOff className="w-12 h-12 mx-auto mb-2" />
-              <p className="text-sm">Image not available</p>
+              <p className="text-sm">{t('common.unavailable')}</p>
             </div>
           </div>
         )}
@@ -135,14 +137,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           <Heart className="w-4 h-4" />
         </Button>
         <div className="absolute bottom-2 left-2 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
-          {property.type === 'sale' ? 'For Sale' : 'For Rent'}
+          {property.type === 'sale' ? t('nav.buy') : t('nav.rent')}
         </div>
       </div>
       
       <CardContent className="p-4">
         <div className="mb-2">
           <p className="text-2xl font-bold text-primary">{convertedPrice}</p>
-          {property.type === 'rent' && <p className="text-sm text-gray-600">per month</p>}
+          {property.type === 'rent' && <p className="text-sm text-gray-600">{t('common.per.month')}</p>}
         </div>
         
         <h3 className="font-semibold text-lg mb-2 line-clamp-2 cursor-pointer" onClick={handleViewDetails}>
@@ -188,7 +190,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           className="w-full bg-primary hover:bg-primary/90"
           onClick={handleViewDetails}
         >
-          View Details
+          {t('common.view.details')}
         </Button>
       </CardContent>
     </Card>

@@ -7,10 +7,12 @@ import { SearchHeader } from '@/components/search/SearchHeader';
 import { SearchFiltersBar } from '@/components/search/SearchFiltersBar';
 import { AdBanner } from '@/components/search/AdBanner';
 import { BackToTopButton } from '@/components/BackToTopButton';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const { selectedLanguage, t } = useLanguage();
   const [searchFilters, setSearchFilters] = useState({
     location: '',
     neighborhood: '',
@@ -33,6 +35,12 @@ const Search = () => {
   const [searchLocation, setSearchLocation] = useState('');
   const [sort, setSort] = useState('most-recent');
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Apply RTL direction for Hebrew
+  useEffect(() => {
+    document.documentElement.dir = selectedLanguage === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = selectedLanguage;
+  }, [selectedLanguage]);
 
   // On mount or when URL query params change, initialize filters, but do NOT trigger the search/results
   useEffect(() => {
@@ -120,10 +128,10 @@ const Search = () => {
           <div className="text-center py-12 bg-white rounded-lg border">
             <div className="max-w-md mx-auto">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Ready to find your perfect home?
+                {t('search.ready.title')}
               </h3>
               <p className="text-gray-600">
-                Use the search filters above to start exploring properties in your desired location.
+                {t('search.ready.subtitle')}
               </p>
             </div>
           </div>

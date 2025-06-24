@@ -7,13 +7,21 @@ import { PropertyDetailsLoadingState } from '@/components/property-details/Prope
 import { PropertyDetailsErrorState } from '@/components/property-details/PropertyDetailsErrorState';
 import { usePropertyDetails } from '@/hooks/usePropertyDetails';
 import { handleBackNavigation, getBackButtonText } from '@/components/property-details/utils/navigationUtils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+  const { selectedLanguage, t } = useLanguage();
   
   const { data: property, isLoading, error } = usePropertyDetails(id!);
+
+  // Apply RTL direction for Hebrew
+  useEffect(() => {
+    document.documentElement.dir = selectedLanguage === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = selectedLanguage;
+  }, [selectedLanguage]);
 
   useEffect(() => {
     // Restore scroll position when returning from property details
@@ -28,8 +36,8 @@ const PropertyDetails = () => {
   const transformText = (text: string) => {
     if (!text) return '';
     return text
-      .replace(/(\d+)BR/gi, (match, num) => `${num} bedroom${num > 1 ? 's' : ''}`)
-      .replace(/(\d+)BA/gi, (match, num) => `${num} bathroom${num > 1 ? 's' : ''}`);
+      .replace(/(\d+)BR/gi, (match, num) => `${num} ${num > 1 ? t('details.bedrooms') : t('details.bedrooms').slice(0, -1)}`)
+      .replace(/(\d+)BA/gi, (match, num) => `${num} ${num > 1 ? t('details.bathrooms') : t('details.bathrooms').slice(0, -1)}`);
   };
 
   const handleBackClick = () => {

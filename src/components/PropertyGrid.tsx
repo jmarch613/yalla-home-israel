@@ -6,6 +6,7 @@ import { PropertyGridEmptyState } from "./PropertyGridEmptyState";
 import { filterProperties, sortProperties } from "@/utils/propertyFiltering";
 import { useToast } from "@/hooks/use-toast";
 import { useAllProperties } from "@/hooks/useAllProperties";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PropertyGridProps {
   filters: any;
@@ -20,24 +21,25 @@ export const PropertyGrid = ({
 }: PropertyGridProps) => {
   const { allProperties, loading, error, refetch, triggerScraping } = useAllProperties();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleScrapeData = async () => {
     try {
       toast({
-        title: "Starting scraping...",
-        description: "Fetching latest property data from remaxjerusalem.com",
+        title: t('common.scraping.start') || "Starting scraping...",
+        description: t('common.scraping.description') || "Fetching latest property data from remaxjerusalem.com",
       });
       await triggerScraping();
       await refetch();
       toast({
-        title: "Scraping completed!",
-        description: "Property data has been updated successfully.",
+        title: t('common.scraping.success') || "Scraping completed!",
+        description: t('common.scraping.success.description') || "Property data has been updated successfully.",
       });
     } catch (error) {
       console.error("Scraping failed:", error);
       toast({
-        title: "Scraping failed",
-        description: "Failed to fetch property data. Please try again.",
+        title: t('common.scraping.failed') || "Scraping failed",
+        description: t('common.scraping.failed.description') || "Failed to fetch property data. Please try again.",
         variant: "destructive",
       });
     }
@@ -68,7 +70,7 @@ export const PropertyGrid = ({
               ></path>
             </svg>
           </span>
-          <p className="text-gray-600">Loading properties...</p>
+          <p className="text-gray-600">{t('common.loading.properties') || 'Loading properties...'}</p>
         </div>
       </div>
     );
@@ -77,7 +79,7 @@ export const PropertyGrid = ({
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-4">Failed to load properties</p>
+        <p className="text-red-600 mb-4">{t('common.error.loading') || 'Failed to load properties'}</p>
         <button
           onClick={() => refetch()}
           className="inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium border-gray-300 hover:bg-gray-100"
@@ -101,7 +103,7 @@ export const PropertyGrid = ({
               d="M4 12A8 8 0 0 1 20 12"
             ></path>
           </svg>
-          Try Again
+          {t('common.try.again') || 'Try Again'}
         </button>
       </div>
     );

@@ -72,6 +72,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.results.for.sale': 'Property for sale in',
     'search.results.to.rent': 'Property to rent in',
     'search.results.subtitle': 'Search properties to find your perfect home',
+    'search.ready.title': 'Ready to find your perfect home?',
+    'search.ready.subtitle': 'Use the search filters above to start exploring properties in your desired location.',
     'property.type.apartment': 'Apartment',
     'property.type.house': 'House',
     'property.type.villa': 'Villa',
@@ -80,7 +82,11 @@ const translations: Record<Language, Record<string, string>> = {
     'property.type.duplex': 'Duplex',
     'property.type.cottage': 'Cottage',
     'property.type.townhouse': 'Townhouse',
-    'common.unavailable': 'N/A'
+    'common.unavailable': 'N/A',
+    'common.view.details': 'View Details',
+    'common.per.month': 'per month',
+    'common.loading': 'Loading...',
+    'common.error': 'Error'
   },
   fr: {
     'nav.home': 'Accueil',
@@ -129,6 +135,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.results.for.sale': 'Propriété à vendre à',
     'search.results.to.rent': 'Propriété à louer à',
     'search.results.subtitle': 'Recherchez des propriétés pour trouver votre maison parfaite',
+    'search.ready.title': 'Prêt à trouver votre maison parfaite?',
+    'search.ready.subtitle': 'Utilisez les filtres de recherche ci-dessus pour commencer à explorer les propriétés dans votre emplacement souhaité.',
     'property.type.apartment': 'Appartement',
     'property.type.house': 'Maison',
     'property.type.villa': 'Villa',
@@ -137,7 +145,11 @@ const translations: Record<Language, Record<string, string>> = {
     'property.type.duplex': 'Duplex',
     'property.type.cottage': 'Cottage',
     'property.type.townhouse': 'Maison de Ville',
-    'common.unavailable': 'N/A'
+    'common.unavailable': 'N/A',
+    'common.view.details': 'Voir Détails',
+    'common.per.month': 'par mois',
+    'common.loading': 'Chargement...',
+    'common.error': 'Erreur'
   },
   he: {
     'nav.home': 'בית',
@@ -186,6 +198,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.results.for.sale': 'נכס למכירה ב',
     'search.results.to.rent': 'נכס להשכרה ב',
     'search.results.subtitle': 'חפש נכסים כדי למצוא את הבית המושלם שלך',
+    'search.ready.title': 'מוכן למצוא את הבית המושלם שלך?',
+    'search.ready.subtitle': 'השתמש במסנני החיפוש למעלה כדי להתחיל לחקור נכסים במיקום הרצוי שלך.',
     'property.type.apartment': 'דירה',
     'property.type.house': 'בית',
     'property.type.villa': 'וילה',
@@ -194,7 +208,11 @@ const translations: Record<Language, Record<string, string>> = {
     'property.type.duplex': 'דופלקס',
     'property.type.cottage': 'קוטג׳',
     'property.type.townhouse': 'בית עירוני',
-    'common.unavailable': 'לא זמין'
+    'common.unavailable': 'לא זמין',
+    'common.view.details': 'צפה בפרטים',
+    'common.per.month': 'לחודש',
+    'common.loading': 'טוען...',
+    'common.error': 'שגיאה'
   },
   ru: {
     'nav.home': 'Главная',
@@ -243,6 +261,8 @@ const translations: Record<Language, Record<string, string>> = {
     'search.results.for.sale': 'Недвижимость на продажу в',
     'search.results.to.rent': 'Недвижимость в аренду в',
     'search.results.subtitle': 'Ищите недвижимость, чтобы найти свой идеальный дом',
+    'search.ready.title': 'Готовы найти свой идеальный дом?',
+    'search.ready.subtitle': 'Используйте фильтры поиска выше, чтобы начать изучение недвижимости в желаемом месте.',
     'property.type.apartment': 'Квартира',
     'property.type.house': 'Дом',
     'property.type.villa': 'Вилла',
@@ -251,7 +271,11 @@ const translations: Record<Language, Record<string, string>> = {
     'property.type.duplex': 'Дуплекс',
     'property.type.cottage': 'Коттедж',
     'property.type.townhouse': 'Таунхаус',
-    'common.unavailable': 'Н/Д'
+    'common.unavailable': 'Н/Д',
+    'common.view.details': 'Посмотреть Детали',
+    'common.per.month': 'в месяц',
+    'common.loading': 'Загрузка...',
+    'common.error': 'Ошибка'
   }
 };
 
