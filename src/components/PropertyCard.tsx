@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Heart, Bed, Bath, Square, MapPin, ImageOff, Wind, Thermometer, Home, TreePine, Car, Shield, ShieldCheck } from 'lucide-react';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocationTranslation } from '@/utils/locationTranslations';
 import { PropertyStatusBanner } from './PropertyStatusBanner';
 
 interface PropertyCardProps {
@@ -30,6 +31,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   const [imageError, setImageError] = useState(false);
   const { convertPrice } = useCurrency();
   const { t } = useLanguage();
+  const { translateLocation } = useLocationTranslation();
 
   const handleViewDetails = () => {
     // Capture current scroll position
@@ -99,6 +101,18 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     return null;
   };
 
+  // Parse and translate location
+  const parseLocation = (locationString: string) => {
+    const parts = locationString.split(', ');
+    if (parts.length >= 2) {
+      const neighborhood = parts[0];
+      const city = parts[1];
+      return translateLocation(city, neighborhood);
+    } else {
+      return translateLocation(locationString);
+    }
+  };
+
   // Convert price to selected currency
   const convertedPrice = convertPrice(property.price);
 
@@ -153,7 +167,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         
         <div className="flex items-center text-gray-600 mb-3">
           <MapPin className="w-4 h-4 mr-1" />
-          <span className="text-sm">{property.location}</span>
+          <span className="text-sm">{parseLocation(property.location)}</span>
         </div>
         
         <div className="flex items-center justify-between text-sm text-gray-600 mb-3">

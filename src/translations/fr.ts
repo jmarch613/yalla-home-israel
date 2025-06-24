@@ -1,3 +1,4 @@
+
 export const frTranslations = {
   'nav.home': 'Accueil',
   'nav.search': 'Rechercher',
@@ -101,5 +102,22 @@ export const frTranslations = {
   'status.under_offer': 'Sous Offre',
   'status.sold': 'Vendu',
   'status.withdrawn': 'Retiré',
-  'status.price_reduced': 'Prix Réduit'
+  'status.price_reduced': 'Prix Réduit',
+  // City translations
+  'city.jerusalem': 'Jérusalem',
+  'city.tel.aviv': 'Tel Aviv',
+  'city.haifa': 'Haïfa',
+  'city.beersheva': 'Be\'er-Sheva',
+  'city.rishon.lezion': 'Rishon LeZion',
+  'city.petah.tikva': 'Petah Tikva',
+  'city.ashdod': 'Ashdod',
+  'city.netanya': 'Netanya',
+  'city.holon': 'Holon',
+  'city.bnei.brak': 'Bnei Brak',
+  'city.rehovot': 'Rehovot',
+  'city.bat.yam': 'Bat Yam',
+  'city.beit.shemesh': 'Beit Shemesh',
+  'city.herzliya': 'Herzliya',
+  'city.kfar.saba': 'Kfar Saba',
+  'city.ramat.gan': 'Ramat Gan'
 };

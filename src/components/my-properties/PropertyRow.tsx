@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { PropertyActions } from './PropertyActions';
 import { StatusUpdateDropdown } from './StatusUpdateDropdown';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocationTranslation } from '@/utils/locationTranslations';
 
 interface PropertyRowProps {
   property: PropertyListing;
@@ -15,6 +16,7 @@ interface PropertyRowProps {
 
 export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowProps) => {
   const { t } = useLanguage();
+  const { translateLocation } = useLocationTranslation();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -48,6 +50,10 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
     return `₪${price.toLocaleString()}`;
   };
 
+  const getTranslatedLocation = () => {
+    return translateLocation(property.city, property.neighborhood);
+  };
+
   return (
     <TableRow>
       <TableCell className="font-medium">
@@ -72,7 +78,7 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
         </div>
       </TableCell>
       <TableCell>
-        {property.city}{property.neighborhood && `, ${property.neighborhood}`}
+        {getTranslatedLocation()}
       </TableCell>
       <TableCell>
         {new Date(property.created_at).toLocaleDateString()}

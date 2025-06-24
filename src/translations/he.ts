@@ -1,3 +1,4 @@
+
 export const heTranslations = {
   'nav.home': 'בית',
   'nav.search': 'חיפוש',
@@ -101,5 +102,22 @@ export const heTranslations = {
   'status.under_offer': 'תחת הצעה',
   'status.sold': 'נמכר',
   'status.withdrawn': 'נמשך',
-  'status.price_reduced': 'מחיר הופחת'
+  'status.price_reduced': 'מחיר הופחת',
+  // City translations
+  'city.jerusalem': 'ירושלים',
+  'city.tel.aviv': 'תל אביב',
+  'city.haifa': 'חיפה',
+  'city.beersheva': 'באר שבע',
+  'city.rishon.lezion': 'ראשון לציון',
+  'city.petah.tikva': 'פתח תקווה',
+  'city.ashdod': 'אשדוד',
+  'city.netanya': 'נתניה',
+  'city.holon': 'חולון',
+  'city.bnei.brak': 'בני ברק',
+  'city.rehovot': 'רחובות',
+  'city.bat.yam': 'בת ים',
+  'city.beit.shemesh': 'בית שמש',
+  'city.herzliya': 'הרצליה',
+  'city.kfar.saba': 'כפר סבא',
+  'city.ramat.gan': 'רמת גן'
 };

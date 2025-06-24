@@ -1,3 +1,4 @@
+
 export const ruTranslations = {
   'nav.home': 'Главная',
   'nav.search': 'Поиск',
@@ -101,5 +102,22 @@ export const ruTranslations = {
   'status.under_offer': 'Под Предложением',
   'status.sold': 'Продано',
   'status.withdrawn': 'Снято',
-  'status.price_reduced': 'Цена Снижена'
+  'status.price_reduced': 'Цена Снижена',
+  // City translations
+  'city.jerusalem': 'Иерусалим',
+  'city.tel.aviv': 'Тель-Авив',
+  'city.haifa': 'Хайфа',
+  'city.beersheva': 'Беэр-Шева',
+  'city.rishon.lezion': 'Ришон-ле-Цион',
+  'city.petah.tikva': 'Петах-Тиква',
+  'city.ashdod': 'Ашдод',
+  'city.netanya': 'Нетания',
+  'city.holon': 'Холон',
+  'city.bnei.brak': 'Бней-Брак',
+  'city.rehovot': 'Реховот',
+  'city.bat.yam': 'Бат-Ям',
+  'city.beit.shemesh': 'Бейт-Шемеш',
+  'city.herzliya': 'Герцлия',
+  'city.kfar.saba': 'Кфар-Саба',
+  'city.ramat.gan': 'Рамат-Ган'
 };
