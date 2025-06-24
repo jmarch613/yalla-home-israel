@@ -1,8 +1,8 @@
-
 import React, { useState, useRef } from "react";
 import { Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language } from "@/translations";
 
 interface LanguageOption {
   code: Language;
