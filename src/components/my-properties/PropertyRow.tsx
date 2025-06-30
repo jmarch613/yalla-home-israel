@@ -19,39 +19,26 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
   const { translateLocation } = useLocationTranslation();
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved':
-      case 'published':
-        return 'bg-green-100 text-green-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
-      case 'under_offer':
-        return 'bg-blue-100 text-blue-800';
-      case 'sold':
-        return 'bg-purple-100 text-purple-800';
-      case 'withdrawn':
-        return 'bg-gray-100 text-gray-800';
-      case 'price_reduced':
-        return 'bg-orange-100 text-orange-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+    const statusColors = {
+      approved: 'bg-green-100 text-green-800',
+      published: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      rejected: 'bg-red-100 text-red-800',
+      under_offer: 'bg-blue-100 text-blue-800',
+      sold: 'bg-purple-100 text-purple-800',
+      withdrawn: 'bg-gray-100 text-gray-800',
+      price_reduced: 'bg-orange-100 text-orange-800'
+    };
+    return statusColors[status as keyof typeof statusColors] || 'bg-gray-100 text-gray-800';
   };
 
   const formatStatus = (status: string) => {
-    const statusKey = `status.${status}`;
-    return t(statusKey);
+    return t(`status.${status}`);
   };
 
   const formatPrice = (price: number | null) => {
     if (!price) return t('my.properties.price.on.request');
     return `₪${price.toLocaleString()}`;
-  };
-
-  const getTranslatedLocation = () => {
-    return translateLocation(property.city, property.neighborhood);
   };
 
   return (
@@ -78,7 +65,7 @@ export const PropertyRow = ({ property, onDelete, onStatusUpdate }: PropertyRowP
         </div>
       </TableCell>
       <TableCell>
-        {getTranslatedLocation()}
+        {translateLocation(property.city, property.neighborhood)}
       </TableCell>
       <TableCell>
         {new Date(property.created_at).toLocaleDateString()}

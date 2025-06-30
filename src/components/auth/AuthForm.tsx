@@ -8,6 +8,8 @@ import { Loader2 } from 'lucide-react';
 import { AuthFormFields } from './AuthFormFields';
 import { AuthToggle } from './AuthToggle';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
+import { validateAuthForm } from './AuthValidation';
+import { handleAuthError, handleAuthSuccess } from './AuthErrorHandler';
 
 interface AuthFormProps {
   isLogin: boolean;
@@ -24,7 +26,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ isLogin, setIsLogin }) => {
   
   const { signIn, signUp } = useAuth();
 
-  // Show forgot password form if requested
   if (showForgotPassword) {
     return (
       <ForgotPasswordForm 
@@ -33,51 +34,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ isLogin, setIsLogin }) => {
     );
   }
 
-  const validateForm = () => {
-    if (!email || !password) {
-      toast({
-        title: "Validation Error",
-        description: "Email and password are required.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    if (!isLogin && (!firstName || !lastName)) {
-      toast({
-        title: "Validation Error",
-        description: "First name and last name are required for sign up.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    if (password.length < 6) {
-      toast({
-        title: "Validation Error",
-        description: "Password must be at least 6 characters long.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast({
-        title: "Validation Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    return true;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    if (!validateAuthForm({ email, password, firstName, lastName, isLogin })) {
       return;
     }
 
@@ -87,61 +47,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ isLogin, setIsLogin }) => {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            toast({
-              title: "Login failed",
-              description: "Invalid email or password. Please check your credentials and try again.",
-              variant: "destructive"
-            });
-          } else if (error.message.includes('Email not confirmed')) {
-            toast({
-              title: "Email not confirmed",
-              description: "Please check your email and click the confirmation link before signing in.",
-              variant: "destructive"
-            });
-          } else {
-            toast({
-              title: "Login failed",
-              description: error.message,
-              variant: "destructive"
-            });
-          }
+          handleAuthError(error, isLogin, setIsLogin, setPassword);
         } else {
-          toast({
-            title: "Welcome back!",
-            description: "You have successfully signed in."
-          });
+          handleAuthSuccess(isLogin, setIsLogin, setPassword);
         }
       } else {
         const { error } = await signUp(email, password, firstName, lastName);
         if (error) {
-          if (error.message.includes('User already registered')) {
-            toast({
-              title: "Account exists",
-              description: "An account with this email already exists. Please sign in instead.",
-              variant: "destructive"
-            });
-            setIsLogin(true);
-          } else if (error.message.includes('Password should be at least')) {
-            toast({
-              title: "Password too weak",
-              description: "Password should be at least 6 characters long.",
-              variant: "destructive"
-            });
-          } else {
-            toast({
-              title: "Sign up failed",
-              description: error.message,
-              variant: "destructive"
-            });
-          }
+          handleAuthError(error, isLogin, setIsLogin, setPassword);
         } else {
-          toast({
-            title: "Account created successfully!",
-            description: "Please check your email to verify your account before signing in."
-          });
-          setIsLogin(true);
-          setPassword('');
+          handleAuthSuccess(isLogin, setIsLogin, setPassword);
         }
       }
     } catch (error) {
