@@ -40,9 +40,11 @@ export const Header = () => {
               className="flex items-center space-x-2 cursor-pointer"
               onClick={() => navigate('/')}
             >
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Y</span>
-              </div>
+              <img 
+                src="/lovable-uploads/f14f5f22-0f12-408e-b947-419bffbbe73d.png" 
+                alt="Yalla Move" 
+                className="w-8 h-8 object-contain"
+              />
               <span className="text-xl font-bold text-primary">Yalla Home</span>
             </div>
             <nav className="hidden md:flex space-x-6">
