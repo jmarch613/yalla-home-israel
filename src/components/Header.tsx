@@ -43,7 +43,7 @@ export const Header = () => {
               <img 
                 src="/lovable-uploads/f14f5f22-0f12-408e-b947-419bffbbe73d.png" 
                 alt="Yalla Move" 
-                className="w-8 h-8 object-contain"
+                className="w-12 h-12 object-contain"
               />
               <span className="text-xl font-bold text-primary">Yalla Home</span>
             </div>
