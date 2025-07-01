@@ -27,8 +27,8 @@ export const SearchHero = () => {
   };
 
   return (
-    <div className="relative bg-cover bg-center text-white py-16" style={{ backgroundImage: 'url(/lovable-uploads/c4e4754d-6d31-4ee6-8d2e-f15103b68059.png)' }}>
-      <div className="absolute inset-0 bg-black/40"></div>
+    <div className="relative bg-cover bg-bottom text-white py-16" style={{ backgroundImage: 'url(/lovable-uploads/c4e4754d-6d31-4ee6-8d2e-f15103b68059.png)', filter: 'brightness(1.2) contrast(1.1)' }}>
+      <div className="absolute inset-0 bg-black/20"></div>
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
